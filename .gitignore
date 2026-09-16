@@ -1,0 +1,45 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter temporary checkpoints
+.ipynb_checkpoints/
+
+# Download caches can be regenerated from OpenStreetMap
+cache/
+data_osm_5km/cache/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+*.code-workspace
+
+# Temporary and backup files
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+~$*.docx
+~$*.xlsx
+
+# Temporary experiment output only; keep final data, CSV, charts, maps,
+# notebooks, and thesis documents versioned as research evidence.
+hasil_bab_4/_sementara/
+data_osm_5km/_sementara/
+
+.virtual_documents/
+.jupyter/
