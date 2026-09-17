@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import ast
 import re
-import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -44,7 +43,6 @@ ALLOW_REVISIT = True
 REVISIT_AFTER_RATIO = 0.50
 MAX_NODE_VISITS = 2
 PROGRESS_BINS = 16
-REVISIT_COUNT_BINS = 3
 
 NEUTRAL_COMFORT_SCORE = 0.50
 RETURN_PHASE_RATIO = 0.50
@@ -66,7 +64,7 @@ EPSILON_END = 0.05
 EPISODES = 2_500
 MAX_STEPS_PER_EPISODE = 220
 SEEDS = (0, 1, 2, 3, 4)
-ROLLING_WINDOW = 100
+ROLLING_WINDOW = 50
 
 TERMINATION_REASONS = (
     "success",
@@ -75,6 +73,26 @@ TERMINATION_REASONS = (
     "early_return",
     "step_limit",
 )
+
+# Kolom yang menjadi hasil evaluasi utama pada BAB IV. Kolom diagnosis seperti
+# ukuran Q-table dan jumlah revisit tetap dapat dipakai secara internal, tetapi
+# tidak ditampilkan sebagai metrik pembanding utama antar-scenario.
+EVALUATION_RESULT_COLUMNS = (
+    "scenario",
+    "seed",
+    "is_loop",
+    "total_distance_m",
+    "absolute_distance_error_m",
+    "total_reward",
+    "mean_comfort",
+    "return_progress_ratio",
+    "distance_to_start_at_end_m",
+    "termination_reason",
+)
+
+# Kolom yang ditampilkan secara vertikal di notebook. Scenario tidak diperlukan
+# di sini karena satu notebook hanya menjalankan satu scenario.
+EVALUATION_DISPLAY_COLUMNS = EVALUATION_RESULT_COLUMNS[2:]
 
 
 def configure_osmnx() -> None:
@@ -267,7 +285,7 @@ def build_actions(graph: nx.MultiDiGraph) -> dict[int, list[EdgeAction]]:
 
 
 def build_state(environment, scenario: str) -> tuple:
-    """Membentuk state A-D tanpa mengubah aturan environment."""
+    """Membentuk state A-C tanpa mengubah aturan environment."""
     if scenario == "A":
         return (environment.current_node,)
     if scenario == "B":
@@ -277,13 +295,6 @@ def build_state(environment, scenario: str) -> tuple:
             environment.current_node,
             environment.previous_node,
             environment.progress_bin(),
-        )
-    if scenario == "D":
-        return (
-            environment.current_node,
-            environment.previous_node,
-            environment.progress_bin(),
-            environment.revisit_count_bin(),
         )
     raise ValueError(f"Scenario tidak dikenal: {scenario}")
 
@@ -327,9 +338,6 @@ class RunningRouteEnvironment:
     def progress_bin(self) -> int:
         raw_bin = int(self.total_distance_m / MAX_DISTANCE_M * PROGRESS_BINS)
         return min(PROGRESS_BINS - 1, max(0, raw_bin))
-
-    def revisit_count_bin(self) -> int:
-        return min(REVISIT_COUNT_BINS - 1, self.revisit_count)
 
     def straight_distance_to_start(self, node: int) -> float:
         x, y = self.node_xy[node]
@@ -547,7 +555,7 @@ def route_metrics(environment: RunningRouteEnvironment, total_reward: float) -> 
     return {
         "is_loop": environment.is_loop,
         "termination_reason": environment.termination_reason,
-        "distance_m": environment.total_distance_m,
+        "total_distance_m": environment.total_distance_m,
         "distance_km": environment.total_distance_m / 1000.0,
         "absolute_distance_error_m": abs(
             environment.total_distance_m - TARGET_DISTANCE_M
@@ -592,8 +600,6 @@ def train_q_learning(
     rng = np.random.default_rng(seed)
     q_table = defaultdict(dict)
     history_rows = []
-    started = time.perf_counter()
-
     for episode in range(EPISODES):
         state = environment.reset()
         epsilon = EPSILON_END + (EPSILON_START - EPSILON_END) * (
@@ -649,14 +655,10 @@ def train_q_learning(
             "episode": episode + 1,
             "epsilon": epsilon,
             "q_state_count": len(q_table),
-            "q_action_entry_count": sum(len(values) for values in q_table.values()),
-            # Waktu kumulatif sejak seed ini mulai dilatih. Nilai ini dipakai
-            # sebagai indikasi biaya komputasi selama proses training.
-            "training_elapsed_seconds": time.perf_counter() - started,
         })
         history_rows.append(metrics)
 
-    return q_table, pd.DataFrame(history_rows), time.perf_counter() - started
+    return q_table, pd.DataFrame(history_rows)
 
 
 def evaluate_greedy(
@@ -716,21 +718,13 @@ def diagnosis_summary(metrics_df: pd.DataFrame) -> pd.DataFrame:
             "distance_to_start_at_end_mean_m": metrics_df[
                 "distance_to_start_at_end_m"
             ].mean(),
-            "distance_to_start_at_end_std_m": metrics_df[
-                "distance_to_start_at_end_m"
-            ].std(ddof=0),
             "return_progress_ratio_mean": metrics_df[
                 "return_progress_ratio"
             ].mean(),
             "closing_action_available_rate": metrics_df[
                 "closing_action_was_available"
             ].mean(),
-            "overshoot_mean_m": metrics_df["overshoot_m"].mean(),
             "q_state_count_mean": metrics_df["q_state_count"].mean(),
-            "q_action_entry_count_mean": metrics_df[
-                "q_action_entry_count"
-            ].mean(),
-            "training_seconds_mean": metrics_df["training_seconds"].mean(),
         }
     ])
 
@@ -764,7 +758,7 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
 
     axes[0, 0].plot(rolling["episode"], rolling["success_rate"], color="#16A34A")
     axes[0, 0].set(
-        title="Rata-rata Keberhasilan 100 Episode Terakhir",
+        title=f"Rata-rata Keberhasilan {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Proporsi is_loop",
         ylim=(-0.02, 1.02),
@@ -772,7 +766,7 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
 
     axes[0, 1].plot(rolling["episode"], rolling["mean_reward"], color="#2563EB")
     axes[0, 1].set(
-        title="Rata-rata Reward 100 Episode Terakhir",
+        title=f"Rata-rata Reward {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Reward",
     )
@@ -786,7 +780,7 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
     )
     axes[1, 0].axhline(MAX_DISTANCE_M / 1000, color="#9CA3AF", linestyle=":")
     axes[1, 0].set(
-        title="Rata-rata Jarak 100 Episode Terakhir",
+        title=f"Rata-rata Jarak {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Jarak (km)",
     )
@@ -794,7 +788,7 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
 
     axes[1, 1].plot(rolling["episode"], rolling["mean_comfort"], color="#F59E0B")
     axes[1, 1].set(
-        title="Rata-rata Skor Kenyamanan 100 Episode Terakhir",
+        title=f"Rata-rata Skor Kenyamanan {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Comfort score",
         ylim=(0, 1),
@@ -811,7 +805,7 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
         mean_history["episode"], mean_history["mean_epsilon"], color="#0891B2"
     )
     axes[2, 1].set(
-        title="Jadwal Epsilon",
+        title="Nilai Epsilon per Episode",
         xlabel="Episode",
         ylabel="Epsilon",
         ylim=(0, 1.05),
@@ -846,18 +840,13 @@ TERMINATION_COLORS = {
 
 
 def plot_diagnosis_charts(history_df: pd.DataFrame, scenario: str) -> Path:
-    """Menampilkan seluruh metrik diagnosis sebagai perkembangan per episode.
-
-    Setiap titik episode merupakan rata-rata lima seed. Garis kemudian dihaluskan
-    dengan rolling window agar tren pembelajaran lebih mudah dilihat.
-    """
+    """Menampilkan diagnosis ringkas dengan rata-rata bergerak per 50 episode."""
     episode_summary = history_df.groupby("episode", as_index=False).agg(
+        distance_to_start_at_end_mean_m=(
+            "distance_to_start_at_end_m", "mean"
+        ),
         return_progress_ratio_mean=("return_progress_ratio", "mean"),
         closing_action_available_rate=("closing_action_was_available", "mean"),
-        overshoot_mean_m=("overshoot_m", "mean"),
-        q_state_count_mean=("q_state_count", "mean"),
-        q_action_entry_count_mean=("q_action_entry_count", "mean"),
-        training_elapsed_seconds_mean=("training_elapsed_seconds", "mean"),
     )
     rolling = (
         episode_summary.set_index("episode")
@@ -866,34 +855,23 @@ def plot_diagnosis_charts(history_df: pd.DataFrame, scenario: str) -> Path:
         .reset_index()
     )
 
-    figure, axes = plt.subplots(4, 2, figsize=(14, 17))
+    figure, axes = plt.subplots(2, 2, figsize=(14, 10))
     figure.suptitle(
         f"Diagnosis Training Scenario {scenario} - rata-rata {ROLLING_WINDOW} episode",
         fontsize=14,
         fontweight="bold",
     )
 
-    axis = axes[0, 0]
-    seed_colors = ["#0F766E", "#2563EB", "#7C3AED", "#EA580C", "#DC2626"]
-    for color, (seed, seed_history) in zip(
-        seed_colors, history_df.groupby("seed", sort=True)
-    ):
-        # Nilai asli setiap episode untuk tiap seed: tidak di-average dan tidak
-        # dihaluskan, agar terlihat perilaku training yang sebenarnya.
-        axis.plot(
-            seed_history["episode"],
-            seed_history["distance_to_start_at_end_m"],
-            color=color,
-            alpha=0.8,
-            linewidth=1,
-            label=f"Seed {seed}",
-        )
-    axis.set(
-        title="Jarak Akhir ke Start per Seed (Nilai Asli)",
+    axes[0, 0].plot(
+        rolling["episode"],
+        rolling["distance_to_start_at_end_mean_m"],
+        color="#0F766E",
+    )
+    axes[0, 0].set(
+        title=f"Rata-rata Jarak Akhir ke Start {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Meter",
     )
-    axis.legend(title="Seed", fontsize=8)
 
     axes[0, 1].plot(
         rolling["episode"],
@@ -908,77 +886,19 @@ def plot_diagnosis_charts(history_df: pd.DataFrame, scenario: str) -> Path:
     )
 
     axes[1, 0].plot(
-        rolling["episode"], rolling["overshoot_mean_m"], color="#DC2626"
-    )
-    axes[1, 0].set(
-        title="Kelebihan Jarak di Atas 5,5 km",
-        xlabel="Episode",
-        ylabel="Meter",
-    )
-
-    axes[1, 1].plot(
-        rolling["episode"], rolling["q_state_count_mean"], color="#7C3AED"
-    )
-    axes[1, 1].set(
-        title="Jumlah State pada Q-table",
-        xlabel="Episode",
-        ylabel="Jumlah state",
-    )
-
-    axes[2, 0].plot(
-        rolling["episode"],
-        rolling["q_action_entry_count_mean"],
-        color="#B45309",
-    )
-    axes[2, 0].set(
-        title="Jumlah Nilai Q untuk Action",
-        xlabel="Episode",
-        ylabel="Jumlah entry Q",
-    )
-
-    axes[2, 1].plot(
-        rolling["episode"],
-        rolling["training_elapsed_seconds_mean"],
-        color="#475569",
-    )
-    axes[2, 1].set(
-        title="Waktu Kumulatif Training per Seed",
-        xlabel="Episode",
-        ylabel="Detik",
-    )
-
-    axes[3, 0].plot(
         rolling["episode"],
         rolling["closing_action_available_rate"] * 100,
         color="#16A34A",
     )
-    axes[3, 0].set(
+    axes[1, 0].set(
         title="Peluang Closing Action Tersedia",
         xlabel="Episode",
         ylabel="Rate (%)",
         ylim=(-1, 101),
     )
 
-    # Hanya tujuh metrik diagnosis yang ditampilkan; panel terakhir sengaja
-    # dikosongkan agar susunan grafik tetap mudah dibaca.
-    axes[3, 1].axis("off")
-
-    for axis in axes.flat:
-        axis.grid(alpha=0.25)
-    plt.tight_layout()
-    RESULT_DIR.mkdir(parents=True, exist_ok=True)
-    chart_path = RESULT_DIR / f"grafik_diagnosis_{scenario}.png"
-    figure.savefig(chart_path, dpi=160, bbox_inches="tight")
-    plt.show()
-    return chart_path
-
-
-def plot_termination_charts(
-    history_df: pd.DataFrame,
-    evaluation_termination_df: pd.DataFrame,
-    scenario: str,
-) -> Path:
-    """Grafik rate terminasi training dan evaluasi untuk setiap alasan terminal."""
+    # Semua tipe terminasi digabung ke panel diagnosis terakhir agar tidak
+    # memerlukan gambar termination rate terpisah.
     episode_rates = pd.DataFrame({"episode": sorted(history_df["episode"].unique())})
     for reason in TERMINATION_REASONS:
         rate_by_episode = (
@@ -990,54 +910,33 @@ def plot_termination_charts(
             .rename(columns={"is_reason": reason})
         )
         episode_rates = episode_rates.merge(rate_by_episode, on="episode", how="left")
-
     rolling_rates = (
         episode_rates.set_index("episode")
         .rolling(ROLLING_WINDOW, min_periods=1)
         .mean()
         .reset_index()
     )
-
-    figure, axes = plt.subplots(1, 2, figsize=(16, 5.5))
-    figure.suptitle(
-        f"Termination Rate Scenario {scenario}", fontsize=14, fontweight="bold"
-    )
     for reason in TERMINATION_REASONS:
-        axes[0].plot(
+        axes[1, 1].plot(
             rolling_rates["episode"],
             rolling_rates[reason] * 100,
             label=TERMINATION_LABELS[reason],
             color=TERMINATION_COLORS[reason],
             linewidth=2,
         )
-    axes[0].set(
-        title=f"Training: rata-rata {ROLLING_WINDOW} episode terakhir",
+    axes[1, 1].set(
+        title=f"Termination Rate {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
-        ylabel="Termination rate (%)",
+        ylabel="Rate (%)",
         ylim=(-1, 101),
     )
-    axes[0].grid(alpha=0.25)
-    axes[0].legend(title="Tipe terminasi", fontsize=8)
+    axes[1, 1].legend(title="Tipe terminasi", fontsize=8)
 
-    evaluation_plot = evaluation_termination_df.copy()
-    colors = [TERMINATION_COLORS[reason] for reason in evaluation_plot["termination_reason"]]
-    axes[1].bar(
-        evaluation_plot["termination_reason"].map(TERMINATION_LABELS),
-        evaluation_plot["termination_rate_percent"],
-        color=colors,
-    )
-    axes[1].set(
-        title="Evaluasi greedy: lima seed",
-        xlabel="Tipe terminasi",
-        ylabel="Termination rate (%)",
-        ylim=(0, 101),
-    )
-    axes[1].tick_params(axis="x", rotation=25)
-    axes[1].grid(axis="y", alpha=0.25)
-
+    for axis in axes.flat:
+        axis.grid(alpha=0.25)
     plt.tight_layout()
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
-    chart_path = RESULT_DIR / f"grafik_termination_{scenario}.png"
+    chart_path = RESULT_DIR / f"grafik_diagnosis_{scenario}.png"
     figure.savefig(chart_path, dpi=160, bbox_inches="tight")
     plt.show()
     return chart_path
@@ -1154,10 +1053,56 @@ def make_route_map(graph, trial: dict, scenario: str, node_xy) -> folium.Map:
 # F. FUNGSI TUNGGAL YANG DIPANGGIL NOTEBOOK SCENARIO
 # ============================================================
 
+def select_representative_trial(trials: list[dict]) -> tuple[dict, str]:
+    """Memilih satu Q-table/seed untuk divisualisasikan pada peta.
+
+    Rute valid selalu lebih penting daripada rute gagal. Jika belum ada loop
+    valid, peta menjadi alat diagnosis: pilih rute yang panjangnya paling dekat
+    dengan target terlebih dahulu. Jarak akhir ke start hanya dipakai sebagai
+    pembeda agar rute yang berhenti terlalu dini tidak tampak sebagai terbaik.
+    """
+    valid_loop_trials = [
+        trial for trial in trials if trial["metrics"]["is_loop"]
+    ]
+
+    if valid_loop_trials:
+        selected = min(
+            valid_loop_trials,
+            key=lambda trial: (
+                trial["metrics"]["absolute_distance_error_m"],
+                -np.nan_to_num(trial["metrics"]["mean_comfort"], nan=-1),
+                -np.nan_to_num(trial["metrics"]["return_progress_ratio"], nan=-1),
+                trial["metrics"]["seed"],
+            ),
+        )
+        reason = (
+            f"Dipilih dari {len(valid_loop_trials)} loop valid: galat jarak "
+            "paling kecil; jika setara, comfort lalu return progress lebih tinggi."
+        )
+        return selected, reason
+
+    selected = min(
+        trials,
+        key=lambda trial: (
+            trial["metrics"]["absolute_distance_error_m"],
+            trial["metrics"]["distance_to_start_at_end_m"],
+            -np.nan_to_num(trial["metrics"]["mean_comfort"], nan=-1),
+            -np.nan_to_num(trial["metrics"]["return_progress_ratio"], nan=-1),
+            trial["metrics"]["seed"],
+        ),
+    )
+    reason = (
+        "Tidak ada loop valid, sehingga dipilih rute dengan galat jarak "
+        "paling kecil; jika setara, jarak akhir ke start paling kecil, "
+        "comfort tertinggi, lalu return progress tertinggi."
+    )
+    return selected, reason
+
+
 def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
-    """Menjalankan satu scenario A-D dengan core yang sama."""
-    if scenario not in {"A", "B", "C", "D"}:
-        raise ValueError("Scenario harus A, B, C, atau D.")
+    """Menjalankan satu scenario A-C dengan core yang sama."""
+    if scenario not in {"A", "B", "C"}:
+        raise ValueError("Scenario harus A, B, atau C.")
 
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     add_comfort_scores(graph)
@@ -1171,7 +1116,7 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     print(f"Menjalankan Scenario {scenario}: {len(SEEDS)} seed x {EPISODES:,} episode")
 
     for seed in SEEDS:
-        q_table, history, training_seconds = train_q_learning(
+        q_table, history = train_q_learning(
             scenario, seed, start_node, actions_by_node, node_xy
         )
         environment, metrics = evaluate_greedy(
@@ -1181,8 +1126,6 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
             "scenario": scenario,
             "seed": seed,
             "q_state_count": len(q_table),
-            "q_action_entry_count": sum(len(values) for values in q_table.values()),
-            "training_seconds": training_seconds,
         })
         histories.append(history)
         evaluation_rows.append(metrics)
@@ -1198,7 +1141,10 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
         )
 
     history_df = pd.concat(histories, ignore_index=True)
+    # metrics_df menyimpan detail internal untuk diagnosis dan pemilihan peta.
+    # evaluation_df adalah hasil evaluasi ringkas yang dipakai pada BAB IV.
     metrics_df = pd.DataFrame(evaluation_rows)
+    evaluation_df = metrics_df.loc[:, list(EVALUATION_RESULT_COLUMNS)].copy()
     diagnosis_df = diagnosis_summary(metrics_df)
     training_termination_df = termination_rate_table(history_df)
     evaluation_termination_df = termination_rate_table(metrics_df)
@@ -1209,35 +1155,39 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     training_termination_path = RESULT_DIR / f"termination_rates_training_{scenario}.csv"
     evaluation_termination_path = RESULT_DIR / f"termination_rates_evaluation_{scenario}.csv"
     history_df.to_csv(history_path, index=False)
-    metrics_df.to_csv(metrics_path, index=False)
+    evaluation_df.to_csv(metrics_path, index=False)
     diagnosis_df.to_csv(diagnosis_path, index=False)
     training_termination_df.to_csv(training_termination_path, index=False)
     evaluation_termination_df.to_csv(evaluation_termination_path, index=False)
 
-    # Data mentah tetap disimpan dalam CSV. Notebook menampilkan grafik agar
-    # perkembangan antar-episode dan perbedaan tipe terminasi lebih mudah dibaca.
-    print("Metrik evaluasi greedy per seed (semua kolom)")
-    # option_context mencegah Pandas menyembunyikan kolom pada tabel yang lebar.
-    with pd.option_context("display.max_columns", None, "display.width", 2000):
-        display(metrics_df.sort_values("seed"))
-    print("Tampilan vertikal metrik evaluasi per seed")
-    display(metrics_df.sort_values("seed").set_index("seed").T)
+    # Tabel evaluasi sengaja dibatasi pada metrik yang menjawab tujuan penelitian.
+    # Metrik diagnosis training ditampilkan dalam grafik terpisah di bawahnya.
+    print("Tampilan vertikal metrik evaluasi utama per seed")
+    display(
+        evaluation_df.sort_values("seed")
+        .set_index("seed")
+        .loc[:, list(EVALUATION_DISPLAY_COLUMNS)]
+        .T
+    )
 
     chart_path = plot_training_charts(history_df, scenario)
     diagnosis_chart_path = plot_diagnosis_charts(history_df, scenario)
-    termination_chart_path = plot_termination_charts(
-        history_df, evaluation_termination_df, scenario
-    )
 
-    representative = sorted(
-        trials,
-        key=lambda item: (
-            -int(item["metrics"]["is_loop"]),
-            item["metrics"]["absolute_distance_error_m"],
-            -np.nan_to_num(item["metrics"]["mean_comfort"], nan=-1),
-            item["metrics"]["revisit_count"],
-        ),
-    )[0]
+    representative, representative_reason = select_representative_trial(trials)
+    selected_metrics = representative["metrics"]
+    print("=== Q-TABLE / SEED YANG DIPILIH UNTUK PETA ===")
+    print(f"Scenario: {scenario}; seed: {selected_metrics['seed']}")
+    print(
+        "Metrik: "
+        f"is_loop={selected_metrics['is_loop']}, "
+        f"jarak={selected_metrics['total_distance_m']:.2f} m, "
+        f"galat={selected_metrics['absolute_distance_error_m']:.2f} m, "
+        f"comfort={selected_metrics['mean_comfort']:.3f}, "
+        f"return_progress={selected_metrics['return_progress_ratio']:.3f}, "
+        f"jarak akhir ke start={selected_metrics['distance_to_start_at_end_m']:.2f} m, "
+        f"terminasi={selected_metrics['termination_reason']}"
+    )
+    print(f"Alasan: {representative_reason}")
     route_map = make_route_map(graph, representative, scenario, node_xy)
     map_path = RESULT_DIR / f"peta_interaktif_scenario_{scenario}.html"
     route_map.save(map_path)
@@ -1250,16 +1200,17 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     print(f"Termination rate evaluasi: {evaluation_termination_path}")
     print(f"Grafik training utama: {chart_path}")
     print(f"Grafik diagnosis: {diagnosis_chart_path}")
-    print(f"Grafik termination rate: {termination_chart_path}")
     print(f"Peta: {map_path}")
 
     return {
         "scenario": scenario,
         "history": history_df,
-        "metrics": metrics_df,
+        "metrics": evaluation_df,
+        "evaluation_details": metrics_df,
         "diagnosis": diagnosis_df,
         "training_termination_rates": training_termination_df,
         "evaluation_termination_rates": evaluation_termination_df,
         "trials": trials,
         "representative": representative,
+        "representative_reason": representative_reason,
     }

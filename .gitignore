@@ -38,8 +38,8 @@ Thumbs.db
 
 # Temporary experiment output only; keep final data, CSV, charts, maps,
 # notebooks, and thesis documents versioned as research evidence.
-hasil_bab_4/_sementara/
-data_osm_5km/_sementara/
+hasil_bab_4/
+data_osm_5km/
 
 .virtual_documents/
 .jupyter/

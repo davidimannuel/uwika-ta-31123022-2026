@@ -1,6 +1,6 @@
 # Wiki Implementasi Rute Lari Loop 5 KM
 
-Dokumen ini adalah sumber konteks teknis utama proyek. Bacalah sebelum mengubah **analisa.ipynb**, **rute_lari_core.py**, atau notebook scenario A–D. Isinya menjelaskan keputusan implementasi Python, data, environment, reward, training, evaluasi, dan status eksperimen yang sudah disepakati.
+Dokumen ini adalah sumber konteks teknis utama proyek. Bacalah sebelum mengubah **analisa.ipynb**, **rute_lari_core.py**, atau notebook scenario A–C. Isinya menjelaskan keputusan implementasi Python, data, environment, reward, training, evaluasi, dan status eksperimen yang sudah disepakati.
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
@@ -17,11 +17,10 @@ Tujuan agen bukan hanya mencapai jarak. Agen juga diarahkan memilih edge dengan 
 
 Status hasil yang tersimpan sekarang:
 
-- Scenario state A, B, C, dan D sudah berjalan end-to-end.
-- Keempat scenario memakai action, reward, action mask, dan aturan revisit yang sama. Hanya representasi state yang berbeda.
-- Dari 20 evaluasi greedy saat ini, belum ada hasil dengan is_loop=True.
-- State C relatif paling baik pada galat jarak, comfort, revisit, dan unique edge ratio, tetapi belum dapat diklaim berhasil membentuk loop.
-- Terminasi paling sering adalah over_distance dan no_available_action. Tuning reward kembali ke start, action mask, state, atau jumlah episode masih diperlukan.
+- Scenario state A, B, dan C adalah eksperimen final. Ketiganya memakai action, reward, action mask, dan aturan revisit yang sama; hanya representasi state yang berbeda.
+- Scenario C telah menghasilkan satu loop valid dari lima evaluasi greedy pada konfigurasi saat ini.
+- State C adalah kandidat utama karena menambahkan konteks arah kedatangan melalui `previous_node`.
+- Terminasi paling sering masih `no_available_action` dan `over_distance`; hasil perlu dibaca bersama closing action available rate.
 
 ## 2. Struktur Proyek dan Urutan Eksekusi
 
@@ -32,7 +31,6 @@ Status hasil yang tersimpan sekarang:
 | **scenario_A.ipynb** | Training dan evaluasi state A. | Memanggil core bersama. |
 | **scenario_B.ipynb** | Training dan evaluasi state B. | Memanggil core bersama. |
 | **scenario_C.ipynb** | Training dan evaluasi state C. | Memanggil core bersama. |
-| **scenario_D.ipynb** | Training dan evaluasi state D. | Memanggil core bersama. |
 | **training.ipynb** | Notebook gabungan versi lama. | Jangan gunakan untuk eksperimen baru. |
 | **data_osm_5km/graf_jalan_kaki_5km.graphml** | Snapshot graf jalan terproyeksi. | Input utama training. |
 | **data_osm_5km/** | Menyimpan GraphML serta peta analisis highway dan comfort. | Artefak analisis. |
@@ -43,9 +41,9 @@ Urutan kerja yang benar:
 
 1. Buka proyek dari direktori root agar path relatif berfungsi.
 2. Jalankan **analisa.ipynb** dari atas sampai GraphML berhasil disimpan.
-3. Buka salah satu **scenario_A.ipynb** sampai **scenario_D.ipynb**. Notebook memuat GraphML dengan fungsi core yang sama; jika GraphML belum ada, fungsi yang sama mengunduh data OSM.
-4. Jalankan Scenario A, B, C, lalu D. Setiap scenario menjalankan lima seed, menampilkan tabel evaluasi greedy per seed, tiga berkas grafik (training utama, diagnosis, dan termination rate), serta peta interaktif. Data mentah juga disimpan dalam CSV.
-5. Jalankan perbandingan akhir A–D.
+3. Buka salah satu **scenario_A.ipynb** sampai **scenario_C.ipynb**. Notebook memuat GraphML dengan fungsi core yang sama; jika GraphML belum ada, fungsi yang sama mengunduh data OSM.
+4. Jalankan Scenario A, B, lalu C. Setiap scenario menjalankan lima seed, menampilkan tabel evaluasi greedy per seed, dua berkas grafik (training utama dan diagnosis), serta peta interaktif. Termination rate berada di dalam grafik diagnosis. Data hasil juga disimpan dalam CSV.
+5. Jalankan perbandingan akhir A–C.
 6. Gunakan CSV hasil sebagai sumber angka untuk BAB IV dan BAB V.
 
 Notebook scenario dapat membuat GraphML bila belum ada, tetapi analisis tetap sebaiknya dijalankan lebih dahulu untuk memeriksa data dan peta.
@@ -204,13 +202,12 @@ Contoh, `(u, v, key=0)` dan `(u, v, key=1)` adalah **dua action berbeda** walaup
 | A | (current_node,) | Baseline: agen hanya tahu posisi node. |
 | B | (current_node, progress_bin) | Membedakan keputusan awal dan akhir pada node yang sama. |
 | C | (current_node, previous_node, progress_bin) | Menambahkan arah kedatangan. |
-| D | (current_node, previous_node, progress_bin, revisit_count_bin) | Menambahkan ringkasan jumlah revisit. |
 
 Fungsi pembentuk state adalah **build_state(environment, scenario)**. Jangan mengganti istilah ini menjadi encoder.
 
 Kata **bin** berarti *bucket* atau kategori rentang nilai. Pada proyek ini, `progress_bin` tidak menyimpan jarak meter yang persis, melainkan nomor kategori progres jarak. Parameter `PROGRESS_BINS = 16` berarti rentang 0--5.500 m dibagi menjadi **16 kategori**, dengan indeks 0 sampai 15. Angka **15 bukan pilihan parameter terpisah**; ia adalah indeks terakhir karena indeks Python dimulai dari 0: `16 - 1 = 15`.
 
-Nilai 16 dipilih sebagai kompromi desain: cukup rinci untuk membedakan fase awal, tengah, dan akhir rute (sekitar 343,75 m per kategori), tetapi tidak terlalu banyak sehingga kombinasi state `(node, progress_bin)` membuat Q-table menjadi jauh lebih besar dan jarang dikunjungi. Nilai ini bukan rumus standar universal; bila kelak diubah, seluruh Scenario A--D harus dijalankan ulang agar perbandingan tetap adil.
+Nilai 16 dipilih sebagai kompromi desain: cukup rinci untuk membedakan fase awal, tengah, dan akhir rute (sekitar 343,75 m per kategori), tetapi tidak terlalu banyak sehingga kombinasi state `(node, progress_bin)` membuat Q-table menjadi jauh lebih besar dan jarang dikunjungi. Nilai ini bukan rumus standar universal; bila kelak diubah, seluruh Scenario A--C harus dijalankan ulang agar perbandingan tetap adil.
 
 **progress_bin** menghitung jarak yang sudah ditempuh menjadi 16 kategori:
 
@@ -225,7 +222,7 @@ Nilai 16 dipilih sebagai kompromi desain: cukup rinci untuk membedakan fase awal
 | 5.000 m | int(5.000 ÷ 5.500 × 16) | 14 |
 | 5.500 m | int(5.500 ÷ 5.500 × 16) = 16, lalu dibatasi | 15 |
 
-Hasil akhirnya selalu dibatasi pada 0 sampai 15 melalui `min(PROGRESS_BINS - 1, max(0, raw_bin))`. Batas bawah 0 menjaga nilai tidak negatif; batas atas 15 mencegah indeks 16 atau lebih ketika jarak mencapai/melewati 5.500 m. Karena itu node yang sama dapat menjadi state berbeda saat agen masih awal, pertengahan, atau mendekati batas jarak. **revisit_count_bin** membatasi jumlah revisit menjadi 0, 1, atau 2 agar Q-table tidak bertambah tanpa batas.
+Hasil akhirnya selalu dibatasi pada 0 sampai 15 melalui `min(PROGRESS_BINS - 1, max(0, raw_bin))`. Batas bawah 0 menjaga nilai tidak negatif; batas atas 15 mencegah indeks 16 atau lebih ketika jarak mencapai/melewati 5.500 m. Karena itu node yang sama dapat menjadi state berbeda saat agen masih awal, pertengahan, atau mendekati batas jarak.
 
 ### 6.4 Kondisi environment
 
@@ -262,7 +259,7 @@ Konfigurasi tetap untuk semua scenario:
 | RETURN_PHASE_RATIO | 0,50 |
 | MAX_NODE_VISITS | 2 |
 
-Ini penting: A–D diuji secara adil karena tidak mempunyai environment berbeda.
+Ini penting: A–C diuji secara adil karena tidak mempunyai environment berbeda.
 
 Kondisi early_return tetap ada dalam step sebagai penjagaan, tetapi action mask normal tidak menawarkan edge ke start sebelum jarak valid. Jadi early_return biasanya tidak muncul kecuali action mask atau pemanggilan step diubah.
 
@@ -333,7 +330,7 @@ Contoh: pada jarak rute 1.800 m, agen melewati edge dengan reward comfort `+0,25
 | REVISIT_PENALTY | -8 | Revisit node selain start. |
 | OUTWARD_PENALTY_SCALE | 0,40 | Skala penalti bila, sebelum 2.500 m, action membuat agen mendekati start. |
 
-Nilai reward dapat dituning, tetapi setiap perubahan reward harus dievaluasi ulang pada seluruh A–D dengan seed sama.
+Nilai reward dapat dituning, tetapi setiap perubahan reward harus dievaluasi ulang pada seluruh A–C dengan seed sama.
 
 ### 7.2 Epsilon-greedy
 
@@ -377,44 +374,37 @@ Nilai masa depan hanya dicari dari action legal pada state berikutnya. Jika epis
 | EPISODES | 2.500 | Episode per seed per scenario. |
 | MAX_STEPS_PER_EPISODE | 220 | Batas langkah per episode. |
 | SEEDS | (0, 1, 2, 3, 4) | Lima seed eksperimen. |
-| ROLLING_WINDOW | 100 | Ukuran rata-rata tren. |
+| ROLLING_WINDOW | 50 | Ukuran rata-rata bergerak untuk menghaluskan tren grafik. |
 
 Setiap scenario melatih lima Q-table, satu untuk setiap seed. Training history digabung, tetapi evaluasi greedy tetap dicatat per seed.
 
 | Grafik | Arti |
 |---|---|
-| Rata-rata Keberhasilan 100 Episode Terakhir | Proporsi is_loop True dalam 100 episode terakhir. |
-| Rata-rata Reward 100 Episode Terakhir | Rata-rata total reward 100 episode terakhir. Reward naik tidak otomatis berarti loop berhasil. |
-| Rata-rata Jarak 100 Episode Terakhir | Rata-rata jarak rute 100 episode terakhir; bandingkan dengan target 5 km dan batas valid. |
-| Rata-rata Skor Kenyamanan 100 Episode Terakhir | Rata-rata comfort score rute dalam 100 episode terakhir. |
+| Rata-rata Keberhasilan 50 Episode Terakhir | Proporsi is_loop True dalam 50 episode terakhir. |
+| Rata-rata Reward 50 Episode Terakhir | Rata-rata total reward 50 episode terakhir. Reward naik tidak otomatis berarti loop berhasil. |
+| Rata-rata Jarak 50 Episode Terakhir | Rata-rata jarak rute 50 episode terakhir; bandingkan dengan target 5 km dan batas valid. |
+| Rata-rata Skor Kenyamanan 50 Episode Terakhir | Rata-rata comfort score rute dalam 50 episode terakhir. |
 | Jumlah State Q-table | Jumlah state unik yang memiliki entry Q-table. |
-| Jadwal Epsilon | Penurunan eksplorasi dari 1,00 ke 0,05 per episode; bukan rata-rata hasil episode. |
+| Nilai Epsilon per Episode | Nilai peluang eksplorasi yang ditetapkan dari 1,00 ke 0,05 per episode; bukan rata-rata hasil episode. |
 
 ## 9. Evaluasi, Peta, dan Berkas Hasil
 
 ### 9.1 Evaluasi greedy
 
-Fungsi **evaluate_greedy()** memakai epsilon 0. Metrik yang harus dibaca:
+Fungsi **evaluate_greedy()** memakai epsilon 0. Tabel evaluasi utama sengaja dibatasi agar perbandingan Scenario A--C tetap fokus. Setiap baris mewakili satu seed dan hanya memuat metrik berikut.
 
 | Metrik | Arti |
 |---|---|
 | is_loop | Keberhasilan utama: kembali ke start pada 4.500–5.500 m. |
-| distance_m/distance_km | Total jarak edge pada rute. |
+| total_distance_m | Total jarak edge pada rute dalam meter. |
 | absolute_distance_error_m | Selisih absolut dari target 5.000 m. Bukan pengganti is_loop. |
+| total_reward | Akumulasi seluruh reward dan penalti dari satu evaluasi greedy. Dibaca bersama is_loop dan termination_reason, bukan sebagai satu-satunya ukuran kualitas rute. |
 | mean_comfort | Rata-rata comfort edge berbobot panjang. |
 | distance_to_start_at_end_m | Jarak lurus posisi akhir ke start dalam meter. Makin kecil berarti agen setidaknya mendekati start sebelum terminasi. |
-| return_progress_ratio | Proporsi langkah setelah 2,75 km yang mengurangi jarak lurus ke start. Nilai mendekati 1 berarti arah pulang lebih konsisten. |
-| closing_action_was_available | Bernilai True bila selama episode pernah tersedia edge legal langsung menuju start dengan jarak akhir 4.500--5.500 m. |
-| closing_action_available_rate | Proporsi episode yang memiliki minimal satu closing action. Rate tinggi tetapi `is_loop` rendah berarti agen memiliki kesempatan menutup loop, namun policy tidak memilihnya. Rate rendah berarti agen jarang mencapai kesempatan menutup loop. |
-| overshoot_m | Jarak yang melebihi batas 5.500 m. Bernilai 0 bila rute tidak melewati batas. |
-| revisit_count | Revisit node selain start. |
-| repeated_intermediate_nodes | Banyak node tengah yang muncul berulang. |
-| unique_edge_ratio | Edge unik dibagi seluruh edge rute; makin mendekati 1, makin sedikit pengulangan. |
+| return_progress_ratio | Proporsi langkah setelah 2.500 m yang mengurangi jarak lurus ke start. Nilai mendekati 1 berarti arah pulang lebih konsisten. |
 | termination_reason | Alasan terminal setiap seed: success, over_distance, no_available_action, early_return, atau step_limit. |
-| training termination rate | Proporsi seluruh episode training: 2.500 episode × 5 seed = 12.500 episode per scenario. Semua lima kategori terminasi ditampilkan. |
-| evaluation termination rate | Proporsi lima evaluasi greedy, satu untuk setiap seed. Ini dipisahkan dari termination rate training. |
-| q_state_count | Ukuran Q-table hasil training. |
-| training_seconds | Waktu training seed tersebut. |
+
+`closing_action_available_rate` dan rate semua tipe terminasi adalah **diagnosis training**, bukan metrik pembanding utama. Metrik tersebut tetap ditampilkan dalam grafik diagnosis untuk menjelaskan mengapa suatu scenario berhasil atau gagal, tetapi tidak dimasukkan ke tabel evaluasi per seed maupun berkas `evaluation_metrics_{scenario}.csv`.
 
 ### 9.1.1 Rumus termination rate
 
@@ -426,15 +416,14 @@ Contoh: bila 3.750 dari 12.500 episode training berakhir karena `over_distance`,
 
 ### 9.1.2 Grafik yang ditampilkan notebook scenario
 
-Notebook tetap menampilkan tabel evaluasi greedy lengkap per seed, termasuk versi vertikal agar semua kolom terbaca. Data mentah juga disimpan dalam CSV agar dapat dipakai pada BAB IV. Selain tabel evaluasi, notebook menampilkan tiga grafik berikut.
+Notebook menampilkan tabel evaluasi greedy dalam format vertikal agar setiap metrik utama mudah dibandingkan antar-seed. Berkas `evaluation_metrics_{scenario}.csv` memakai kolom yang sama dengan tabel tersebut. Selain tabel evaluasi, notebook menampilkan dua gambar berikut.
 
-1. **Grafik training utama**: keberhasilan loop, reward, jarak, mean comfort, jumlah state Q-table, dan epsilon. Semuanya selain epsilon memakai rata-rata bergerak 100 episode.
-2. **Grafik diagnosis training**: seluruh metrik diagnosis divisualkan terhadap episode. Jarak akhir ke start ditampilkan sebagai nilai asli masing-masing seed tanpa rolling mean maupun simpangan baku. Return progress ratio, closing action available rate, overshoot, jumlah state Q-table, jumlah entry Q-action, dan waktu kumulatif training ditampilkan sebagai tren rata-rata bergerak 100 episode.
-3. **Grafik termination rate**: panel kiri memuat rate lima tipe terminasi sepanjang training dengan legenda tipe terminasi; setiap garis adalah rata-rata bergerak 100 episode dari lima seed. Panel kanan adalah bar chart termination rate pada lima evaluasi greedy.
+1. **Grafik training utama**: keberhasilan loop, reward, jarak, mean comfort, jumlah state Q-table, dan epsilon. Semuanya selain epsilon memakai rata-rata bergerak 50 episode.
+2. **Grafik diagnosis training**: rata-rata jarak akhir ke start, return progress ratio, closing action available rate, dan lima termination rate. Seluruh panel memakai rata-rata bergerak 50 episode dari lima seed; termination rate ditempatkan pada panel yang sama, bukan sebagai gambar tersendiri.
 
 Grafik diagnosis menggunakan data `training_history_{scenario}.csv`, sehingga menunjukkan perubahan selama training, bukan hanya angka akhir. Nilai kosong pada `return_progress_ratio` terjadi bila episode belum pernah mencapai fase kembali, yaitu 50% dari target (2.500 m); rata-rata hanya dihitung dari episode yang memasuki fase tersebut.
 
-Tidak ada baseline Dijkstra. Perbandingan eksperimen hanya A vs B vs C vs D, dengan lingkungan yang sama.
+Tidak ada baseline Dijkstra. Perbandingan eksperimen hanya A vs B vs C, dengan lingkungan yang sama.
 
 ### 9.2 Cara membaca mean_comfort
 
@@ -455,7 +444,12 @@ Semakin `mean_comfort` mendekati 1, semakin besar bagian panjang rute yang melew
 
 ### 9.3 Peta interaktif
 
-**make_route_map()** memilih satu rute representatif dari lima hasil evaluasi greedy (satu hasil untuk setiap seed), bukan dari episode training. Prioritas pemilihannya adalah: loop valid, galat jarak paling kecil, comfort paling tinggi, lalu revisit paling sedikit. Karena itu seed pada peta tidak selalu seed 0. Peta memakai warna berbeda per kilometer dan memuat marker start KM 0, marker KM 1–5, serta marker finish terpisah.
+**make_route_map()** menampilkan satu rute representatif dari lima hasil evaluasi greedy (satu hasil untuk setiap seed), bukan dari episode training. Fungsi **select_representative_trial()** menentukan Q-table/seed yang dipakai dengan aturan berikut.
+
+1. Bila ada satu atau lebih `is_loop=True`, pilih hanya dari kelompok loop valid: `absolute_distance_error_m` terkecil, kemudian `mean_comfort` tertinggi, lalu `return_progress_ratio` tertinggi.
+2. Bila belum ada loop valid, pilih rute dengan `absolute_distance_error_m` terkecil, kemudian `distance_to_start_at_end_m` terkecil, lalu `mean_comfort` dan `return_progress_ratio` tertinggi. Urutan ini mencegah rute yang berhenti terlalu dini tetapi kebetulan dekat start terpilih sebagai peta. Dalam kondisi ini peta adalah alat diagnosis, bukan contoh rute final yang berhasil.
+
+Notebook mencetak scenario, seed, nilai seluruh metrik utama, dan alasan pemilihan sebelum peta ditampilkan. Karena itu seed pada peta tidak selalu seed 0 dan pengguna dapat memverifikasi alasan rute tersebut dipilih. `revisit_count` tidak digunakan sebagai kriteria pemilihan peta. Peta memakai warna berbeda per kilometer dan memuat marker start KM 0, marker KM 1–5, serta marker finish terpisah.
 
 Jika rute valid loop, marker finish digeser sedikit untuk tampilan agar tidak menumpuk marker start. Posisi logis finish tetap sama dengan start. Peta representatif bukan rata-rata lima seed; peta hanya alat inspeksi rute terbaik menurut aturan prioritas.
 
@@ -463,23 +457,22 @@ Jika rute valid loop, marker finish digeser sedikit untuk tampilan agar tidak me
 
 | State | Loop rate | Jarak rata-rata | Galat absolut rata-rata | Comfort rata-rata | Revisit rata-rata |
 |---|---:|---:|---:|---:|---:|
-| A | 0,00 | 4,840 km | 656,81 m | 0,722 | 2,20 |
-| B | 0,00 | 5,535 km | 534,52 m | 0,728 | 1,60 |
-| C | 0,00 | 5,471 km | 470,94 m | 0,737 | 1,00 |
-| D | 0,00 | 5,103 km | 554,34 m | 0,730 | 2,40 |
+| A | 0,00 | 3,769 km | 1.440,42 m | 0,707 | 4,20 |
+| B | 0,00 | 4,657 km | 718,51 m | 0,726 | 5,80 |
+| C | 0,20 | 5,122 km | 341,00 m | 0,717 | 4,60 |
 
-Jangan menyebut scenario D terbaik hanya karena rata-rata jaraknya paling dekat ke 5 km. Variasi antarseed tinggi dan loop rate masih 0. State C adalah kandidat awal yang lebih layak untuk tuning berikutnya, bukan hasil akhir yang berhasil.
+Tabel hasil harus diperbarui setiap kali konfigurasi berubah. Pada konfigurasi saat ini, C menghasilkan satu loop valid dari lima evaluasi greedy; hasil tersebut masih awal dan perlu diuji ulang dengan seed yang sama bila parameter kembali diubah.
 
 ## 10. Aturan Modifikasi dan Konteks untuk AI
 
 Saat membuat perubahan:
 
 1. Ubah satu komponen eksperimen pada satu waktu, misalnya reward kembali atau jumlah progress bin.
-2. Jangan mengubah reward/action mask bersamaan dengan definisi state jika ingin membandingkan A–D secara adil.
-3. Setelah perubahan yang memengaruhi environment, reward, action, atau training, jalankan ulang seluruh A–D dengan lima seed yang sama.
+2. Jangan mengubah reward/action mask bersamaan dengan definisi state jika ingin membandingkan A–C secara adil.
+3. Setelah perubahan yang memengaruhi environment, reward, action, atau training, jalankan ulang seluruh A–C dengan lima seed yang sama.
 4. Simpan hasil baru pada direktori berbeda atau beri nama konfigurasi agar CSV lama tidak tertimpa tanpa jejak.
 5. Perbarui wiki ini jika parameter, rumus reward, action mask, metrik, atau status hasil berubah.
 6. Jangan mengklaim sistem berhasil sebelum is_loop True muncul secara konsisten pada evaluasi greedy.
 7. Jangan mengklaim comfort score sebagai pengalaman pelari yang tervalidasi tanpa validasi lapangan atau survei.
 
-Ringkasan singkat: proyek menggunakan Q-Learning tabular dari scratch pada graf jalan kaki OSMnx MultiDiGraph terproyeksi meter. Target adalah loop 5 km plus toleransi 10%. Action adalah edge spesifik (next_node, key). State yang diuji A sampai D berbeda hanya pada informasi kondisi. Revisit tersedia mulai 50% target dengan maksimum dua kunjungan node; fase ini sama dengan awal reward arah pulang. Semua aturan bersama berada di rute_lari_core.py; analisis berada di analisa.ipynb; eksperimen dipisahkan pada scenario_A.ipynb sampai scenario_D.ipynb. Hasil saat ini belum menghasilkan loop valid.
+Ringkasan singkat: proyek menggunakan Q-Learning tabular dari scratch pada graf jalan kaki OSMnx MultiDiGraph terproyeksi meter. Target adalah loop 5 km plus toleransi 10%. Action adalah edge spesifik (next_node, key). State final yang diuji A sampai C berbeda pada informasi posisi, progres, dan arah kedatangan. Revisit tersedia mulai 50% target dengan maksimum dua kunjungan node; fase ini sama dengan awal reward arah pulang. Semua aturan bersama berada di rute_lari_core.py; analisis berada di analisa.ipynb; eksperimen dipisahkan pada scenario_A.ipynb sampai scenario_C.ipynb. Konfigurasi saat ini telah menghasilkan loop valid pada salah satu evaluasi greedy C.
