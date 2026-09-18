@@ -61,7 +61,9 @@ ALPHA = 0.15
 GAMMA = 0.95
 EPSILON_START = 1.00
 EPSILON_END = 0.05
-EPISODES = 2_500
+# Default ringan untuk percobaan cepat di notebook. Eksperimen sensitivitas
+# selalu mengirim jumlah episode secara eksplisit (10k sampai 50k).
+EPISODES = 10_000
 MAX_STEPS_PER_EPISODE = 220
 SEEDS = (0, 1, 2, 3, 4)
 ROLLING_WINDOW = 50
@@ -87,6 +89,7 @@ EVALUATION_RESULT_COLUMNS = (
     "mean_comfort",
     "return_progress_ratio",
     "distance_to_start_at_end_m",
+    "closing_action_available",
     "termination_reason",
 )
 
@@ -593,17 +596,23 @@ def train_q_learning(
     start_node: int,
     actions_by_node: dict[int, list[EdgeAction]],
     node_xy: dict[int, tuple[float, float]],
+    episodes: int | None = None,
 ):
+    """Melatih satu Q-table dengan jumlah episode yang dapat ditentukan."""
+    total_episodes = EPISODES if episodes is None else episodes
+    if total_episodes <= 0:
+        raise ValueError("episodes harus lebih dari 0.")
+
     environment = RunningRouteEnvironment(
         start_node, scenario, actions_by_node, node_xy
     )
     rng = np.random.default_rng(seed)
     q_table = defaultdict(dict)
     history_rows = []
-    for episode in range(EPISODES):
+    for episode in range(total_episodes):
         state = environment.reset()
         epsilon = EPSILON_END + (EPSILON_START - EPSILON_END) * (
-            1 - episode / max(1, EPISODES - 1)
+            1 - episode / max(1, total_episodes - 1)
         )
         episode_reward = 0.0
 
@@ -733,7 +742,9 @@ def diagnosis_summary(metrics_df: pd.DataFrame) -> pd.DataFrame:
 # E. GRAFIK DAN PETA INTERAKTIF
 # ============================================================
 
-def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
+def plot_training_charts(
+    history_df: pd.DataFrame, scenario: str, output_dir: Path = RESULT_DIR
+) -> Path:
     mean_history = history_df.groupby("episode", as_index=False).agg(
         success_rate=("is_loop", "mean"),
         mean_reward=("total_reward", "mean"),
@@ -814,8 +825,8 @@ def plot_training_charts(history_df: pd.DataFrame, scenario: str) -> Path:
     for axis in axes.flat:
         axis.grid(alpha=0.25)
     plt.tight_layout()
-    RESULT_DIR.mkdir(parents=True, exist_ok=True)
-    chart_path = RESULT_DIR / f"grafik_training_{scenario}.png"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_path = output_dir / f"grafik_training_{scenario}.png"
     figure.savefig(chart_path, dpi=160, bbox_inches="tight")
     plt.show()
     return chart_path
@@ -839,7 +850,9 @@ TERMINATION_COLORS = {
 }
 
 
-def plot_diagnosis_charts(history_df: pd.DataFrame, scenario: str) -> Path:
+def plot_diagnosis_charts(
+    history_df: pd.DataFrame, scenario: str, output_dir: Path = RESULT_DIR
+) -> Path:
     """Menampilkan diagnosis ringkas dengan rata-rata bergerak per 50 episode."""
     episode_summary = history_df.groupby("episode", as_index=False).agg(
         distance_to_start_at_end_mean_m=(
@@ -935,8 +948,8 @@ def plot_diagnosis_charts(history_df: pd.DataFrame, scenario: str) -> Path:
     for axis in axes.flat:
         axis.grid(alpha=0.25)
     plt.tight_layout()
-    RESULT_DIR.mkdir(parents=True, exist_ok=True)
-    chart_path = RESULT_DIR / f"grafik_diagnosis_{scenario}.png"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_path = output_dir / f"grafik_diagnosis_{scenario}.png"
     figure.savefig(chart_path, dpi=160, bbox_inches="tight")
     plt.show()
     return chart_path
@@ -1099,12 +1112,28 @@ def select_representative_trial(trials: list[dict]) -> tuple[dict, str]:
     return selected, reason
 
 
-def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
-    """Menjalankan satu scenario A-C dengan core yang sama."""
+def run_scenario_experiment(
+    graph,
+    start_node: int,
+    scenario: str,
+    episodes: int | None = None,
+    result_subdir: str | None = None,
+) -> dict:
+    """Menjalankan satu scenario A-C dengan core yang sama.
+
+    ``episodes`` dipakai untuk eksperimen sensitivitas jumlah episode tanpa
+    mengubah konfigurasi default global. ``result_subdir`` menyimpan artefak
+    tiap eksperimen pada folder terpisah agar CSV, grafik, dan peta tidak
+    menimpa hasil konfigurasi lain.
+    """
     if scenario not in {"A", "B", "C"}:
         raise ValueError("Scenario harus A, B, atau C.")
+    total_episodes = EPISODES if episodes is None else episodes
+    if total_episodes <= 0:
+        raise ValueError("episodes harus lebih dari 0.")
 
-    RESULT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir = RESULT_DIR / result_subdir if result_subdir else RESULT_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
     add_comfort_scores(graph)
     actions_by_node = build_actions(graph)
     node_xy = {
@@ -1113,11 +1142,15 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     }
 
     histories, evaluation_rows, trials = [], [], []
-    print(f"Menjalankan Scenario {scenario}: {len(SEEDS)} seed x {EPISODES:,} episode")
+    print(
+        f"Menjalankan Scenario {scenario}: {len(SEEDS)} seed x "
+        f"{total_episodes:,} episode"
+    )
 
     for seed in SEEDS:
         q_table, history = train_q_learning(
-            scenario, seed, start_node, actions_by_node, node_xy
+            scenario, seed, start_node, actions_by_node, node_xy,
+            episodes=total_episodes,
         )
         environment, metrics = evaluate_greedy(
             scenario, q_table, seed, start_node, actions_by_node, node_xy
@@ -1126,6 +1159,9 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
             "scenario": scenario,
             "seed": seed,
             "q_state_count": len(q_table),
+            # Nama kolom ringkas untuk tabel evaluasi utama. Nilainya berasal
+            # dari evaluasi greedy yang sudah dijalankan di atas.
+            "closing_action_available": metrics["closing_action_was_available"],
         })
         histories.append(history)
         evaluation_rows.append(metrics)
@@ -1149,11 +1185,11 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     training_termination_df = termination_rate_table(history_df)
     evaluation_termination_df = termination_rate_table(metrics_df)
 
-    history_path = RESULT_DIR / f"training_history_{scenario}.csv"
-    metrics_path = RESULT_DIR / f"evaluation_metrics_{scenario}.csv"
-    diagnosis_path = RESULT_DIR / f"diagnosis_metrics_{scenario}.csv"
-    training_termination_path = RESULT_DIR / f"termination_rates_training_{scenario}.csv"
-    evaluation_termination_path = RESULT_DIR / f"termination_rates_evaluation_{scenario}.csv"
+    history_path = output_dir / f"training_history_{scenario}.csv"
+    metrics_path = output_dir / f"evaluation_metrics_{scenario}.csv"
+    diagnosis_path = output_dir / f"diagnosis_metrics_{scenario}.csv"
+    training_termination_path = output_dir / f"termination_rates_training_{scenario}.csv"
+    evaluation_termination_path = output_dir / f"termination_rates_evaluation_{scenario}.csv"
     history_df.to_csv(history_path, index=False)
     evaluation_df.to_csv(metrics_path, index=False)
     diagnosis_df.to_csv(diagnosis_path, index=False)
@@ -1170,8 +1206,8 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
         .T
     )
 
-    chart_path = plot_training_charts(history_df, scenario)
-    diagnosis_chart_path = plot_diagnosis_charts(history_df, scenario)
+    chart_path = plot_training_charts(history_df, scenario, output_dir)
+    diagnosis_chart_path = plot_diagnosis_charts(history_df, scenario, output_dir)
 
     representative, representative_reason = select_representative_trial(trials)
     selected_metrics = representative["metrics"]
@@ -1189,7 +1225,7 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
     )
     print(f"Alasan: {representative_reason}")
     route_map = make_route_map(graph, representative, scenario, node_xy)
-    map_path = RESULT_DIR / f"peta_interaktif_scenario_{scenario}.html"
+    map_path = output_dir / f"peta_interaktif_scenario_{scenario}.html"
     route_map.save(map_path)
     display(route_map)
 
@@ -1204,6 +1240,7 @@ def run_scenario_experiment(graph, start_node: int, scenario: str) -> dict:
 
     return {
         "scenario": scenario,
+        "episodes": total_episodes,
         "history": history_df,
         "metrics": evaluation_df,
         "evaluation_details": metrics_df,

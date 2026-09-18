@@ -18,9 +18,10 @@ Tujuan agen bukan hanya mencapai jarak. Agen juga diarahkan memilih edge dengan 
 Status hasil yang tersimpan sekarang:
 
 - Scenario state A, B, dan C adalah eksperimen final. Ketiganya memakai action, reward, action mask, dan aturan revisit yang sama; hanya representasi state yang berbeda.
-- Scenario C telah menghasilkan satu loop valid dari lima evaluasi greedy pada konfigurasi saat ini.
+- Hasil evaluasi terbaru harus selalu dibaca dari CSV setelah notebook dijalankan ulang. Evaluasi yang dipakai untuk pelaporan adalah evaluasi greedy, bukan episode training yang masih mengandung eksplorasi.
 - State C adalah kandidat utama karena menambahkan konteks arah kedatangan melalui `previous_node`.
 - Terminasi paling sering masih `no_available_action` dan `over_distance`; hasil perlu dibaca bersama closing action available rate.
+- Eksperimen sensitivitas episode sedang berjalan. Hasil Scenario B pada lima seed belum stabil; 40.000 episode menghasilkan 1 loop valid, sedangkan 50.000 episode belum menghasilkan loop valid. Karena itu belum boleh disimpulkan bahwa episode lebih banyak selalu lebih baik.
 
 ## 2. Struktur Proyek dan Urutan Eksekusi
 
@@ -332,29 +333,54 @@ Contoh: pada jarak rute 1.800 m, agen melewati edge dengan reward comfort `+0,25
 
 Nilai reward dapat dituning, tetapi setiap perubahan reward harus dievaluasi ulang pada seluruh A–C dengan seed sama.
 
+### 7.1.1 Dasar skala SUCCESS_BONUS = +80
+
+Nilai `+80` bukan nilai standar Q-Learning dan bukan berasal dari data OSM. Nilai ini adalah parameter desain yang ditetapkan dari skala reward lain agar keberhasilan loop menjadi tujuan utama, tetapi reward comfort dan arah pulang masih membedakan kualitas dua loop yang sama-sama valid.
+
+Estimasi reward comfort untuk rute 5 km dengan comfort rata-rata data sekitar `0,68` adalah:
+
+    (0,68 - 0,50) x 5.000 / 100 = +9
+
+Pada fase pulang, jarak lurus yang dapat berkurang secara bersih secara logis tidak melebihi sekitar 2.500 m, yaitu panjang rute ketika fase pulang dimulai. Estimasi reward arah pulang maksimumnya:
+
+    0,40 x 2.500 / 100 = +10
+
+Maka perkiraan total reward pembentuk perilaku (*shaping reward*) pada rute baik adalah `+9 + +10 = +19`. Bonus sukses dibandingkan nilai tersebut:
+
+    80 / 19 = 4,2
+
+Artinya bonus sukses sekitar 4,2 kali lebih besar daripada reward comfort dan arah pulang yang diharapkan. Namun komponen shaping masih sekitar `19 / (80 + 19) = 19,2%` dari reward rute sukses, sehingga comfort dan arah pulang tetap berpengaruh untuk membedakan loop valid.
+
+| Kondisi akhir dengan perkiraan shaping +19 | Perhitungan | Total perkiraan |
+|---|---:|---:|
+| Loop valid | `+19 + 80` | `+99` |
+| Melebihi 5,5 km | `+19 - 50` | `-31` |
+| Tidak ada action legal | `+19 - 45` | `-26` |
+
+Perbedaan komponen terminal antara sukses dan `over_distance` adalah `+80 - (-50) = 130`. Karena itu loop valid diberi sinyal jauh lebih kuat daripada kegagalan terminal. Bonus `+10` terlalu dekat dengan shaping `+19`, sedangkan `+500` membuat pengaruh shaping hanya sekitar 3,7%; oleh sebab itu `+80` dipakai sebagai kompromi skala. Nilai ini tetap dapat diuji melalui eksperimen sensitivitas, tetapi setiap perubahan harus dijalankan ulang pada seluruh Scenario A--C.
+
 ### 7.2 Epsilon-greedy
 
 **choose_action()** memilih action legal secara acak dengan peluang epsilon; selain itu ia memilih Q-value terbesar. Bila nilai Q terbaik seri, salah satu action terbaik dipilih secara acak.
 
-Schedule epsilon:
+Nilai epsilon per episode dihitung dengan:
 
-    epsilon = 0,05 + (1,00 − 0,05) × (1 − episode ÷ 2.499)
+    epsilon = 0,05 + (1,00 − 0,05) × (1 − episode ÷ (N − 1))
 
-Epsilon turun linear dari 1,00 ke 0,05 selama 2.500 episode. Evaluasi greedy memakai epsilon 0 agar policy yang diuji tidak mengandung eksplorasi acak.
+`N` adalah jumlah episode pada satu eksperimen. Epsilon turun linear dari 1,00 ke 0,05 selama jumlah episode yang dipakai pada satu eksperimen. Evaluasi greedy memakai epsilon 0 agar policy yang diuji tidak mengandung eksplorasi acak.
 
 Satu nilai epsilon dipakai untuk seluruh action di dalam satu episode. Artinya pada episode awal agen sangat sering mengeksplorasi action legal secara acak; seiring episode bertambah, agen makin sering memakai Q-value terbaik yang sudah dipelajari.
 
-Simulasi schedule epsilon saat `EPISODES=2.500`:
+Simulasi nilai epsilon pada eksperimen `EPISODES=40.000`:
 
 | Episode (dimulai dari 0) | Epsilon kira-kira | Makna |
 |---:|---:|---|
 | 0 | 1,000 | Hampir setiap pemilihan action bersifat acak. |
-| 500 | 0,810 | Sekitar 81% peluang eksplorasi, 19% memilih Q-value terbaik. |
-| 1.250 | 0,525 | Eksplorasi dan pemanfaatan policy relatif seimbang. |
-| 2.000 | 0,240 | Agen lebih sering mengikuti Q-value terbaik. |
-| 2.499 | 0,050 | Hanya sekitar 5% peluang action acak. |
+| 10.000 | 0,762 | Eksplorasi masih dominan, tetapi Q-value mulai lebih sering dipakai. |
+| 20.000 | 0,525 | Eksplorasi dan eksploitasi seimbang secara kasar. |
+| 39.999 | 0,050 | Hanya sekitar 5% peluang action acak. |
 
-Contoh pada episode 2.000: apabila ada tiga action legal, agen memiliki sekitar 24% peluang memilih salah satu action secara acak dan sekitar 76% peluang memilih action dengan Q-value tertinggi. Saat evaluasi greedy, epsilon dipaksa menjadi 0 sehingga agen selalu memilih action legal dengan Q-value tertinggi; hasil evaluasi tidak dipengaruhi eksplorasi acak.
+Pada akhir training, apabila ada tiga action legal, agen masih memiliki sekitar 5% peluang memilih salah satu action secara acak. Saat evaluasi greedy, epsilon dipaksa menjadi 0 sehingga agen selalu memilih action legal dengan Q-value tertinggi; hasil evaluasi tidak dipengaruhi eksplorasi acak.
 
 ### 7.3 Rumus update
 
@@ -363,7 +389,7 @@ Contoh pada episode 2.000: apabila ada tiga action legal, agen memiliki sekitar 
 
 Nilai masa depan hanya dicari dari action legal pada state berikutnya. Jika episode selesai atau tidak ada action legal, nilai masa depan adalah 0.
 
-## 8. Konfigurasi Training dan Enam Grafik
+## 8. Konfigurasi Training dan Grafik
 
 | Parameter | Nilai | Makna |
 |---|---:|---|
@@ -371,12 +397,34 @@ Nilai masa depan hanya dicari dari action legal pada state berikutnya. Jika epis
 | GAMMA | 0,95 | Bobot reward masa depan. |
 | EPSILON_START | 1,00 | Eksplorasi awal. |
 | EPSILON_END | 0,05 | Eksplorasi akhir. |
-| EPISODES | 2.500 | Episode per seed per scenario. |
+| EPISODES | 10.000 | Default cepat untuk satu kali uji notebook. Eksperimen perbandingan mengirim nilai eksplisit 10.000--50.000. |
 | MAX_STEPS_PER_EPISODE | 220 | Batas langkah per episode. |
 | SEEDS | (0, 1, 2, 3, 4) | Lima seed eksperimen. |
 | ROLLING_WINDOW | 50 | Ukuran rata-rata bergerak untuk menghaluskan tren grafik. |
 
-Setiap scenario melatih lima Q-table, satu untuk setiap seed. Training history digabung, tetapi evaluasi greedy tetap dicatat per seed.
+Setiap scenario melatih lima Q-table, satu untuk setiap seed. Untuk grafik training, nilai lima seed pada episode yang sama dirata-ratakan terlebih dahulu, kemudian dihaluskan dengan rata-rata bergerak 50 episode. Evaluasi greedy tetap dicatat per seed.
+
+### 8.1 Eksperimen sensitivitas jumlah episode
+
+Setiap notebook `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` memiliki cell terpisah untuk melatih scenario-nya dengan **10.000, 20.000, 30.000, 40.000, dan 50.000 episode**. Tujuannya adalah menguji apakah perbedaan jumlah episode memengaruhi kualitas policy, bukan sekadar membandingkan bentuk grafik training.
+
+Setiap jumlah episode menjalankan lima seed baru dari awal, dengan konfigurasi graf, reward, action mask, state scenario terkait, dan evaluasi greedy yang sama. Jadi hasil 20.000 episode **bukan** kelanjutan hasil 10.000 episode. Artefaknya disimpan dalam subfolder `hasil_bab_4/training_qlearning_5km/sensitivitas_episode_<jumlah>_<scenario>` agar tidak menimpa hasil utama.
+
+Ringkasan notebook membandingkan empat indikator dari lima evaluasi greedy: `success_rate_greedy`, rata-rata galat jarak, `return_progress_ratio`, dan `closing_action_available_rate`. Jika hasil membaik secara konsisten ketika episode bertambah, dapat disimpulkan bahwa training sebelumnya belum cukup. Sebaliknya, jika metrik telah mendatar, tambahan episode tidak lagi memberi manfaat yang berarti pada konfigurasi tersebut. Untuk perbandingan state A--C yang final, gunakan jumlah episode **yang sama** untuk seluruh scenario; jangan membandingkan A pada 10.000 episode dengan C pada 50.000 episode.
+
+### 8.2 Hasil sementara sensitivitas Scenario B
+
+Hasil berikut berasal dari evaluasi greedy lima seed untuk setiap jumlah episode. Ini adalah catatan eksperimen sementara, bukan hasil final BAB IV.
+
+| Episode | Success rate | Galat jarak rata-rata (m) | Reward rata-rata | Comfort rata-rata | Return progress ratio | Closing action rate |
+|---:|---:|---:|---:|---:|---:|---:|
+| 10.000 | 0,00 | 539,18 | -85,53 | 0,754 | 0,556 | 0,00 |
+| 20.000 | 0,00 | 544,32 | -63,99 | 0,768 | 0,489 | 0,00 |
+| 30.000 | 0,00 | 415,38 | -101,51 | 0,761 | 0,496 | 0,00 |
+| 40.000 | 0,20 | 299,68 | -56,28 | 0,763 | 0,554 | 0,20 |
+| 50.000 | 0,00 | 499,36 | -84,11 | 0,761 | 0,316 | 0,00 |
+
+Pada data ini, 40.000 episode merupakan kandidat terbaik sementara: satu dari lima seed membentuk loop valid, galat jarak paling kecil, dan satu seed memiliki closing action legal. Namun, hasil 50.000 episode turun kembali. Dengan lima seed, satu keberhasilan mengubah rate sebesar 20%, sehingga pola tersebut belum cukup untuk klaim stabil atau untuk menyatakan 50.000 episode lebih buruk secara umum. Comfort relatif stabil; hambatan utama adalah agen jarang mencapai kondisi yang menyediakan closing action.
 
 | Grafik | Arti |
 |---|---|
@@ -387,11 +435,21 @@ Setiap scenario melatih lima Q-table, satu untuk setiap seed. Training history d
 | Jumlah State Q-table | Jumlah state unik yang memiliki entry Q-table. |
 | Nilai Epsilon per Episode | Nilai peluang eksplorasi yang ditetapkan dari 1,00 ke 0,05 per episode; bukan rata-rata hasil episode. |
 
+### 8.1 Cara membaca reward training
+
+Grafik reward training adalah akumulasi seluruh reward comfort, reward/penalti arah pulang, penalti revisit, dan reward terminal dalam episode yang dijalankan dengan kebijakan epsilon-greedy. Karena itu reward tidak wajib selalu naik seiring episode.
+
+Sebagai contoh, episode yang buntu cepat dapat menerima `no_available_action = -45`. Episode lain dapat berjalan lebih jauh, menerima beberapa penalti revisit, lalu berakhir `over_distance = -50`; totalnya dapat lebih rendah, misalnya `-80` atau `-90`. Jadi penurunan reward dapat berarti agen makin sering mengambil rute gagal yang lebih panjang dan lebih mahal, bukan semata-mata kualitas model pasti memburuk.
+
+Reward harus dibaca bersama grafik keberhasilan loop, rata-rata jarak, peluang closing action tersedia, serta termination rate. Bila reward menurun tetapi keberhasilan loop dan closing action meningkat, perlu dilihat trade-off-nya. Bila reward menurun sementara success tetap rendah dan `over_distance`/`no_available_action` tinggi, policy belum menemukan pola loop yang baik.
+
 ## 9. Evaluasi, Peta, dan Berkas Hasil
 
 ### 9.1 Evaluasi greedy
 
 Fungsi **evaluate_greedy()** memakai epsilon 0. Tabel evaluasi utama sengaja dibatasi agar perbandingan Scenario A--C tetap fokus. Setiap baris mewakili satu seed dan hanya memuat metrik berikut.
+
+Setelah training selesai untuk **setiap seed**, Q-table seed tersebut langsung diuji satu kali oleh `evaluate_greedy()`. Dengan lima seed `(0, 1, 2, 3, 4)`, eksperimen selalu menghasilkan lima evaluasi greedy: satu policy hasil training untuk setiap seed. Pada evaluasi ini `epsilon = 0`, sehingga tidak ada pemilihan action untuk eksplorasi acak; agen memilih action legal dengan nilai Q terbesar. `EPSILON_END = 0,05` hanya digunakan selama training. Bila dua atau lebih action memiliki nilai Q sama, pemilihan tie dilakukan dengan generator acak yang diberi seed tetap (`seed + 100000`) agar hasil evaluasi tetap dapat direproduksi.
 
 | Metrik | Arti |
 |---|---|
@@ -404,7 +462,7 @@ Fungsi **evaluate_greedy()** memakai epsilon 0. Tabel evaluasi utama sengaja dib
 | return_progress_ratio | Proporsi langkah setelah 2.500 m yang mengurangi jarak lurus ke start. Nilai mendekati 1 berarti arah pulang lebih konsisten. |
 | termination_reason | Alasan terminal setiap seed: success, over_distance, no_available_action, early_return, atau step_limit. |
 
-`closing_action_available_rate` dan rate semua tipe terminasi adalah **diagnosis training**, bukan metrik pembanding utama. Metrik tersebut tetap ditampilkan dalam grafik diagnosis untuk menjelaskan mengapa suatu scenario berhasil atau gagal, tetapi tidak dimasukkan ke tabel evaluasi per seed maupun berkas `evaluation_metrics_{scenario}.csv`.
+Tabel evaluasi utama dan berkas `evaluation_metrics_{scenario}.csv` kini langsung menampilkan `closing_action_available` per seed. Nilai tersebut bersumber dari flag internal `closing_action_was_available`; bernilai True bila selama evaluasi tersedia edge legal langsung ke start dengan proyeksi total jarak 4.500–5.500 m. Nilai True berarti kesempatan menutup loop pernah ada, bukan bahwa edge itu pasti dipilih. Sementara itu, `closing_action_available_rate` serta rate semua tipe terminasi adalah **diagnosis training** yang tetap ditampilkan pada grafik diagnosis.
 
 ### 9.1.1 Rumus termination rate
 
@@ -416,7 +474,7 @@ Contoh: bila 3.750 dari 12.500 episode training berakhir karena `over_distance`,
 
 ### 9.1.2 Grafik yang ditampilkan notebook scenario
 
-Notebook menampilkan tabel evaluasi greedy dalam format vertikal agar setiap metrik utama mudah dibandingkan antar-seed. Berkas `evaluation_metrics_{scenario}.csv` memakai kolom yang sama dengan tabel tersebut. Selain tabel evaluasi, notebook menampilkan dua gambar berikut.
+Workflow `run_scenario_experiment()` telah menjalankan `evaluate_greedy()` untuk setiap Q-table. Hasilnya langsung dimasukkan ke tabel evaluasi utama, termasuk `closing_action_available`; tidak diperlukan cell evaluasi tambahan. Selain tabel evaluasi, notebook menampilkan dua gambar berikut.
 
 1. **Grafik training utama**: keberhasilan loop, reward, jarak, mean comfort, jumlah state Q-table, dan epsilon. Semuanya selain epsilon memakai rata-rata bergerak 50 episode.
 2. **Grafik diagnosis training**: rata-rata jarak akhir ke start, return progress ratio, closing action available rate, dan lima termination rate. Seluruh panel memakai rata-rata bergerak 50 episode dari lima seed; termination rate ditempatkan pada panel yang sama, bukan sebagai gambar tersendiri.
@@ -453,15 +511,11 @@ Notebook mencetak scenario, seed, nilai seluruh metrik utama, dan alasan pemilih
 
 Jika rute valid loop, marker finish digeser sedikit untuk tampilan agar tidak menumpuk marker start. Posisi logis finish tetap sama dengan start. Peta representatif bukan rata-rata lima seed; peta hanya alat inspeksi rute terbaik menurut aturan prioritas.
 
-### 9.4 Hasil sekarang
+### 9.4 Status dan pembaruan hasil
 
-| State | Loop rate | Jarak rata-rata | Galat absolut rata-rata | Comfort rata-rata | Revisit rata-rata |
-|---|---:|---:|---:|---:|---:|
-| A | 0,00 | 3,769 km | 1.440,42 m | 0,707 | 4,20 |
-| B | 0,00 | 4,657 km | 718,51 m | 0,726 | 5,80 |
-| C | 0,20 | 5,122 km | 341,00 m | 0,717 | 4,60 |
+Angka hasil eksperimen tidak ditulis permanen di wiki ini karena CSV dapat berubah setiap kali konfigurasi reward, action mask, atau jumlah episode diubah. Gunakan `evaluation_metrics_A.csv`, `evaluation_metrics_B.csv`, dan `evaluation_metrics_C.csv` yang dihasilkan dari **satu konfigurasi yang sama** sebagai sumber tabel BAB IV. Untuk eksperimen sensitivitas episode, gunakan CSV pada subfolder `sensitivitas_episode_<jumlah>_<scenario>` dan jangan mencampurkannya dengan hasil konfigurasi utama.
 
-Tabel hasil harus diperbarui setiap kali konfigurasi berubah. Pada konfigurasi saat ini, C menghasilkan satu loop valid dari lima evaluasi greedy; hasil tersebut masih awal dan perlu diuji ulang dengan seed yang sama bila parameter kembali diubah.
+Sebelum membuat tabel perbandingan A--C, pastikan ketiga scenario sudah dijalankan ulang dengan konfigurasi final dan lima seed yang sama. Ringkasan BAB IV hanya memakai `is_loop`, `total_distance_m`, `absolute_distance_error_m`, `total_reward`, `mean_comfort`, `return_progress_ratio`, `distance_to_start_at_end_m`, `closing_action_available`, dan `termination_reason`; `revisit_count` tidak dipakai sebagai metrik evaluasi utama.
 
 ## 10. Aturan Modifikasi dan Konteks untuk AI
 
@@ -475,4 +529,4 @@ Saat membuat perubahan:
 6. Jangan mengklaim sistem berhasil sebelum is_loop True muncul secara konsisten pada evaluasi greedy.
 7. Jangan mengklaim comfort score sebagai pengalaman pelari yang tervalidasi tanpa validasi lapangan atau survei.
 
-Ringkasan singkat: proyek menggunakan Q-Learning tabular dari scratch pada graf jalan kaki OSMnx MultiDiGraph terproyeksi meter. Target adalah loop 5 km plus toleransi 10%. Action adalah edge spesifik (next_node, key). State final yang diuji A sampai C berbeda pada informasi posisi, progres, dan arah kedatangan. Revisit tersedia mulai 50% target dengan maksimum dua kunjungan node; fase ini sama dengan awal reward arah pulang. Semua aturan bersama berada di rute_lari_core.py; analisis berada di analisa.ipynb; eksperimen dipisahkan pada scenario_A.ipynb sampai scenario_C.ipynb. Konfigurasi saat ini telah menghasilkan loop valid pada salah satu evaluasi greedy C.
+Ringkasan singkat: proyek menggunakan Q-Learning tabular dari scratch pada graf jalan kaki OSMnx MultiDiGraph terproyeksi meter. Target adalah loop 5 km plus toleransi 10%. Action adalah edge spesifik (next_node, key). State final yang diuji A sampai C berbeda pada informasi posisi, progres, dan arah kedatangan. Revisit tersedia mulai 50% target dengan maksimum dua kunjungan node; fase ini sama dengan awal reward arah pulang. Semua aturan bersama berada di rute_lari_core.py; analisis berada di analisa.ipynb; eksperimen dipisahkan pada scenario_A.ipynb sampai scenario_C.ipynb. Hasil yang dilaporkan selalu berasal dari evaluasi greedy per seed.
