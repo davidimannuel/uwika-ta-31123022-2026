@@ -1,0 +1,25 @@
+PPT presentasi untuk proposal cukup:
+1. Judul
+2. Latarbelakang
+3. Permasalahan
+4. Rumusan masalah, tujuan, dan manfaat
+5. Metodologi penelitian
+6. Time Line (Septmeber - November ?)
+7. Penutup
+
+
+
+16 september 2026
+fokus uji scenario C sebagai sample optimasi training
+loop sudah OK tapi masih muncul beberapa masalah
+1. melewatkan jalan berbahaya bagi pelari (mendekat tol mayjend) (prioritas)
+2. agent cenderung memilih rute yang bersebarang dari pada yang linear searah karena comford reward yang leih tinggi
+
+18 september
+coba episode training lebih variatif karena 2500 episode hanya berhasil is_loop true di scenario C dan itu pun 1 banding 5:
+coba di 40000 episode
+- skenario C = berhasil dapat 2 is_loop = true, ada peningkatan reward di episode terakhir
+- skenario B = semelumnya tidak dapat is_loop = true, jadi berhasil dapat, ada peningkatan reward di episode terakhir
+- skenario C = masih acak, dan reward masih menurun
+apakah ada korelasi state dan korelasi training ?
+lebih valuable kombinasi state nya maka lebih sedikit waktu training nya agar mendapat hasil yang diinginkan
