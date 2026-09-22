@@ -62,7 +62,7 @@ GAMMA = 0.95
 EPSILON_START = 1.00
 EPSILON_END = 0.05
 # Default ringan untuk percobaan cepat di notebook. Eksperimen sensitivitas
-# selalu mengirim jumlah episode secara eksplisit (10k sampai 50k).
+# selalu mengirim jumlah episode secara eksplisit.
 EPISODES = 10_000
 MAX_STEPS_PER_EPISODE = 220
 SEEDS = (0, 1, 2, 3, 4)
@@ -540,6 +540,30 @@ def choose_action(q_table, state: tuple, actions: list[EdgeAction], rng, epsilon
     return actions[int(rng.choice(best_indices))]
 
 
+def epsilon_for_episode(
+    episode: int,
+    total_episodes: int,
+    epsilon_decay_episodes: int | None = None,
+) -> float:
+    """Menghasilkan epsilon untuk satu episode training.
+
+    Bila ``epsilon_decay_episodes`` bernilai None, jadwal lama dipertahankan:
+    epsilon turun selama seluruh total episode eksperimen. Bila diisi, epsilon
+    hanya turun selama jumlah episode tersebut dan kemudian tetap di
+    EPSILON_END. Opsi ini memisahkan lama training dari lama eksplorasi.
+    """
+    decay_episodes = (
+        total_episodes if epsilon_decay_episodes is None else epsilon_decay_episodes
+    )
+    if decay_episodes <= 0:
+        raise ValueError("epsilon_decay_episodes harus lebih dari 0.")
+
+    # progress dibatasi 1 agar epsilon tidak turun melewati EPSILON_END setelah
+    # fase decay selesai pada eksperimen dengan training yang lebih panjang.
+    progress = min(episode / max(1, decay_episodes - 1), 1.0)
+    return EPSILON_END + (EPSILON_START - EPSILON_END) * (1 - progress)
+
+
 def route_metrics(environment: RunningRouteEnvironment, total_reward: float) -> dict:
     edge_length = sum(action.length_m for _, action in environment.path_actions)
     mean_comfort = (
@@ -597,8 +621,9 @@ def train_q_learning(
     actions_by_node: dict[int, list[EdgeAction]],
     node_xy: dict[int, tuple[float, float]],
     episodes: int | None = None,
+    epsilon_decay_episodes: int | None = None,
 ):
-    """Melatih satu Q-table dengan jumlah episode yang dapat ditentukan."""
+    """Melatih satu Q-table dengan durasi dan jadwal epsilon opsional."""
     total_episodes = EPISODES if episodes is None else episodes
     if total_episodes <= 0:
         raise ValueError("episodes harus lebih dari 0.")
@@ -611,10 +636,14 @@ def train_q_learning(
     history_rows = []
     for episode in range(total_episodes):
         state = environment.reset()
-        epsilon = EPSILON_END + (EPSILON_START - EPSILON_END) * (
-            1 - episode / max(1, total_episodes - 1)
+        epsilon = epsilon_for_episode(
+            episode, total_episodes, epsilon_decay_episodes
         )
         episode_reward = 0.0
+        # Menyimpan besar TD-error pada setiap update Q di episode ini.
+        # Nilai ini dipakai sebagai diagnosis: apakah nilai Q masih berubah
+        # besar atau mulai menetap. Ini bukan metrik keberhasilan rute.
+        td_error_values = []
 
         for _ in range(MAX_STEPS_PER_EPISODE):
             actions = environment.available_actions()
@@ -644,9 +673,12 @@ def train_q_learning(
                     default=0.0,
                 )
                 old_value = q_table[state].get(action.get_action_id(), 0.0)
-                q_table[state][action.get_action_id()] = old_value + ALPHA * (
-                    reward + GAMMA * future_value - old_value
-                )
+                # TD-error adalah selisih antara target nilai Q dengan nilai
+                # Q lama. Target terdiri dari reward saat ini dan nilai terbaik
+                # yang masih mungkin diperoleh pada state berikutnya.
+                td_error = reward + GAMMA * future_value - old_value
+                q_table[state][action.get_action_id()] = old_value + ALPHA * td_error
+                td_error_values.append(abs(td_error))
 
             state = next_state
             if done:
@@ -664,6 +696,11 @@ def train_q_learning(
             "episode": episode + 1,
             "epsilon": epsilon,
             "q_state_count": len(q_table),
+            # Episode yang tidak melakukan update Q (misalnya langsung buntu)
+            # diberi NaN agar tidak dianggap memiliki TD-error nol.
+            "mean_abs_td_error": (
+                float(np.mean(td_error_values)) if td_error_values else np.nan
+            ),
         })
         history_rows.append(metrics)
 
@@ -860,6 +897,7 @@ def plot_diagnosis_charts(
         ),
         return_progress_ratio_mean=("return_progress_ratio", "mean"),
         closing_action_available_rate=("closing_action_was_available", "mean"),
+        mean_abs_td_error=("mean_abs_td_error", "mean"),
     )
     rolling = (
         episode_summary.set_index("episode")
@@ -868,50 +906,69 @@ def plot_diagnosis_charts(
         .reset_index()
     )
 
-    figure, axes = plt.subplots(2, 2, figsize=(14, 10))
+    # Lima diagnosis memakai tata letak vertikal. Termination rate dibuat
+    # selebar dua kolom karena memuat lima garis sekaligus.
+    figure = plt.figure(figsize=(14, 14))
+    grid = figure.add_gridspec(3, 2)
+    distance_axis = figure.add_subplot(grid[0, 0])
+    return_axis = figure.add_subplot(grid[0, 1])
+    closing_axis = figure.add_subplot(grid[1, 0])
+    td_error_axis = figure.add_subplot(grid[1, 1])
+    termination_axis = figure.add_subplot(grid[2, :])
     figure.suptitle(
         f"Diagnosis Training Scenario {scenario} - rata-rata {ROLLING_WINDOW} episode",
         fontsize=14,
         fontweight="bold",
     )
 
-    axes[0, 0].plot(
+    distance_axis.plot(
         rolling["episode"],
         rolling["distance_to_start_at_end_mean_m"],
         color="#0F766E",
     )
-    axes[0, 0].set(
+    distance_axis.set(
         title=f"Rata-rata Jarak Akhir ke Start {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Meter",
     )
 
-    axes[0, 1].plot(
+    return_axis.plot(
         rolling["episode"],
         rolling["return_progress_ratio_mean"],
         color="#2563EB",
     )
-    axes[0, 1].set(
+    return_axis.set(
         title="Konsistensi Bergerak Mendekati Start",
         xlabel="Episode",
         ylabel="Proporsi langkah",
         ylim=(-0.02, 1.02),
     )
 
-    axes[1, 0].plot(
+    closing_axis.plot(
         rolling["episode"],
         rolling["closing_action_available_rate"] * 100,
         color="#16A34A",
     )
-    axes[1, 0].set(
+    closing_axis.set(
         title="Peluang Closing Action Tersedia",
         xlabel="Episode",
         ylabel="Rate (%)",
         ylim=(-1, 101),
     )
 
-    # Semua tipe terminasi digabung ke panel diagnosis terakhir agar tidak
-    # memerlukan gambar termination rate terpisah.
+    td_error_axis.plot(
+        rolling["episode"],
+        rolling["mean_abs_td_error"],
+        color="#9333EA",
+    )
+    td_error_axis.set(
+        title=f"Rata-rata Nilai Absolut TD-error {ROLLING_WINDOW} Episode Terakhir",
+        xlabel="Episode",
+        ylabel="TD-error",
+    )
+
+    # Semua tipe terminasi digabung ke panel terakhir agar tidak memerlukan
+    # gambar termination rate terpisah.
     episode_rates = pd.DataFrame({"episode": sorted(history_df["episode"].unique())})
     for reason in TERMINATION_REASONS:
         rate_by_episode = (
@@ -930,22 +987,28 @@ def plot_diagnosis_charts(
         .reset_index()
     )
     for reason in TERMINATION_REASONS:
-        axes[1, 1].plot(
+        termination_axis.plot(
             rolling_rates["episode"],
             rolling_rates[reason] * 100,
             label=TERMINATION_LABELS[reason],
             color=TERMINATION_COLORS[reason],
             linewidth=2,
         )
-    axes[1, 1].set(
+    termination_axis.set(
         title=f"Termination Rate {ROLLING_WINDOW} Episode Terakhir",
         xlabel="Episode",
         ylabel="Rate (%)",
         ylim=(-1, 101),
     )
-    axes[1, 1].legend(title="Tipe terminasi", fontsize=8)
+    termination_axis.legend(title="Tipe terminasi", fontsize=8)
 
-    for axis in axes.flat:
+    for axis in (
+        distance_axis,
+        return_axis,
+        closing_axis,
+        td_error_axis,
+        termination_axis,
+    ):
         axis.grid(alpha=0.25)
     plt.tight_layout()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1117,20 +1180,26 @@ def run_scenario_experiment(
     start_node: int,
     scenario: str,
     episodes: int | None = None,
+    epsilon_decay_episodes: int | None = None,
     result_subdir: str | None = None,
 ) -> dict:
     """Menjalankan satu scenario A-C dengan core yang sama.
 
     ``episodes`` dipakai untuk eksperimen sensitivitas jumlah episode tanpa
-    mengubah konfigurasi default global. ``result_subdir`` menyimpan artefak
-    tiap eksperimen pada folder terpisah agar CSV, grafik, dan peta tidak
-    menimpa hasil konfigurasi lain.
+    mengubah konfigurasi default global. Jika ``epsilon_decay_episodes``
+    bernilai None, jadwal epsilon mengikuti total episode seperti implementasi
+    lama. Jika diisi, epsilon turun hanya selama nilai tersebut lalu tetap di
+    EPSILON_END. ``result_subdir`` menyimpan artefak tiap eksperimen pada
+    folder terpisah agar CSV, grafik, dan peta tidak menimpa hasil konfigurasi
+    lain.
     """
     if scenario not in {"A", "B", "C"}:
         raise ValueError("Scenario harus A, B, atau C.")
     total_episodes = EPISODES if episodes is None else episodes
     if total_episodes <= 0:
         raise ValueError("episodes harus lebih dari 0.")
+    if epsilon_decay_episodes is not None and epsilon_decay_episodes <= 0:
+        raise ValueError("epsilon_decay_episodes harus lebih dari 0.")
 
     output_dir = RESULT_DIR / result_subdir if result_subdir else RESULT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1146,11 +1215,19 @@ def run_scenario_experiment(
         f"Menjalankan Scenario {scenario}: {len(SEEDS)} seed x "
         f"{total_episodes:,} episode"
     )
+    if epsilon_decay_episodes is None:
+        print("Jadwal epsilon: dinamis mengikuti total episode eksperimen")
+    else:
+        print(
+            "Jadwal epsilon: turun selama "
+            f"{epsilon_decay_episodes:,} episode, lalu tetap {EPSILON_END:.2f}"
+        )
 
     for seed in SEEDS:
         q_table, history = train_q_learning(
             scenario, seed, start_node, actions_by_node, node_xy,
             episodes=total_episodes,
+            epsilon_decay_episodes=epsilon_decay_episodes,
         )
         environment, metrics = evaluate_greedy(
             scenario, q_table, seed, start_node, actions_by_node, node_xy
@@ -1241,6 +1318,7 @@ def run_scenario_experiment(
     return {
         "scenario": scenario,
         "episodes": total_episodes,
+        "epsilon_decay_episodes": epsilon_decay_episodes,
         "history": history_df,
         "metrics": evaluation_df,
         "evaluation_details": metrics_df,
