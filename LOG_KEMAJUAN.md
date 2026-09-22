@@ -9,8 +9,8 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - State yang aktif dan dibandingkan: A = `(current_node,)`, B = `(current_node, progress_bin)`, C = `(current_node, previous_node, progress_bin)`.
 - Scenario D telah dihapus; revisit bukan bagian state. Revisit tetap merupakan aturan environment yang sama untuk seluruh A--C.
 - Evaluasi utama adalah **greedy** (`epsilon=0`) sekali untuk setiap Q-table/seed. `EPSILON_END=0,05` hanya berlaku saat training.
-- Hasil terbaru epsilon decay tetap 50.000 pada Scenario C: 50k menghasilkan 2/5 loop valid; 100k, 200k, dan 400k masing-masing menghasilkan 5/5 loop valid. Pada 400k, galat jarak rata-rata dan comfort memburuk dibanding 100k/200k walaupun success rate tetap 100%.
-- Scenario B pada epsilon decay tetap: 50k menghasilkan 0/5 loop; 100k, 200k, dan 400k masing-masing menghasilkan 5/5 loop. Pada 100k, B memiliki galat jarak rata-rata 114,43 m dan comfort 0,759; C pada 100k memiliki galat 267,31 m dan comfort 0,699, tetapi return progress dan reward C lebih tinggi. Jangan lagi menyimpulkan bahwa C pasti lebih unggul hanya dari hasil epsilon dinamis lama.
+- Rancangan eksperimen episode yang disepakati tetapi belum dijalankan ulang: (a) epsilon dinamis pada 30k, 40k, 50k, dan 75k; (b) horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k. Keduanya dijalankan pada A, B, C dan lima seed yang sama.
+- Hasil lama hingga 400k disimpan sebagai bukti awal: B dan C pernah mencapai 5/5 loop pada 100k dengan horizon epsilon tetap 50k, sedangkan A tetap 0/5. Hasil itu tidak menjadi angka final sampai rangkaian baru selesai dijalankan.
 
 ## Keputusan implementasi yang penting
 
@@ -28,11 +28,11 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - Jumlah episode default adalah 10.000 untuk percobaan cepat. Nilai eksplisit dipakai pada eksperimen perbandingan.
 - `train_q_learning(..., episodes=..., epsilon_decay_episodes=...)` mendukung jadwal epsilon dinamis maupun tetap.
 - Output eksperimen dapat ditulis ke `result_subdir`, sehingga CSV, grafik, dan peta tidak tertimpa oleh konfigurasi episode lain.
-- `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` tidak lagi memiliki cell training default yang redundan. Masing-masing menyediakan cell 10k, 20k, 30k, 40k, dan 50k episode, plus tabel dan empat grafik ringkasan.
+- `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` tidak lagi memiliki cell training default yang redundan. Masing-masing menyediakan cell epsilon dinamis 30k, 40k, 50k, 75k serta cell horizon epsilon tetap 50k, 75k, 100k, 150k; tiap kelompok memiliki tabel dan empat grafik ringkasan.
 - Setiap cell eksperimen melakukan `importlib.reload(rute_lari_core)` untuk menghindari kernel memakai versi core lama.
-- Masing-masing notebook A--C sekarang memiliki dua kelompok eksperimen: 10k--50k dengan epsilon dinamis, serta 50k, 100k, 200k, dan 400k dengan epsilon decay tetap 50k. Artefak kelompok kedua memakai folder `sensitivitas_epsilon_tetap_50000_episode_<jumlah>_<scenario>`.
+- Masing-masing notebook A--C sekarang memiliki dua kelompok eksperimen: 30k, 40k, 50k, 75k dengan epsilon dinamis, serta 50k, 75k, 100k, 150k dengan horizon epsilon tetap 50k. Artefak kelompok kedua memakai folder `sensitivitas_epsilon_tetap_50000_episode_<jumlah>_<scenario>`.
 
-## Hasil sensitivitas episode yang sudah tersedia: Scenario B
+## Arsip hasil sensitivitas sebelumnya: Scenario B
 
 Semua angka dari evaluasi greedy lima seed:
 
@@ -62,14 +62,13 @@ Sumbu X adalah jumlah episode. Semua grafik memakai agregasi lima evaluasi greed
 
 Tabel juga memuat `mean_total_reward` dan `mean_comfort`. Reward bukan indikator utama karena penalti terminal dapat membuatnya turun; comfort harus dibaca sebagai proxy OSM.
 
-## Langkah berikutnya yang disarankan
+## Langkah berikutnya yang disepakati
 
-1. Scenario B dan C telah menunjukkan 100k sebagai kandidat durasi final: keduanya 5/5 loop valid. B lebih dekat ke target dan memiliki comfort lebih tinggi pada checkpoint ini; C memiliki return progress serta reward lebih tinggi. Pilih prioritas metrik sebelum menentukan state kandidat utama.
-2. Jalankan Scenario A pada **100.000 episode dengan epsilon_decay_episodes=50.000**. Hasil B dan C 100k yang sudah ada dapat menjadi kelompok pembanding jika tidak ada konfigurasi lain yang berubah.
-3. Bandingkan A--C memakai evaluasi greedy dan grafik TD-error; jangan membandingkan hasil epsilon dinamis dengan epsilon tetap sebagai satu rangkaian yang sama.
-4. Tentukan kesimpulan perbandingan state hanya dari satu jumlah episode final yang sama untuk A--C.
-5. Untuk klaim stabil yang lebih kuat, lima seed masih terbatas. Setelah konfigurasi dikunci, evaluasi ulang dengan lebih banyak seed (misalnya 10 atau 20) dan gunakan success rate serta sebaran metrik per seed.
-6. Jika closing action tetap jarang pada scenario lain, catat sebagai masalah yang perlu dibahas dan diuji secara terpisah. Jangan mengubah environment sebelum rancangan eksperimennya disepakati.
+1. Jalankan ulang epsilon dinamis pada 30k, 40k, 50k, dan 75k untuk A, B, dan C. Laporan BAB IV hanya menjadikannya alasan metodologis, bukan pembandingan durasi final.
+2. Jalankan horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k untuk A, B, dan C. Rangkaian ini menjadi basis hasil akhir BAB IV.
+3. Bandingkan A--C dengan jumlah episode sama, evaluasi greedy, serta grafik TD-error. Jangan mencampurkan hasil epsilon dinamis dan horizon tetap sebagai satu rangkaian.
+4. Tentukan state kandidat dari keberhasilan loop terlebih dahulu, lalu galat jarak dan comfort sebagai pembeda. Return progress dan reward dibaca sebagai metrik pendukung.
+5. Lima seed cukup untuk eksperimen saat ini, tetapi pembahasan BAB IV harus menyebutnya sebagai stabilitas empiris pada lima seed, bukan klaim generalisasi.
 
 ## Berkas utama
 

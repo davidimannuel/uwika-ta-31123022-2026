@@ -49,7 +49,7 @@ Keberhasilan tersebut direpresentasikan oleh `is_loop=True`. Comfort score adala
 1. Jangan menduplikasi environment atau Q-Learning di notebook. Ubah aturan bersama hanya di `rute_lari_core.py`.
 2. Jangan mengubah reward, action mask, state, dan hyperparameter sekaligus bila hasil akan dibandingkan. Ubah satu faktor per eksperimen.
 3. Perbandingan A--C yang final wajib memakai jumlah episode, seed, graf, reward, dan action mask yang sama.
-4. Default `EPISODES=10_000` hanya untuk uji cepat. Notebook A--C menyediakan eksperimen eksplisit 10k, 20k, 30k, 40k, dan 50k episode; setiap hasil disimpan pada subfolder sendiri.
+4. Default `EPISODES=10_000` hanya untuk uji cepat. Notebook A--C menyediakan dua rangkaian eksplisit: epsilon dinamis pada 30k, 40k, 50k, dan 75k episode; serta horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k episode. Setiap hasil disimpan pada subfolder sendiri.
 5. Setiap jumlah episode melatih ulang lima seed `(0,1,2,3,4)` dari awal. Hasil 50k bukan kelanjutan hasil 40k.
 6. Jangan mengklaim sistem stabil atau siap digunakan hanya dari satu loop valid atau lima seed. Laporkan keterbatasan secara eksplisit.
 7. Jangan memasukkan metode atau rencana yang belum diimplementasikan ke dokumentasi TA.

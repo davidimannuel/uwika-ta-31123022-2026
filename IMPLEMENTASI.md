@@ -21,7 +21,7 @@ Status hasil yang tersimpan sekarang:
 - Hasil evaluasi terbaru harus selalu dibaca dari CSV setelah notebook dijalankan ulang. Evaluasi yang dipakai untuk pelaporan adalah evaluasi greedy, bukan episode training yang masih mengandung eksplorasi.
 - Pada eksperimen epsilon dinamis awal, State C sempat menjadi kandidat utama karena menambahkan konteks arah kedatangan melalui `previous_node`. Namun, hasil epsilon decay tetap menunjukkan State B juga dapat membentuk loop secara konsisten; perbandingan final harus memakai hasil A--C dengan konfigurasi epsilon tetap yang sama.
 - Terminasi paling sering masih `no_available_action` dan `over_distance`; hasil perlu dibaca bersama closing action available rate.
-- Eksperimen sensitivitas episode sedang berjalan. Hasil Scenario B pada lima seed belum stabil; 40.000 episode menghasilkan 1 loop valid, sedangkan 50.000 episode belum menghasilkan loop valid. Karena itu belum boleh disimpulkan bahwa episode lebih banyak selalu lebih baik.
+- Rancangan sensitivitas episode final belum dijalankan ulang sepenuhnya. Rancangan tersebut memisahkan epsilon dinamis (30k--75k) dan horizon epsilon tetap 50k (50k--150k), masing-masing pada lima seed. Hasil dari rangkaian lama 10k--400k hanya menjadi arsip penelusuran, bukan dasar angka BAB IV final.
 
 ## 2. Struktur Proyek dan Urutan Eksekusi
 
@@ -388,6 +388,16 @@ Simulasi nilai epsilon pada eksperimen `EPISODES=40.000`:
 
 Pada akhir fase decay, apabila ada tiga action legal, agen masih memiliki sekitar 5% peluang memilih salah satu action secara acak. Saat evaluasi greedy, epsilon dipaksa menjadi 0 sehingga agen selalu memilih action legal dengan Q-value tertinggi; hasil evaluasi tidak dipengaruhi eksplorasi acak.
 
+#### Seed dan pengacakan yang dapat diulang
+
+Walaupun Q-Learning memerlukan pilihan acak, hasil eksperimen perlu dapat diuji ulang. Karena itu setiap training membuat generator angka acak NumPy dengan:
+
+    rng = np.random.default_rng(seed)
+
+`seed` adalah angka awal pembentuk urutan pseudoacak, bukan nilai yang menghilangkan pengacakan. Generator ini dipakai ketika `choose_action()` memilih action legal secara acak pada eksplorasi epsilon-greedy dan ketika beberapa action memiliki Q-value terbaik yang sama. Dengan graf, kode, konfigurasi, dan seed yang sama, urutan pilihan acak pada training seharusnya sama sehingga hasil dapat direproduksi.
+
+Eksperimen memakai lima seed, yaitu `(0, 1, 2, 3, 4)`. Seed yang berbeda menghasilkan pola eksplorasi berbeda; sebab itu keberhasilan yang muncul pada seluruh seed lebih meyakinkan daripada keberhasilan pada satu seed saja. Evaluasi greedy menggunakan generator terpisah `np.random.default_rng(seed + 100_000)`. Epsilon evaluasi bernilai 0, tetapi generator tersebut masih diperlukan bila terjadi seri Q-value terbaik; offset `100.000` memisahkan urutan acak evaluasi dari urutan acak training.
+
 ### 7.3 Rumus update
 
     Q(s, a) = Q(s, a)
@@ -423,18 +433,22 @@ TD-error yang semakin kecil dan mendatar menunjukkan bahwa nilai Q pada state-ac
 
 Kolom `steps` juga tetap disimpan pada `training_history_{scenario}.csv` sebagai diagnosis internal. Kolom tersebut tidak ditampilkan sebagai grafik utama karena jumlah langkah dipengaruhi panjang edge dan proses simplifikasi graf. Pada target rute 5 km, langkah lebih sedikit tidak selalu berarti rute lebih baik. Indikator yang relevan bila agen benar-benar terlalu banyak melangkah sudah tersedia melalui terminasi `step_limit`.
 
-### 8.2 Eksperimen sensitivitas jumlah episode
+### 8.2 Rancangan final eksperimen sensitivitas jumlah episode
 
 Setiap notebook `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` memiliki dua kelompok eksperimen episode.
 
-1. **Epsilon dinamis:** 10.000, 20.000, 30.000, 40.000, dan 50.000 episode. Epsilon turun selama seluruh durasi masing-masing eksperimen. Kelompok ini dipertahankan sebagai catatan eksplorasi awal.
-2. **Epsilon decay tetap 50.000:** 50.000, 100.000, 200.000, dan 400.000 episode. Epsilon turun dari 1,00 ke 0,05 hanya selama 50.000 episode pertama, kemudian tetap 0,05. Kelompok ini digunakan untuk menilai dampak tambahan durasi training setelah fase eksplorasi utama selesai.
+1. **Epsilon dinamis:** 30.000, 40.000, 50.000, dan 75.000 episode. Epsilon turun selama seluruh durasi masing-masing eksperimen. Kelompok ini adalah eksperimen pendahuluan untuk menunjukkan bahwa durasi total juga mengubah lama fase eksplorasi; kelompok ini bukan dasar kesimpulan final tentang tambahan episode.
+2. **Horizon epsilon tetap 50.000:** 50.000, 75.000, 100.000, dan 150.000 episode. Epsilon turun dari 1,00 ke 0,05 hanya selama 50.000 episode pertama, kemudian tetap 0,05. Kelompok ini adalah eksperimen utama untuk menilai dampak tambahan durasi training setelah fase eksplorasi utama selesai.
 
-Setiap jumlah episode menjalankan lima seed baru dari awal, dengan konfigurasi graf, reward, penyaringan ruas legal, state scenario terkait, dan evaluasi greedy yang sama. Jadi hasil 200.000 episode **bukan** kelanjutan hasil 100.000 episode. Artefak epsilon dinamis disimpan pada subfolder `sensitivitas_episode_<jumlah>_<scenario>`, sedangkan artefak epsilon tetap disimpan pada `sensitivitas_epsilon_tetap_50000_episode_<jumlah>_<scenario>` agar tidak tercampur.
+Setiap jumlah episode menjalankan lima seed baru dari awal, dengan konfigurasi graf, reward, penyaringan ruas legal, state scenario terkait, dan evaluasi greedy yang sama. Karena seed dan jadwal epsilon sama sampai titik episode yang dibandingkan, hasil pada horizon tetap dapat dibaca sebagai checkpoint kebijakan untuk seed yang sama; namun setiap cell tetap membuat training baru yang mandiri. Artefak epsilon dinamis disimpan pada subfolder `sensitivitas_episode_<jumlah>_<scenario>`, sedangkan artefak horizon tetap disimpan pada `sensitivitas_epsilon_tetap_50000_episode_<jumlah>_<scenario>` agar tidak tercampur.
 
-Ringkasan notebook membandingkan empat indikator dari lima evaluasi greedy: `success_rate_greedy`, rata-rata galat jarak, `return_progress_ratio`, dan `closing_action_available_rate`. Jika hasil membaik secara konsisten ketika episode bertambah, dapat disimpulkan bahwa training sebelumnya belum cukup. Sebaliknya, jika metrik telah mendatar, tambahan episode tidak lagi memberi manfaat yang berarti pada konfigurasi tersebut. Untuk perbandingan state A--C yang final, gunakan jumlah episode **yang sama** untuk seluruh scenario; jangan membandingkan A pada 10.000 episode dengan C pada 50.000 episode.
+Ringkasan notebook membandingkan empat indikator dari lima evaluasi greedy: `success_rate_greedy`, rata-rata galat jarak, `return_progress_ratio`, dan `closing_action_available_rate`. Jika hasil membaik secara konsisten ketika episode bertambah, dapat disimpulkan bahwa training sebelumnya belum cukup. Sebaliknya, jika metrik telah mendatar, tambahan episode tidak lagi memberi manfaat yang berarti pada konfigurasi tersebut. Untuk perbandingan state A--C yang final, gunakan jumlah episode **yang sama** untuk seluruh scenario dan hanya bandingkan hasil dari jadwal epsilon yang sama.
 
-### 8.3 Hasil sementara sensitivitas Scenario B dengan epsilon dinamis
+### 8.3 Arsip hasil sebelum rancangan episode final
+
+Bagian 8.4--8.7 di bawah ini memuat hasil lama pada rentang 10k--400k. Hasil tersebut berguna untuk menjelaskan alasan pemisahan jadwal epsilon, tetapi **tidak boleh dipakai sebagai angka atau kesimpulan final BAB IV**. Setelah rangkaian 30k--75k dan 50k--150k selesai dijalankan ulang, ringkasan hasil terbaru harus menggantikan tabel-tabel ini.
+
+### 8.4 Arsip sensitivitas Scenario B dengan epsilon dinamis
 
 Hasil berikut berasal dari evaluasi greedy lima seed untuk setiap jumlah episode. Ini adalah catatan eksperimen sementara, bukan hasil final BAB IV.
 
@@ -458,7 +472,7 @@ Pada data ini, 40.000 episode merupakan kandidat terbaik sementara: satu dari li
 | Nilai Epsilon per Episode | Nilai peluang eksplorasi yang ditetapkan dari 1,00 ke 0,05 per episode; bukan rata-rata hasil episode. |
 | Rata-rata Nilai Absolut TD-error 50 Episode Terakhir | Rata-rata besarnya selisih target Q dan Q lama pada update yang terjadi. Makin kecil berarti nilai Q yang dikunjungi makin sedikit berubah; bukan jaminan loop berhasil. |
 
-### 8.4 Hasil sementara epsilon decay tetap Scenario C
+### 8.5 Arsip epsilon decay tetap Scenario C
 
 Hasil berikut berasal dari evaluasi greedy lima seed dengan `epsilon_decay_episodes=50.000`. Semua eksperimen dimulai ulang dari seed yang sama; untuk seed yang sama, urutan pengalaman hingga suatu episode adalah sama pada 50k, 100k, 200k, dan 400k karena jadwal epsilon juga sama. Dengan demikian, titik 100k, 200k, dan 400k dapat dibaca sebagai checkpoint kebijakan setelah tambahan training, bukan sebagai eksperimen dengan durasi eksplorasi berbeda.
 
@@ -475,7 +489,7 @@ Namun, 400.000 episode bukan kandidat durasi terbaik hanya karena semua seed tet
 
 Sebagai diagnosis, rata-rata nilai absolut TD-error pada 50 episode terakhir dari lima seed berturut-turut adalah 1,224 pada 50k; 0,987 pada 100k; 0,915 pada 200k; dan 0,823 pada 400k. Tren tersebut menurun, sehingga nilai Q pada state-action yang dikunjungi makin sedikit berubah. Nilainya belum perlu dipaksa mencapai nol; TD-error dibaca bersama hasil greedy dan bukan sebagai bukti tunggal stabilitas.
 
-### 8.5 Hasil sementara epsilon decay tetap Scenario B
+### 8.6 Arsip epsilon decay tetap Scenario B
 
 Hasil Scenario B dengan jadwal epsilon yang sama memperlihatkan pola berbeda dari eksperimen epsilon dinamis sebelumnya.
 
@@ -490,7 +504,22 @@ Pada 50.000 episode, B belum membentuk loop. Namun setelah tambahan training den
 
 Untuk checkpoint 100.000 episode, B memiliki galat jarak dan comfort rata-rata lebih baik daripada C, sedangkan C memiliki return progress ratio serta reward rata-rata sedikit lebih tinggi. Karena keduanya sama-sama 5/5 sukses, pemilihan state final harus didasarkan pada tujuan prioritas yang dinyatakan secara eksplisit dan tabel evaluasi lengkap, bukan hanya satu metrik. TD-error B pada 50 episode terakhir adalah 1,749 pada 50k; 0,944 pada 100k; 0,622 pada 200k; dan 0,662 pada 400k. TD-error hanya dibandingkan sebagai tren di dalam scenario B, bukan sebagai angka absolut yang langsung diadu dengan C karena state yang dikunjungi berbeda.
 
-### 8.6 Cara membaca reward training
+### 8.7 Arsip epsilon decay tetap Scenario A
+
+Scenario A memakai state paling sederhana, yaitu hanya `(current_node)`. Pada jadwal epsilon tetap 50.000 episode, A belum membentuk loop valid pada seluruh durasi yang diuji.
+
+| Total episode | Loop valid | Galat jarak rata-rata (m) | Reward rata-rata | Comfort rata-rata | Return progress rata-rata | Jarak akhir ke start rata-rata (m) | Closing action tersedia |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 50.000 | 0/5 | 546,83 | -86,91 | 0,712 | 0,288 | 1.693,25 | 0/5 |
+| 100.000 | 0/5 | 567,17 | -98,44 | 0,714 | 0,441 | 1.047,76 | 0/5 |
+| 200.000 | 0/5 | 541,94 | -63,12 | 0,722 | 0,275 | 1.976,09 | 0/5 |
+| 400.000 | 0/5 | 551,79 | -49,73 | 0,703 | 0,440 | 1.221,46 | 0/5 |
+
+Pada checkpoint 100.000 episode, seluruh seed A berakhir `over_distance`; tidak satu pun pernah memiliki closing action legal pada evaluasi greedy. Tambahan training hingga 400.000 episode tidak mengubah hasil utama tersebut. TD-error pada 50 episode terakhir berada pada 1,327 (50k), 1,463 (100k), 1,406 (200k), dan 1,208 (400k), sementara keberhasilan training pada jendela yang sama tetap sekitar 0--2%. Ini menunjukkan A belum membentuk policy loop yang berhasil.
+
+Jika dibandingkan pada konfigurasi yang sama—100.000 episode dan epsilon decay tetap 50.000—hasilnya adalah: A 0/5 loop, B 5/5 loop, dan C 5/5 loop. Bukti ini mendukung bahwa informasi progres jarak pada state penting untuk membedakan keputusan saat agen masih membangun rute dan saat harus mulai kembali ke titik start. Sementara itu, `previous_node` pada C dapat memengaruhi kecepatan awal dan trade-off metrik, tetapi pada konfigurasi ini bukan syarat mutlak untuk mencapai loop karena B juga berhasil 5/5.
+
+### 8.8 Cara membaca reward training
 
 Grafik reward training adalah akumulasi seluruh reward comfort, reward/penalti arah pulang, penalti revisit, dan reward terminal dalam episode yang dijalankan dengan kebijakan epsilon-greedy. Karena itu reward tidak wajib selalu naik seiring episode.
 
