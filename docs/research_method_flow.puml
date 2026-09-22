@@ -1,0 +1,16 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+start
+:Tetapkan titik awal, target rute 5 km,\ndan batas valid 4,5--5,5 km;
+:Unduh jaringan jalan OpenStreetMap\ndengan OSMnx;
+:Proyeksikan graf ke koordinat meter\ndan tambahkan comfort score pada edge;
+:Analisis struktur graf dan\nkelengkapan atribut data;
+:Bentuk environment Q-Learning\ndari graf jaringan jalan;
+:Terapkan tiga scenario state:\nA, B, dan C;
+:Latih Q-Learning untuk lima seed\npada jumlah episode yang sama;
+:Evaluasi setiap Q-table dengan\nkebijakan greedy (epsilon = 0);
+:Bandingkan metrik evaluasi,\ngrafik training, dan peta rute;
+stop
+@enduml

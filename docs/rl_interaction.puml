@@ -1,0 +1,29 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam rectangle {
+  RoundCorner 12
+}
+
+rectangle "Agen\n(Q-Learning)" as agent #D9EAF7
+rectangle "Environment\n(Graf jaringan jalan)" as env #E2F0D9
+
+note left of agent
+Memilih action menggunakan
+kebijakan epsilon-greedy
+dan memperbarui Q-table.
+end note
+
+note right of env
+Menerapkan perpindahan
+pada edge yang dipilih dan
+menghitung reward.
+end note
+
+agent --> env : Action\n(edge (u, v, key))
+env --> agent : State berikutnya dan reward
+
+note bottom
+Siklus diulangi sampai episode berakhir.
+end note
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+top to bottom direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+rectangle "Node A\n(node sebelumnya)" as a #FFF2CC
+rectangle "Node B\n(node saat ini)" as b #D9EAF7
+rectangle "Node C" as c #D9EAF7
+rectangle "Node D" as d #D9EAF7
+rectangle "Node E" as e #D9EAF7
+
+a --> b : edge (A, B, key=0)
+b -[#2E75B6]-> c : edge (B, C, key=0)\nruas jalan 1
+b -[#70AD47]-> c : edge (B, C, key=1)\nruas jalan 2
+b --> d : edge (B, D, key=0)
+c --> e : edge (C, E, key=0)
+d --> e : edge (D, E, key=0)
+
+note bottom of b
+Pada node B, agen dapat memilih tiga action:
+(B, C, key=0), (B, C, key=1), atau (B, D, key=0).
+
+Dua edge menuju node C tetap berbeda karena key
+membedakan ruas dan atributnya dapat tidak sama.
+end note
+@enduml

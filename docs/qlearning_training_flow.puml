@@ -1,0 +1,18 @@
+@startuml
+start
+:Inisialisasi Q-table;
+:Mulai episode dan reset environment;
+:Amati state saat ini;
+
+while (Episode belum berakhir?) is (ya)
+  :Tentukan ruas jalan yang boleh dipilih\nberdasarkan aturan perjalanan;
+  :Pilih satu ruas jalan dengan\nepsilon-greedy;
+  :Jalankan action pada environment;
+  :Terima reward, state berikutnya,\ndan status terminasi;
+  :Perbarui Q(s,a) menggunakan\naturan pembaruan Q-Learning;
+  :State = state berikutnya;
+endwhile (tidak)
+
+:Simpan metrik episode;
+stop
+@enduml

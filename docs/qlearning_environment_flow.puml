@@ -1,0 +1,37 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+start
+:Reset environment\nke node start;
+:Bentuk state sesuai scenario;
+
+repeat
+  :Tentukan ruas jalan\nyang boleh dipilih;
+
+  if (Ada ruas jalan yang boleh dipilih?) then (ya)
+    :Pilih satu ruas jalan\ndengan epsilon-greedy;
+    :Pindah melalui edge terpilih\ndan perbarui jarak, node sebelumnya,\nriwayat, serta jumlah kunjungan;
+    :Hitung reward comfort\ndan penalti revisit bila ada;
+
+    if (Kembali ke start dalam\njarak 4,5--5,5 km?) then (ya)
+      :Tambahkan bonus berhasil loop;
+      :Episode selesai: success;
+      stop
+    else (tidak)
+      if (Melewati 5,5 km atau\nbatas 220 langkah?) then (ya)
+        :Tambahkan penalti terminasi;
+        :Episode selesai;
+        stop
+      else (tidak)
+        :Berikan sinyal arah perjalanan:\npenalti mendekati start terlalu awal\natau reward mendekati start setelah 2,5 km;
+        :Perbarui Q-table dan\nbentuk state berikutnya;
+      endif
+    endif
+  else (tidak)
+    :Tambahkan penalti\ntidak ada ruas jalan;
+    :Episode selesai: no_available_action;
+    stop
+  endif
+repeat while (Episode belum selesai?) is (ya)
+@enduml
