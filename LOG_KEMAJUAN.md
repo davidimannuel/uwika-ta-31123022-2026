@@ -13,6 +13,13 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - Hasil fixed decay final: A selalu 0/5; B mencapai 5/5 pada 75k, 100k, dan 150k; C mencapai 5/5 pada 75k dan 100k, kemudian 4/5 pada 150k. B pada 75k adalah kandidat sementara terbaik berdasarkan 5/5 loop, galat jarak 112,16 m, dan comfort 0,766.
 - Paket draf BAB IV tersedia pada `docs/temp/`: naskah sementara, manifest aset, ringkasan CSV, gambar analisis graf, grafik sensitivitas, grafik training/diagnosis B-C 75k, serta peta interaktif B-C 75k.
 
+## Pembaruan penyimpanan dan tampilan hasil
+
+- `run_scenario_experiment` kini memiliki parameter `display_results`. Notebook scenario mengirim `False` agar cell training hanya menyimpan hasil, tidak memaksa tampilan tabel, grafik, dan peta.
+- Setelah setiap cell training, tersedia cell baru yang memanggil `display_saved_experiment_results`. Cell tersebut memuat ulang CSV, grafik PNG, dan peta HTML tanpa menjalankan Q-Learning.
+- Eksperimen baru menyimpan lebih lengkap: CSV riwayat dan evaluasi, grafik, peta, metadata JSON, Q-table `.pkl` per seed, serta jejak rute evaluasi greedy `.json` per seed.
+- Ringkasan sensitivitas pada notebook A--C sekarang membaca CSV melalui `summarize_saved_experiments`, sehingga dapat dijalankan kembali setelah kernel di-restart.
+
 ## Keputusan implementasi yang penting
 
 - Action adalah edge spesifik `(next_node, key)`. Jika terdapat beberapa edge paralel dari `u` ke `v`, masing-masing `key` adalah action berbeda.

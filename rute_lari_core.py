@@ -7,7 +7,10 @@ modul ini agar data OSM, reward, action mask, dan metrik selalu konsisten.
 from __future__ import annotations
 
 import ast
+import json
+import pickle
 import re
+import uuid
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -18,7 +21,7 @@ import networkx as nx
 import numpy as np
 import osmnx as ox
 import pandas as pd
-from IPython.display import display
+from IPython.display import HTML, Javascript, Image as DisplayImage, display
 from pyproj import Transformer
 
 
@@ -780,7 +783,10 @@ def diagnosis_summary(metrics_df: pd.DataFrame) -> pd.DataFrame:
 # ============================================================
 
 def plot_training_charts(
-    history_df: pd.DataFrame, scenario: str, output_dir: Path = RESULT_DIR
+    history_df: pd.DataFrame,
+    scenario: str,
+    output_dir: Path = RESULT_DIR,
+    show: bool = True,
 ) -> Path:
     mean_history = history_df.groupby("episode", as_index=False).agg(
         success_rate=("is_loop", "mean"),
@@ -865,7 +871,9 @@ def plot_training_charts(
     output_dir.mkdir(parents=True, exist_ok=True)
     chart_path = output_dir / f"grafik_training_{scenario}.png"
     figure.savefig(chart_path, dpi=160, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
+    plt.close(figure)
     return chart_path
 
 
@@ -888,7 +896,10 @@ TERMINATION_COLORS = {
 
 
 def plot_diagnosis_charts(
-    history_df: pd.DataFrame, scenario: str, output_dir: Path = RESULT_DIR
+    history_df: pd.DataFrame,
+    scenario: str,
+    output_dir: Path = RESULT_DIR,
+    show: bool = True,
 ) -> Path:
     """Menampilkan diagnosis ringkas dengan rata-rata bergerak per 50 episode."""
     episode_summary = history_df.groupby("episode", as_index=False).agg(
@@ -1014,7 +1025,9 @@ def plot_diagnosis_charts(
     output_dir.mkdir(parents=True, exist_ok=True)
     chart_path = output_dir / f"grafik_diagnosis_{scenario}.png"
     figure.savefig(chart_path, dpi=160, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
+    plt.close(figure)
     return chart_path
 
 
@@ -1126,6 +1139,231 @@ def make_route_map(graph, trial: dict, scenario: str, node_xy) -> folium.Map:
 
 
 # ============================================================
+# F. PENYIMPANAN DAN PEMUATAN ARTEFAK EKSPERIMEN
+# ============================================================
+
+def experiment_artifact_paths(scenario: str, result_subdir: str | None = None) -> dict[str, Path]:
+    """Menyusun lokasi artefak sebuah eksperimen tanpa menjalankan training.
+
+    Fungsi ini dipakai oleh notebook untuk memisahkan cell training yang mahal
+    dari cell pembacaan tabel, grafik, dan peta hasil yang sudah tersimpan.
+    """
+    if scenario not in {"A", "B", "C"}:
+        raise ValueError("Scenario harus A, B, atau C.")
+    output_dir = RESULT_DIR / result_subdir if result_subdir else RESULT_DIR
+    return {
+        "output_dir": output_dir,
+        "history": output_dir / f"training_history_{scenario}.csv",
+        "evaluation": output_dir / f"evaluation_metrics_{scenario}.csv",
+        "diagnosis": output_dir / f"diagnosis_metrics_{scenario}.csv",
+        "training_termination": output_dir / f"termination_rates_training_{scenario}.csv",
+        "evaluation_termination": output_dir / f"termination_rates_evaluation_{scenario}.csv",
+        "training_chart": output_dir / f"grafik_training_{scenario}.png",
+        "diagnosis_chart": output_dir / f"grafik_diagnosis_{scenario}.png",
+        "route_map": output_dir / f"peta_interaktif_scenario_{scenario}.html",
+        "metadata": output_dir / f"metadata_eksperimen_{scenario}.json",
+    }
+
+
+def load_saved_experiment_results(
+    scenario: str,
+    result_subdir: str | None = None,
+    include_history: bool = True,
+) -> dict[str, Any]:
+    """Memuat hasil eksperimen yang sudah disimpan tanpa melatih ulang agen.
+
+    ``include_history=False`` dipakai saat hanya menampilkan artefak agar CSV
+    riwayat yang besar tidak perlu dimuat ke RAM.
+    """
+    paths = experiment_artifact_paths(scenario, result_subdir)
+    required = (
+        "history", "evaluation", "diagnosis", "training_termination",
+        "evaluation_termination", "training_chart", "diagnosis_chart", "route_map",
+    )
+    missing = [str(paths[name]) for name in required if not paths[name].exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Artefak eksperimen belum lengkap. Jalankan cell training terlebih dahulu.\n"
+            + "\n".join(missing)
+        )
+
+    metadata: dict[str, Any] = {}
+    if paths["metadata"].exists():
+        metadata = json.loads(paths["metadata"].read_text(encoding="utf-8"))
+
+    return {
+        "paths": paths,
+        "metadata": metadata,
+        "history": pd.read_csv(paths["history"]) if include_history else None,
+        "metrics": pd.read_csv(paths["evaluation"]),
+        "diagnosis": pd.read_csv(paths["diagnosis"]),
+        "training_termination_rates": pd.read_csv(paths["training_termination"]),
+        "evaluation_termination_rates": pd.read_csv(paths["evaluation_termination"]),
+    }
+
+
+def select_representative_from_evaluation_metrics(
+    metrics_df: pd.DataFrame,
+) -> tuple[pd.Series, str]:
+    """Mengulang aturan pemilihan peta hanya dari CSV evaluasi tersimpan."""
+    required = {
+        "seed", "is_loop", "absolute_distance_error_m",
+        "distance_to_start_at_end_m", "mean_comfort", "return_progress_ratio",
+    }
+    missing = required - set(metrics_df.columns)
+    if missing:
+        raise ValueError(f"Kolom evaluasi tidak lengkap: {sorted(missing)}")
+
+    ranked = metrics_df.copy()
+    ranked["_is_loop"] = ranked["is_loop"].astype(str).str.lower().eq("true")
+    ranked["_comfort_rank"] = -pd.to_numeric(
+        ranked["mean_comfort"], errors="coerce"
+    ).fillna(-1)
+    ranked["_return_rank"] = -pd.to_numeric(
+        ranked["return_progress_ratio"], errors="coerce"
+    ).fillna(-1)
+
+    valid_loops = ranked[ranked["_is_loop"]]
+    if not valid_loops.empty:
+        selected = valid_loops.sort_values(
+            ["absolute_distance_error_m", "_comfort_rank", "_return_rank", "seed"]
+        ).iloc[0]
+        reason = (
+            f"Dipilih dari {len(valid_loops)} loop valid: galat jarak paling kecil; "
+            "jika setara, comfort lalu return progress lebih tinggi."
+        )
+        return selected, reason
+
+    selected = ranked.sort_values(
+        [
+            "absolute_distance_error_m", "distance_to_start_at_end_m",
+            "_comfort_rank", "_return_rank", "seed",
+        ]
+    ).iloc[0]
+    reason = (
+        "Tidak ada loop valid, sehingga dipilih rute dengan galat jarak paling "
+        "kecil; jika setara, jarak akhir ke start paling kecil, comfort tertinggi, "
+        "lalu return progress tertinggi."
+    )
+    return selected, reason
+
+
+def display_saved_experiment_results(
+    scenario: str,
+    result_subdir: str | None = None,
+    show_map: bool = True,
+) -> None:
+    """Menampilkan tabel, grafik, dan peta dari artefak tersimpan.
+
+    Tidak ada Q-Learning yang dijalankan dalam fungsi ini. Peta dimuat langsung
+    dari HTML hasil training sebelumnya sehingga gangguan tampilan peta tidak
+    mengharuskan pengguna mengulang training.
+    """
+    saved = load_saved_experiment_results(
+        scenario, result_subdir, include_history=False
+    )
+    paths = saved["paths"]
+    metadata = saved["metadata"]
+
+    if metadata:
+        episodes_label = metadata.get("episodes", "?")
+        if isinstance(episodes_label, int):
+            episodes_label = f"{episodes_label:,}"
+        print(
+            f"Scenario {metadata.get('scenario', scenario)} | "
+            f"{episodes_label} episode | "
+            f"epsilon decay: {metadata.get('epsilon_decay_episodes', 'dinamis')}"
+        )
+    print("=== METRIK EVALUASI GREEDY PER SEED (HASIL TERSIMPAN) ===")
+    display(
+        saved["metrics"].sort_values("seed")
+        .set_index("seed")
+        .loc[:, list(EVALUATION_DISPLAY_COLUMNS)]
+        .T
+    )
+
+    print("=== RINGKASAN DIAGNOSIS EVALUASI: AGREGAT LIMA SEED ===")
+    print(
+        "Satu baris ini adalah rata-rata/proporsi dari lima evaluasi greedy, "
+        "bukan record satu seed. Detail setiap seed ada pada tabel sebelumnya."
+    )
+    display(saved["diagnosis"])
+    print("=== TERMINATION RATE: TRAINING ===")
+    display(saved["training_termination_rates"])
+    print("=== TERMINATION RATE: EVALUASI GREEDY ===")
+    display(saved["evaluation_termination_rates"])
+
+    print("=== GRAFIK TRAINING ===")
+    display(DisplayImage(filename=str(paths["training_chart"])))
+    print("=== GRAFIK DIAGNOSIS ===")
+    display(DisplayImage(filename=str(paths["diagnosis_chart"])))
+
+    if show_map:
+        selected_row, calculated_reason = select_representative_from_evaluation_metrics(
+            saved["metrics"]
+        )
+        selected_seed = int(metadata.get("representative_seed", selected_row["seed"]))
+        selected_reason = metadata.get("representative_reason", calculated_reason)
+        print("=== PETA INTERAKTIF HASIL TERSIMPAN ===")
+        print(f"Seed yang dipakai pada peta: {selected_seed}")
+        print(f"Alasan pemilihan: {selected_reason}")
+        print(f"Jika peta tidak muncul, buka: {paths['route_map']}")
+        # JupyterLab pada desktop dapat memblokir iframe file:// dan endpoint
+        # /files/ dapat memakai root berbeda. Karena itu HTML Folium yang sudah
+        # tersimpan dimasukkan ke iframe sebagai srcdoc; tidak ada pembacaan
+        # ulang dari URL dan tidak ada training/pembuatan peta ulang.
+        route_html = paths["route_map"].read_text(encoding="utf-8")
+        map_container_id = f"saved_route_map_{uuid.uuid4().hex}"
+        display(HTML(
+            f'<div id="{map_container_id}" '
+            'style="width: 100%; height: 650px;"></div>'
+        ))
+        display(Javascript(f"""
+        (function() {{
+            const container = document.getElementById({json.dumps(map_container_id)});
+            if (!container) return;
+            const frame = document.createElement('iframe');
+            frame.style.width = '100%';
+            frame.style.height = '650px';
+            frame.style.border = '1px solid #d1d5db';
+            frame.style.borderRadius = '8px';
+            frame.srcdoc = {json.dumps(route_html)};
+            container.replaceChildren(frame);
+        }})();
+        """))
+    # Fungsi ini sengaja tidak mengembalikan dictionary agar notebook tidak
+    # menampilkan dump path/DataFrame setelah peta. Gunakan
+    # load_saved_experiment_results bila data perlu diolah lagi.
+    return None
+
+
+def summarize_saved_experiments(
+    scenario: str,
+    experiments: dict[int, str],
+    epsilon_decay_episodes: int | None = None,
+) -> pd.DataFrame:
+    """Menyusun ringkasan sensitivitas dari CSV, tanpa memakai result di RAM."""
+    rows = []
+    for episodes, result_subdir in sorted(experiments.items()):
+        metrics = load_saved_experiment_results(
+            scenario, result_subdir, include_history=False
+        )["metrics"]
+        rows.append({
+            "episodes": episodes,
+            "epsilon_decay_episodes": (
+                episodes if epsilon_decay_episodes is None else epsilon_decay_episodes
+            ),
+            "success_rate_greedy": metrics["is_loop"].mean(),
+            "mean_distance_error_m": metrics["absolute_distance_error_m"].mean(),
+            "mean_total_reward": metrics["total_reward"].mean(),
+            "mean_comfort": metrics["mean_comfort"].mean(),
+            "mean_return_progress_ratio": metrics["return_progress_ratio"].mean(),
+            "closing_action_available_rate": metrics["closing_action_available"].mean(),
+        })
+    return pd.DataFrame(rows).sort_values("episodes").reset_index(drop=True)
+
+
+# ============================================================
 # F. FUNGSI TUNGGAL YANG DIPANGGIL NOTEBOOK SCENARIO
 # ============================================================
 
@@ -1182,6 +1420,7 @@ def run_scenario_experiment(
     episodes: int | None = None,
     epsilon_decay_episodes: int | None = None,
     result_subdir: str | None = None,
+    display_results: bool = True,
 ) -> dict:
     """Menjalankan satu scenario A-C dengan core yang sama.
 
@@ -1201,7 +1440,8 @@ def run_scenario_experiment(
     if epsilon_decay_episodes is not None and epsilon_decay_episodes <= 0:
         raise ValueError("epsilon_decay_episodes harus lebih dari 0.")
 
-    output_dir = RESULT_DIR / result_subdir if result_subdir else RESULT_DIR
+    artifact_paths = experiment_artifact_paths(scenario, result_subdir)
+    output_dir = artifact_paths["output_dir"]
     output_dir.mkdir(parents=True, exist_ok=True)
     add_comfort_scores(graph)
     actions_by_node = build_actions(graph)
@@ -1240,6 +1480,38 @@ def run_scenario_experiment(
             # dari evaluasi greedy yang sudah dijalankan di atas.
             "closing_action_available": metrics["closing_action_was_available"],
         })
+        # Q-table dan jejak rute evaluasi disimpan per seed. Dengan demikian,
+        # training tidak perlu diulang hanya untuk melihat artefak lama atau
+        # mengevaluasi kembali Q-table tertentu pada penelitian lanjutan.
+        qtable_path = output_dir / f"qtable_scenario_{scenario}_seed_{seed}.pkl"
+        with qtable_path.open("wb") as qtable_file:
+            pickle.dump(dict(q_table), qtable_file)
+        route_path = output_dir / f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json"
+        route_payload = {
+            "scenario": scenario,
+            "seed": seed,
+            "metrics": {
+                key: (None if pd.isna(value) else value)
+                for key, value in metrics.items()
+            },
+            "path_nodes": [int(node) for node in environment.path_nodes],
+            # path_actions disimpan environment sebagai pasangan
+            # (node_asal, EdgeAction), agar action dapat dipetakan kembali ke
+            # edge MultiDiGraph yang tepat ketika hasil dibuka ulang.
+            "path_actions": [
+                {
+                    "from_node": int(current_node),
+                    "next_node": int(action.next_node),
+                    "key": int(action.key),
+                }
+                for current_node, action in environment.path_actions
+            ],
+        }
+        route_path.write_text(
+            json.dumps(route_payload, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8",
+        )
+
         histories.append(history)
         evaluation_rows.append(metrics)
         trials.append({
@@ -1273,18 +1545,23 @@ def run_scenario_experiment(
     training_termination_df.to_csv(training_termination_path, index=False)
     evaluation_termination_df.to_csv(evaluation_termination_path, index=False)
 
-    # Tabel evaluasi sengaja dibatasi pada metrik yang menjawab tujuan penelitian.
-    # Metrik diagnosis training ditampilkan dalam grafik terpisah di bawahnya.
-    print("Tampilan vertikal metrik evaluasi utama per seed")
-    display(
-        evaluation_df.sort_values("seed")
-        .set_index("seed")
-        .loc[:, list(EVALUATION_DISPLAY_COLUMNS)]
-        .T
-    )
+    # Training cell dapat memilih untuk hanya menyimpan artefak. Tabel dan
+    # visualisasi lalu ditampilkan ulang oleh cell khusus tanpa training ulang.
+    if display_results:
+        print("Tampilan vertikal metrik evaluasi utama per seed")
+        display(
+            evaluation_df.sort_values("seed")
+            .set_index("seed")
+            .loc[:, list(EVALUATION_DISPLAY_COLUMNS)]
+            .T
+        )
 
-    chart_path = plot_training_charts(history_df, scenario, output_dir)
-    diagnosis_chart_path = plot_diagnosis_charts(history_df, scenario, output_dir)
+    chart_path = plot_training_charts(
+        history_df, scenario, output_dir, show=display_results
+    )
+    diagnosis_chart_path = plot_diagnosis_charts(
+        history_df, scenario, output_dir, show=display_results
+    )
 
     representative, representative_reason = select_representative_trial(trials)
     selected_metrics = representative["metrics"]
@@ -1304,7 +1581,36 @@ def run_scenario_experiment(
     route_map = make_route_map(graph, representative, scenario, node_xy)
     map_path = output_dir / f"peta_interaktif_scenario_{scenario}.html"
     route_map.save(map_path)
-    display(route_map)
+
+    metadata = {
+        "scenario": scenario,
+        "episodes": total_episodes,
+        "epsilon_decay_episodes": epsilon_decay_episodes,
+        "seeds": list(SEEDS),
+        "representative_seed": int(selected_metrics["seed"]),
+        "representative_reason": representative_reason,
+        "artifact_files": {
+            "history": history_path.name,
+            "evaluation": metrics_path.name,
+            "diagnosis": diagnosis_path.name,
+            "training_termination": training_termination_path.name,
+            "evaluation_termination": evaluation_termination_path.name,
+            "training_chart": chart_path.name,
+            "diagnosis_chart": diagnosis_chart_path.name,
+            "route_map": map_path.name,
+            "qtables": [
+                f"qtable_scenario_{scenario}_seed_{seed}.pkl" for seed in SEEDS
+            ],
+            "evaluation_routes": [
+                f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json" for seed in SEEDS
+            ],
+        },
+    }
+    artifact_paths["metadata"].write_text(
+        json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    if display_results:
+        display(route_map)
 
     print(f"History: {history_path}")
     print(f"Evaluasi: {metrics_path}")
@@ -1328,4 +1634,5 @@ def run_scenario_experiment(
         "trials": trials,
         "representative": representative,
         "representative_reason": representative_reason,
+        "artifact_paths": artifact_paths,
     }

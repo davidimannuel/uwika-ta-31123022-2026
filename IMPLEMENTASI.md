@@ -49,6 +49,36 @@ Urutan kerja yang benar:
 
 Notebook scenario dapat membuat GraphML bila belum ada, tetapi analisis tetap sebaiknya dijalankan lebih dahulu untuk memeriksa data dan peta.
 
+### 2.1 Pemisahan cell training dan tampilan hasil
+
+Setiap konfigurasi eksperimen pada `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` sekarang memiliki dua cell berurutan:
+
+1. **Cell training** memanggil `run_scenario_experiment(..., display_results=False)`. Cell ini menjalankan lima seed, melakukan evaluasi greedy, lalu menyimpan artefak; tabel, grafik, dan peta tidak ditampilkan agar output training tidak berat.
+2. **Cell tampilkan hasil tersimpan** memanggil `display_saved_experiment_results(...)`. Cell ini **tidak melakukan training**. Cell hanya membaca berkas hasil, lalu menampilkan metrik per seed, diagnosis, termination rate, dua grafik PNG, dan peta HTML interaktif.
+
+Pemisahan ini memungkinkan pengguna memuat ulang peta yang gagal tampil, melihat lagi tabel, atau membuat screenshot grafik tanpa menjalankan ulang training yang memakan waktu. Cell ringkasan sensitivitas juga memakai `summarize_saved_experiments(...)`, sehingga membaca CSV yang tersimpan dan tidak lagi bergantung pada variabel `result_*` yang hanya ada di RAM kernel.
+
+Untuk setiap eksperimen baru, folder `hasil_bab_4/training_qlearning_5km/<result_subdir>/` menyimpan:
+
+| Artefak | Isi dan kegunaan |
+|---|---|
+| `training_history_<scenario>.csv` | Metrik setiap episode untuk lima seed, termasuk reward, epsilon, TD-error, jarak, comfort, dan alasan terminasi. |
+| `evaluation_metrics_<scenario>.csv` | Metrik evaluasi greedy per seed yang dipakai sebagai hasil utama. |
+| `diagnosis_metrics_<scenario>.csv` dan `termination_rates_*.csv` | Ringkasan diagnosis dan termination rate training maupun evaluasi greedy. |
+| `grafik_training_<scenario>.png` dan `grafik_diagnosis_<scenario>.png` | Diagram hasil training yang sudah dirender. |
+| `peta_interaktif_scenario_<scenario>.html` | Peta Folium untuk rute representatif. |
+| `qtable_scenario_<scenario>_seed_<seed>.pkl` | Q-table tabular hasil training untuk setiap seed. |
+| `rute_evaluasi_scenario_<scenario>_seed_<seed>.json` | Urutan node dan action hasil evaluasi greedy untuk setiap seed. Setiap action menyimpan `from_node`, `next_node`, dan `key` agar edge MultiDiGraph dapat dikenali kembali. |
+| `metadata_eksperimen_<scenario>.json` | Konfigurasi episode, epsilon decay, seed, seed yang dipilih untuk peta, dan daftar artefak. |
+
+Artefak Q-table, rute JSON, dan metadata dibuat oleh implementasi terbaru. Folder hasil lama yang dibuat sebelum perubahan ini tetap dapat ditampilkan selama CSV, PNG, dan HTML-nya tersedia; namun Q-table tidak dapat dipulihkan dari folder lama tanpa menjalankan ulang training tersebut.
+
+Pada tampilan hasil tersimpan, bagian **Ringkasan Diagnosis Evaluasi: Agregat Lima Seed** memang hanya memiliki satu baris. Baris tersebut bukan hasil satu seed, melainkan ringkasan lima evaluasi greedy: rata-rata `distance_to_start_at_end_m`, rata-rata `return_progress_ratio`, proporsi `closing_action_available`, dan rata-rata jumlah state Q-table. Nilai per seed tetap tersedia pada tabel **Metrik Evaluasi Greedy per Seed** tepat di atasnya.
+
+Sebelum peta ditampilkan, cell juga mencetak seed yang dipakai serta alasan pemilihannya. Informasi ini diambil dari `metadata_eksperimen_<scenario>.json` apabila tersedia. Untuk folder hasil lama tanpa metadata, seed dihitung ulang dari `evaluation_metrics_<scenario>.csv` memakai aturan pemilihan peta yang sama.
+
+Fungsi `display_saved_experiment_results(...)` khusus untuk tampilan dan sengaja tidak mengembalikan nilai, sehingga notebook tidak mencetak dictionary besar setelah peta. Jika data CSV perlu diolah pada cell lain, gunakan `load_saved_experiment_results(...)`. Peta Folium ditampilkan dengan memasukkan HTML tersimpan ke `iframe.srcdoc` melalui JavaScript Jupyter. Cara ini tidak bergantung pada alamat `file://` maupun endpoint `/files/`, yang dapat diblokir atau memakai root berbeda pada JupyterLab desktop.
+
 ## 3. Konfigurasi Bersama
 
 | Parameter | Nilai | Makna |
@@ -120,6 +150,14 @@ Graf adalah networkx MultiDiGraph:
 - **key**: pembeda edge paralel apabila u dan v sama.
 - **osmid**: ID OSM Way atau ruas jalan sumber; bukan ID node.
 - atribut edge penting: length, geometry, highway, surface, width, dan oneway.
+
+Secara sederhana, **node** adalah titik pada jaringan jalan, sedangkan **edge** adalah satu ruas/jalur yang menghubungkan dua node. Contohnya, bila agen berada pada node A dan terdapat ruas jalan sepanjang 120 m menuju node B, maka perpindahan `A -> B` melalui ruas tersebut adalah satu edge. Node biasanya mewakili simpang, ujung ruas, atau titik keputusan; edge menyimpan karakter ruas yang benar-benar dilalui, seperti panjang, klasifikasi jalan, permukaan, lebar, dan `comfort_score`.
+
+Pada Q-Learning proyek ini, ketika agen memilih action, agen sebenarnya memilih **satu edge** untuk bergerak dari node saat ini ke node tujuan. Karena graf bertipe MultiDiGraph, dua node yang sama dapat dihubungkan oleh lebih dari satu edge. Oleh sebab itu action tidak cukup ditulis sebagai node tujuan saja, melainkan sebagai pasangan `(next_node, key)`. Nilai `key` membedakan edge paralel yang memiliki asal `u` dan tujuan `v` sama, tetapi dapat mewakili ruas atau atribut yang berbeda.
+
+    Node A -- edge: panjang 120 m, comfort 0,75 --> Node B
+
+Pada contoh tersebut, `Node A` adalah posisi agen sebelum bergerak, edge adalah ruas jalan yang dipilih, dan `Node B` menjadi posisi agen setelah action dijalankan. Reward comfort dan total jarak diperoleh dari atribut edge yang dipilih, bukan dari node tujuan saja.
 
 Snapshot graf yang dipakai saat ini:
 
@@ -428,6 +466,8 @@ Walaupun Q-Learning memerlukan pilihan acak, hasil eksperimen perlu dapat diuji 
     rng = np.random.default_rng(seed)
 
 `seed` adalah angka awal pembentuk urutan pseudoacak, bukan nilai yang menghilangkan pengacakan. Generator ini dipakai ketika `choose_action()` memilih action legal secara acak pada eksplorasi epsilon-greedy dan ketika beberapa action memiliki Q-value terbaik yang sama. Dengan graf, kode, konfigurasi, dan seed yang sama, urutan pilihan acak pada training seharusnya sama sehingga hasil dapat direproduksi.
+
+Contoh sederhana: training dengan `seed=0` yang dijalankan dua kali akan menerima urutan angka pseudoacak yang sama, sehingga pilihan eksplorasi dan hasilnya dapat sama persis. Training dengan `seed=1` memakai urutan pseudoacak lain sehingga jalur eksplorasinya dapat berbeda. Dengan kata lain, hasil yang sama ketika notebook dijalankan ulang bukan berarti Q-Learning tidak menggunakan pengacakan; pengacakan tersebut sengaja dikendalikan agar dapat direproduksi.
 
 Eksperimen memakai lima seed, yaitu `(0, 1, 2, 3, 4)`. Seed yang berbeda menghasilkan pola eksplorasi berbeda; sebab itu keberhasilan yang muncul pada seluruh seed lebih meyakinkan daripada keberhasilan pada satu seed saja. Evaluasi greedy menggunakan generator terpisah `np.random.default_rng(seed + 100_000)`. Epsilon evaluasi bernilai 0, tetapi generator tersebut masih diperlukan bila terjadi seri Q-value terbaik; offset `100.000` memisahkan urutan acak evaluasi dari urutan acak training.
 
