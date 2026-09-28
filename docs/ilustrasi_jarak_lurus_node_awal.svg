@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" role="img" aria-labelledby="title description">
+  <title id="title">Ilustrasi jarak lurus node agen ke node awal</title>
+  <desc id="description">Segitiga siku-siku dengan sisi horizontal perubahan koordinat x, sisi vertikal perubahan koordinat y, dan sisi miring berupa jarak lurus dari node agen ke node awal.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <style>
+      .axis { stroke: #1f2937; stroke-width: 2.4; marker-end: url(#arrow); }
+      .edge { stroke: #2563eb; stroke-width: 4; fill: none; }
+      .guide { stroke: #64748b; stroke-width: 2.5; stroke-dasharray: 8 6; fill: none; }
+      .right-angle { stroke: #1f2937; stroke-width: 2; fill: none; }
+      .point { fill: #dc2626; stroke: #ffffff; stroke-width: 3; }
+      .label { font-family: 'Times New Roman', serif; font-size: 24px; fill: #111827; }
+      .small { font-family: 'Times New Roman', serif; font-size: 21px; fill: #111827; }
+      .formula { font-family: 'Times New Roman', serif; font-size: 25px; fill: #111827; font-style: italic; }
+    </style>
+  </defs>
+
+  <rect width="900" height="620" fill="white"/>
+
+  <!-- Bidang koordinat graf terproyeksi. -->
+  <line class="axis" x1="105" y1="485" x2="790" y2="485"/>
+  <line class="axis" x1="105" y1="485" x2="105" y2="80"/>
+  <text class="label" x="805" y="493">x (meter)</text>
+  <text class="label" x="47" y="72">y (meter)</text>
+
+  <!-- Titik A adalah node agen, S adalah node awal, dan H titik bantu. -->
+  <line class="guide" x1="250" y1="190" x2="655" y2="190"/>
+  <line class="guide" x1="655" y1="190" x2="655" y2="400"/>
+  <line class="edge" x1="250" y1="190" x2="655" y2="400"/>
+
+  <!-- Tanda sudut siku-siku di titik bantu H. -->
+  <path class="right-angle" d="M 625 190 L 625 220 L 655 220"/>
+
+  <circle class="point" cx="250" cy="190" r="9"/>
+  <circle class="point" cx="655" cy="400" r="9"/>
+  <circle cx="655" cy="190" r="6" fill="#64748b"/>
+
+  <text class="label" x="164" y="158">Node agen n</text>
+  <text class="small" x="164" y="185">(x_n, y_n)</text>
+
+  <text class="label" x="675" y="395">Node awal</text>
+  <text class="small" x="675" y="422">(x_start, y_start)</text>
+
+  <text class="small" x="660" y="175">Titik bantu</text>
+  <text class="small" x="660" y="200">(x_start, y_n)</text>
+
+  <!-- Label komponen koordinat dan sisi miring. -->
+  <text class="formula" x="385" y="175">Δx = |x_n - x_start|</text>
+  <text class="formula" x="670" y="305">Δy = |y_n - y_start|</text>
+  <text class="formula" x="405" y="325">d_start(n)</text>
+
+  <text class="label" x="105" y="545">Jarak lurus dihitung dengan Teorema Pythagoras:</text>
+  <text class="formula" x="150" y="585">d_start(n) = sqrt((x_n - x_start)^2 + (y_n - y_start)^2)</text>
+</svg>

@@ -21,7 +21,7 @@ Status hasil yang tersimpan sekarang:
 - Hasil evaluasi terbaru harus selalu dibaca dari CSV setelah notebook dijalankan ulang. Evaluasi yang dipakai untuk pelaporan adalah evaluasi greedy, bukan episode training yang masih mengandung eksplorasi.
 - Pada eksperimen epsilon dinamis awal, State C sempat menjadi kandidat utama karena menambahkan konteks arah kedatangan melalui `previous_node`. Namun, hasil epsilon decay tetap menunjukkan State B juga dapat membentuk loop secara konsisten; perbandingan final harus memakai hasil A--C dengan konfigurasi epsilon tetap yang sama.
 - Terminasi paling sering masih `no_available_action` dan `over_distance`; hasil perlu dibaca bersama closing action available rate.
-- Rancangan sensitivitas episode final belum dijalankan ulang sepenuhnya. Rancangan tersebut memisahkan epsilon dinamis (30k--75k) dan horizon epsilon tetap 50k (50k--150k), masing-masing pada lima seed. Hasil dari rangkaian lama 10k--400k hanya menjadi arsip penelusuran, bukan dasar angka BAB IV final.
+- Rancangan sensitivitas episode final telah dijalankan pada lima seed. Epsilon dinamis memakai 30k--75k, sedangkan horizon epsilon tetap 50k memakai 50k--150k. Pada fixed decay, B mencapai 5/5 loop pada 75k--150k; C mencapai 5/5 pada 75k--100k lalu 4/5 pada 150k; A tetap 0/5. Hasil lama 10k--400k hanya menjadi arsip penelusuran, bukan dasar angka BAB IV final.
 
 ## 2. Struktur Proyek dan Urutan Eksekusi
 
@@ -307,6 +307,17 @@ Simulasi reward edge dengan comfort 0,80:
 
 Lima edge masing-masing 20 m dan comfort 0,80 memberi total `5 × 0,06 = +0,30`, sama dengan satu edge 100 m dengan comfort yang sama. Ini alasan utama reward dikalikan panjang: pemecahan satu ruas jalan menjadi banyak edge tidak mengubah total reward secara material.
 
+Pengurangan `0,50` pada rumus comfort adalah **titik netral**, bukan batas nyaman atau tidak nyaman yang berasal dari survei pelari. Karena comfort score berada pada rentang 0--1, pengurangan ini membuat edge dengan skor tepat 0,50 memberi reward nol; skor di atasnya positif dan skor di bawahnya negatif. Tanpa pengurangan tersebut, edge dengan comfort rendah tetap selalu memberi reward positif hanya karena panjangnya bertambah. Contoh edge 100 m dengan comfort 0,35 adalah:
+
+    tanpa titik netral: 0,35 × 100 / 100 = +0,35
+    dengan titik netral: (0,35 - 0,50) × 100 / 100 = -0,15
+
+Sebagai ilustrasi skala total, rute 5.000 m dengan comfort rata-rata 0,68 menghasilkan reward comfort sekitar:
+
+    (0,68 - 0,50) × 5.000 / 100 = +9
+
+Nilai `+9` tersebut bukan jaminan reward aktual rute karena setiap edge memiliki skor dan panjang berbeda, tetapi menunjukkan bahwa normalisasi per 100 m membuat komponen comfort tidak langsung mendominasi reward terminal.
+
 Setelah agen menempuh minimal 50% target, atau 2.500 m, diberikan reward arah pulang:
 
     r_return = 0,40 × (distance_before − distance_after) ÷ 100
@@ -333,31 +344,53 @@ Contoh: pada jarak rute 1.800 m, agen melewati edge dengan reward comfort `+0,25
 
 Nilai reward dapat dituning, tetapi setiap perubahan reward harus dievaluasi ulang pada seluruh A–C dengan seed sama.
 
-### 7.1.1 Dasar skala SUCCESS_BONUS = +80
+### 7.1.1 Dasar skala koefisien arah = 0,40
 
-Nilai `+80` bukan nilai standar Q-Learning dan bukan berasal dari data OSM. Nilai ini adalah parameter desain yang ditetapkan dari skala reward lain agar keberhasilan loop menjadi tujuan utama, tetapi reward comfort dan arah pulang masih membedakan kualitas dua loop yang sama-sama valid.
+Koefisien `0,40` pada reward arah dan penalti bergerak menuju start terlalu awal bukan nilai standar Q-Learning. Nilai ini adalah konfigurasi yang menentukan seberapa besar perubahan jarak lurus dihargai atau diberi penalti. Untuk perubahan jarak lurus sebesar 100 m, nilai ini menghasilkan:
 
-Estimasi reward comfort untuk rute 5 km dengan comfort rata-rata data sekitar `0,68` adalah:
+    0,40 × 100 / 100 = 0,40
 
-    (0,68 - 0,50) x 5.000 / 100 = +9
+Artinya, setelah fase pulang dimulai, bergerak 100 m lebih dekat ke start memberi `+0,40`. Sebelum fase pulang, bergerak 100 m lebih dekat ke start memberi `-0,40`. Nilai ini membuat arah perjalanan menjadi sinyal tambahan yang nyata di samping comfort, tanpa mendekati bonus terminal `+80`.
 
-Pada fase pulang, jarak lurus yang dapat berkurang secara bersih secara logis tidak melebihi sekitar 2.500 m, yaitu panjang rute ketika fase pulang dimulai. Estimasi reward arah pulang maksimumnya:
+Koefisien `0,40` **tidak selalu lebih besar** daripada reward comfort. Sebagai contoh, edge 100 m dengan comfort 0,68 memberi `+0,18`, sehingga pada contoh tersebut reward arah 100 m lebih besar. Namun edge 100 m dengan comfort 1,00 memberi `+0,50`, sehingga reward comfort lebih besar. Oleh karena itu, dokumentasi tidak mengklaim bahwa koefisien arah selalu mendominasi comfort; keduanya sengaja digabungkan sebagai sinyal pembelajaran yang berbeda.
 
-    0,40 x 2.500 / 100 = +10
+### 7.1.2 Dasar skala bonus berhasil = +80
 
-Maka perkiraan total reward pembentuk perilaku (*shaping reward*) pada rute baik adalah `+9 + +10 = +19`. Bonus sukses dibandingkan nilai tersebut:
+Nilai `+80` bukan nilai standar Q-Learning dan bukan berasal dari data OSM. Nilai ini adalah parameter desain agar keberhasilan loop valid menjadi tujuan utama. Dasar numeriknya dapat dilihat dari batas atas konservatif reward positif non-terminal pada rute valid.
 
-    80 / 19 = 4,2
+**Batas atas reward comfort.** Comfort score berada pada rentang 0--1, sehingga nilai positif terbesar per 100 m adalah `(1,00 - 0,50) = 0,50`. Rute valid paling panjang adalah 5.500 m. Dengan demikian:
 
-Artinya bonus sukses sekitar 4,2 kali lebih besar daripada reward comfort dan arah pulang yang diharapkan. Namun komponen shaping masih sekitar `19 / (80 + 19) = 19,2%` dari reward rute sukses, sehingga comfort dan arah pulang tetap berpengaruh untuk membedakan loop valid.
+    R_comfort maksimum = 0,50 × 5.500 / 100 = +27,5
 
-| Kondisi akhir dengan perkiraan shaping +19 | Perhitungan | Total perkiraan |
-|---|---:|---:|
-| Loop valid | `+19 + 80` | `+99` |
-| Melebihi 5,5 km | `+19 - 50` | `-31` |
-| Tidak ada action legal | `+19 - 45` | `-26` |
+**Batas atas reward arah.** Setelah fase pulang, reward arah menjumlahkan perubahan jarak lurus. Bila agen bergerak menjauh, nilai perubahan menjadi negatif dan mengurangi akumulasi reward arah. Karena jarak lurus awal fase pulang secara konservatif tidak dapat melebihi total panjang rute valid 5.500 m, batas atas yang sengaja dibuat longgar adalah:
 
-Perbedaan komponen terminal antara sukses dan `over_distance` adalah `+80 - (-50) = 130`. Karena itu loop valid diberi sinyal jauh lebih kuat daripada kegagalan terminal. Bonus `+10` terlalu dekat dengan shaping `+19`, sedangkan `+500` membuat pengaruh shaping hanya sekitar 3,7%; oleh sebab itu `+80` dipakai sebagai kompromi skala. Nilai ini tetap dapat diuji melalui eksperimen sensitivitas, tetapi setiap perubahan harus dijalankan ulang pada seluruh Scenario A--C.
+    R_arah maksimum = 0,40 × 5.500 / 100 = +22
+
+Dengan demikian, batas atas akumulasi reward positif comfort dan arah adalah:
+
+    R_nonterminal maksimum = +27,5 + +22 = +49,5
+
+Bonus keberhasilan memenuhi:
+
+    +80 > +49,5
+
+Dengan bukti batas ini, bonus `+80` lebih besar daripada akumulasi positif comfort dan arah yang mungkin diperoleh pada rute valid. Selisihnya adalah `80 - 49,5 = 30,5`. Pada dua rute yang sama-sama valid, keduanya menerima bonus `+80` yang sama; perbedaan comfort dan arah tetap digunakan untuk membedakan kualitas kedua rute tersebut.
+
+Pernyataan bahwa `+80` "tidak terlalu besar" bukan fakta matematis dan tidak diklaim sebagai nilai optimal. Yang dapat dinyatakan adalah bahwa `+80` menciptakan hierarki reward yang jelas: keberhasilan loop memberi sinyal terminal terbesar, sedangkan comfort dan arah tetap menjadi komponen pembeda. Sensitivitas terhadap nilai bonus hanya dapat dibuktikan melalui eksperimen ulang dengan konfigurasi lain.
+
+### 7.1.3 Dasar penalti terminal dan revisit
+
+Seluruh penalti berikut adalah konfigurasi operasional, bukan nilai standar universal. Nilai dipilih untuk memberi konsekuensi negatif pada hasil yang tidak memenuhi syarat loop, sambil tetap membedakan jenis kegagalan dan tidak melarang revisit sepenuhnya.
+
+| Parameter | Nilai | Dasar penggunaan |
+|---|---:|---|
+| `OVER_DISTANCE_PENALTY` | -50 | Rute yang melampaui 5.500 m tidak lagi memenuhi batas valid. Nilai ini paling besar di antara penalti kegagalan karena target jarak sudah terlewati. Kontras terminal terhadap sukses adalah `+80 - (-50) = 130`. |
+| `NO_ACTION_PENALTY` | -45 | Agen tidak memiliki edge legal untuk melanjutkan rute. Nilainya dekat dengan -50 agar kondisi buntu tetap jelas merupakan kegagalan, tetapi sedikit lebih kecil karena tidak selalu berarti rute telah melewati batas jarak. |
+| `EARLY_RETURN_PENALTY` | -45 | Kembali ke start di luar rentang valid adalah kegagalan karena loop terlalu pendek. Dalam action mask normal kondisi ini hampir tidak muncul karena edge ke start hanya ditawarkan pada jarak valid; penalti dipertahankan sebagai pengaman bila pemanggilan `step()` berubah. |
+| `STEP_LIMIT_PENALTY` | -40 | Agen belum membentuk loop setelah 220 langkah. Nilainya tetap negatif, tetapi sedikit lebih kecil karena kondisi ini membatasi episode yang terlalu panjang, bukan pelanggaran langsung terhadap batas jarak. |
+| `REVISIT_PENALTY` | -8 | Revisit dibutuhkan sebagai opsi pulang setelah 50% target, sehingga tidak dilarang. Penalti ini membuat pengulangan node kurang menarik dibanding memilih edge baru, tetapi tetap memungkinkan agen kembali melalui jaringan yang telah dilalui. |
+
+Untuk `REVISIT_PENALTY = -8`, tidak ada pembuktian bahwa angka tersebut optimal. Dasarnya adalah fungsi perilaku: penalti harus cukup terlihat dibanding reward comfort per edge yang umumnya kecil, agar agen tidak membentuk putaran pendek berulang, tetapi revisit tetap tersedia melalui action mask pada fase pulang. Nilai ini harus dianggap sebagai hyperparameter dan hanya boleh diubah melalui eksperimen terkontrol pada semua scenario serta seed yang sama.
 
 ### 7.2 Epsilon-greedy
 
@@ -443,6 +476,8 @@ Setiap notebook `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` m
 Setiap jumlah episode menjalankan lima seed baru dari awal, dengan konfigurasi graf, reward, penyaringan ruas legal, state scenario terkait, dan evaluasi greedy yang sama. Karena seed dan jadwal epsilon sama sampai titik episode yang dibandingkan, hasil pada horizon tetap dapat dibaca sebagai checkpoint kebijakan untuk seed yang sama; namun setiap cell tetap membuat training baru yang mandiri. Artefak epsilon dinamis disimpan pada subfolder `sensitivitas_episode_<jumlah>_<scenario>`, sedangkan artefak horizon tetap disimpan pada `sensitivitas_epsilon_tetap_50000_episode_<jumlah>_<scenario>` agar tidak tercampur.
 
 Ringkasan notebook membandingkan empat indikator dari lima evaluasi greedy: `success_rate_greedy`, rata-rata galat jarak, `return_progress_ratio`, dan `closing_action_available_rate`. Jika hasil membaik secara konsisten ketika episode bertambah, dapat disimpulkan bahwa training sebelumnya belum cukup. Sebaliknya, jika metrik telah mendatar, tambahan episode tidak lagi memberi manfaat yang berarti pada konfigurasi tersebut. Untuk perbandingan state A--C yang final, gunakan jumlah episode **yang sama** untuk seluruh scenario dan hanya bandingkan hasil dari jadwal epsilon yang sama.
+
+Hasil rangkaian final menegaskan perbedaan dua jadwal. Pada dynamic 75k, A dan B masih 0/5 loop sedangkan C mencapai 3/5 loop. Pada fixed decay 75k, B dan C masing-masing mencapai 5/5 loop serta closing action tersedia pada seluruh seed; A tetap 0/5. B mempertahankan 5/5 sampai 150k, tetapi galat jarak meningkat dari 112,16 m pada 75k menjadi 240,37 m pada 150k. C turun dari 5/5 pada 75k dan 100k menjadi 4/5 pada 150k. Rincian tabel dan aset visual sementara untuk BAB IV berada pada `docs/temp/BAB_4_DRAFT.md`.
 
 ### 8.3 Arsip hasil sebelum rancangan episode final
 
@@ -541,9 +576,10 @@ Setelah training selesai untuk **setiap seed**, Q-table seed tersebut langsung d
 | total_distance_m | Total jarak edge pada rute dalam meter. |
 | absolute_distance_error_m | Selisih absolut dari target 5.000 m. Bukan pengganti is_loop. |
 | total_reward | Akumulasi seluruh reward dan penalti dari satu evaluasi greedy. Dibaca bersama is_loop dan termination_reason, bukan sebagai satu-satunya ukuran kualitas rute. |
-| mean_comfort | Rata-rata comfort edge berbobot panjang. |
-| distance_to_start_at_end_m | Jarak lurus posisi akhir ke start dalam meter. Makin kecil berarti agen setidaknya mendekati start sebelum terminasi. |
-| return_progress_ratio | Proporsi langkah setelah 2.500 m yang mengurangi jarak lurus ke start. Nilai mendekati 1 berarti arah pulang lebih konsisten. |
+| mean_comfort | Rata-rata comfort edge berbobot panjang. Nilai mendekati 1 berarti proporsi panjang rute lebih banyak melewati edge berskor comfort tinggi. |
+| distance_to_start_at_end_m | Jarak lurus posisi akhir ke start dalam meter. Makin kecil berarti agen setidaknya mendekati start sebelum terminasi. Ini tidak membuktikan loop karena agen dapat dekat start tanpa kembali ke node start. |
+| return_progress_ratio | Proporsi langkah pada fase pulang yang mengurangi jarak lurus ke start. Fase pulang dicatat setelah total jarak mencapai 2.500 m. Nilai mendekati 1 berarti arah pulang lebih konsisten; lihat penjelasan dan contoh pada Bagian 9.2.1. |
+| closing_action_available | Bernilai True bila selama evaluasi pernah tersedia edge legal langsung menuju start yang akan menghasilkan total jarak 4.500–5.500 m. Ini menunjukkan kesempatan menutup loop, bukan bukti edge tersebut dipilih. |
 | termination_reason | Alasan terminal setiap seed: success, over_distance, no_available_action, early_return, atau step_limit. |
 
 Tabel evaluasi utama dan berkas `evaluation_metrics_{scenario}.csv` kini langsung menampilkan `closing_action_available` per seed. Nilai tersebut bersumber dari flag internal `closing_action_was_available`; bernilai True bila selama evaluasi tersedia edge legal langsung ke start dengan proyeksi total jarak 4.500–5.500 m. Nilai True berarti kesempatan menutup loop pernah ada, bukan bahwa edge itu pasti dipilih. Sementara itu, `closing_action_available_rate` serta rate semua tipe terminasi adalah **diagnosis training** yang tetap ditampilkan pada grafik diagnosis.
@@ -567,6 +603,16 @@ Grafik diagnosis menggunakan data `training_history_{scenario}.csv`, sehingga me
 
 Tidak ada baseline Dijkstra. Perbandingan eksperimen hanya A vs B vs C, dengan lingkungan yang sama.
 
+### 9.1.3 Cara membaca kelompok metrik evaluasi
+
+Metrik evaluasi tidak memiliki peran yang sama. `is_loop` adalah keputusan keberhasilan utama untuk satu seed, sedangkan `success_rate_greedy` merangkum berapa dari lima seed yang berhasil. `total_distance_m` dan `absolute_distance_error_m` menjelaskan kedekatan jarak rute terhadap target 5 km, tetapi rute dengan galat kecil tetap gagal apabila tidak kembali ke node start.
+
+`mean_comfort` menjelaskan karakter ruas yang dilalui rute; `total_reward` hanya menjadi indikator pendukung karena nilainya merupakan gabungan reward comfort, arah perjalanan, penalti revisit, dan reward atau penalti terminal. Oleh sebab itu, total reward tidak boleh dipakai sendirian untuk menyatakan sebuah rute lebih baik.
+
+Tiga metrik berikut membantu mendiagnosis kegagalan pulang: `distance_to_start_at_end_m` menunjukkan seberapa jauh posisi akhir dari start, `return_progress_ratio` menunjukkan konsistensi arah pulang setelah fase pulang dimulai, dan `closing_action_available` menunjukkan apakah agen pernah memiliki kesempatan legal untuk langsung menutup loop. Ketiganya tetap metrik pendukung; rute hanya dinyatakan berhasil ketika `is_loop=True`.
+
+`termination_reason` menjelaskan akhir episode. Contohnya, `over_distance` berarti total jarak telah melewati 5.500 m sebelum agen kembali valid ke start, sedangkan `no_available_action` berarti action mask tidak lagi menyediakan edge legal pada state tersebut.
+
 ### 9.2 Cara membaca mean_comfort
 
 `mean_comfort` adalah skor comfort keseluruhan rute. Nilainya dihitung sebagai jumlah setiap **comfort edge × panjang edge**, kemudian dibagi total panjang rute. Karena itu edge panjang memberi pengaruh lebih besar daripada edge pendek.
@@ -583,6 +629,39 @@ Simulasi:
 Perhitungannya adalah `(100 × 0,80 + 900 × 0,60) ÷ (100 + 900) = 0,62`. Hasil ini berbeda dari rata-rata biasa `(0,80 + 0,60) ÷ 2 = 0,70`, karena rata-rata biasa keliru menganggap edge 100 m dan 900 m sama pentingnya.
 
 Semakin `mean_comfort` mendekati 1, semakin besar bagian panjang rute yang melewati edge dengan comfort score tinggi. Semakin mendekati 0, semakin banyak panjang rute melalui edge dengan skor rendah. Interpretasi ini tetap terbatas pada proxy OSM; nilai 0,90 tidak berarti pelari pasti menilai rute sangat nyaman atau aman.
+
+### 9.2.1 Cara membaca return_progress_ratio
+
+`return_progress_ratio` digunakan untuk menjawab pertanyaan: **setelah agen memasuki fase pulang, seberapa konsisten langkahnya benar-benar mendekati titik awal?** Metrik ini tidak mengukur kenyamanan maupun keberhasilan loop secara langsung. Metrik ini hanya membaca arah gerak relatif terhadap start.
+
+    return_progress_ratio = return_progress_steps ÷ return_phase_steps
+
+Data pembentuknya disimpan oleh environment pada setiap action sebagai berikut.
+
+1. Sebelum action dijalankan, environment menghitung `distance_before`, yaitu jarak lurus dari node saat ini ke start.
+2. Setelah action dijalankan, environment menghitung `distance_after`, yaitu jarak lurus dari node tujuan ke start.
+3. Bila total jarak rute **setelah action** sudah minimal 2.500 m, action tersebut dihitung sebagai satu `return_phase_steps`.
+4. Bila pada action tersebut `distance_after < distance_before`, action juga dihitung sebagai satu `return_progress_steps`.
+
+Dengan demikian, pembilang menghitung jumlah langkah yang mendekati start dan penyebut menghitung seluruh langkah dalam fase pulang. Metrik ini menghitung **jumlah langkah**, bukan besar perubahan jaraknya. Sebuah langkah yang mendekat 2 m dan langkah yang mendekat 100 m sama-sama menambah pembilang satu kali.
+
+Contoh: setelah total jarak mencapai 2.500 m, agen melakukan lima action dengan jarak lurus terhadap start berikut.
+
+| Action fase pulang | `distance_before` | `distance_after` | Mendekati start? |
+|---:|---:|---:|---|
+| 1 | 500 m | 440 m | Ya |
+| 2 | 440 m | 470 m | Tidak |
+| 3 | 470 m | 400 m | Ya |
+| 4 | 400 m | 410 m | Tidak |
+| 5 | 410 m | 350 m | Ya |
+
+Pada contoh tersebut, `return_phase_steps = 5` dan `return_progress_steps = 3`. Maka:
+
+    return_progress_ratio = 3 ÷ 5 = 0,60
+
+Nilai 0,60 berarti 60% action pada fase pulang bergerak mendekati start. Nilai 1,00 berarti seluruh action fase pulang mendekati start, sedangkan nilai 0,00 berarti tidak ada action fase pulang yang mendekati start. Bila episode berakhir sebelum total jarak mencapai 2.500 m, penyebutnya nol sehingga implementasi menyimpan nilai `NaN` atau kosong; nilai ini tidak diperlakukan sebagai nol saat rata-rata grafik dihitung.
+
+Nilai tinggi belum tentu berarti loop valid. Agen dapat selalu bergerak mendekati start tetapi berhenti di node yang dekat dengan start, memilih edge yang salah, atau melewati batas jarak sebelum kembali tepat ke node awal. Karena itu `return_progress_ratio` harus dibaca bersama `is_loop`, `distance_to_start_at_end_m`, `closing_action_available`, dan `termination_reason`.
 
 ### 9.3 Peta interaktif
 

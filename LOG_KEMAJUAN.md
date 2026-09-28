@@ -9,8 +9,9 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - State yang aktif dan dibandingkan: A = `(current_node,)`, B = `(current_node, progress_bin)`, C = `(current_node, previous_node, progress_bin)`.
 - Scenario D telah dihapus; revisit bukan bagian state. Revisit tetap merupakan aturan environment yang sama untuk seluruh A--C.
 - Evaluasi utama adalah **greedy** (`epsilon=0`) sekali untuk setiap Q-table/seed. `EPSILON_END=0,05` hanya berlaku saat training.
-- Rancangan eksperimen episode yang disepakati tetapi belum dijalankan ulang: (a) epsilon dinamis pada 30k, 40k, 50k, dan 75k; (b) horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k. Keduanya dijalankan pada A, B, C dan lima seed yang sama.
-- Hasil lama hingga 400k disimpan sebagai bukti awal: B dan C pernah mencapai 5/5 loop pada 100k dengan horizon epsilon tetap 50k, sedangkan A tetap 0/5. Hasil itu tidak menjadi angka final sampai rangkaian baru selesai dijalankan.
+- Rancangan eksperimen episode final sudah dijalankan: (a) epsilon dinamis pada 30k, 40k, 50k, dan 75k; (b) horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k. Keduanya memakai A, B, C serta lima seed yang sama.
+- Hasil fixed decay final: A selalu 0/5; B mencapai 5/5 pada 75k, 100k, dan 150k; C mencapai 5/5 pada 75k dan 100k, kemudian 4/5 pada 150k. B pada 75k adalah kandidat sementara terbaik berdasarkan 5/5 loop, galat jarak 112,16 m, dan comfort 0,766.
+- Paket draf BAB IV tersedia pada `docs/temp/`: naskah sementara, manifest aset, ringkasan CSV, gambar analisis graf, grafik sensitivitas, grafik training/diagnosis B-C 75k, serta peta interaktif B-C 75k.
 
 ## Keputusan implementasi yang penting
 
@@ -20,6 +21,7 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - Fase pulang dimulai pada 50% target. Sebelum fase ini, agen diberi penalti ringan jika action membuatnya lebih dekat ke start; sesudah fase ini, agen memperoleh reward bila makin dekat ke start.
 - Comfort score edge memakai highway, surface, dan width; comfort adalah proxy berbasis OSM, bukan hasil survei pelari atau skor keamanan.
 - `closing_action_available=True` berarti selama evaluasi tersedia action legal langsung ke start yang menghasilkan total jarak 4.500--5.500 m. Flag ini adalah diagnosis kesempatan menutup loop, bukan jaminan loop berhasil.
+- Dasar skala reward telah dilengkapi pada `IMPLEMENTASI.md`: titik netral comfort `0,50`, normalisasi per 100 m, simulasi koefisien arah `0,40`, batas atas konservatif reward non-terminal `+49,5`, dasar bonus sukses `+80`, serta fungsi setiap penalti terminal dan revisit. Nilai-nilai tersebut tetap diposisikan sebagai konfigurasi operasional, bukan standar universal atau nilai optimal yang telah terbukti.
 
 ## Perubahan kode pada sesi terakhir
 
@@ -64,11 +66,10 @@ Tabel juga memuat `mean_total_reward` dan `mean_comfort`. Reward bukan indikator
 
 ## Langkah berikutnya yang disepakati
 
-1. Jalankan ulang epsilon dinamis pada 30k, 40k, 50k, dan 75k untuk A, B, dan C. Laporan BAB IV hanya menjadikannya alasan metodologis, bukan pembandingan durasi final.
-2. Jalankan horizon epsilon tetap 50k pada 50k, 75k, 100k, dan 150k untuk A, B, dan C. Rangkaian ini menjadi basis hasil akhir BAB IV.
-3. Bandingkan A--C dengan jumlah episode sama, evaluasi greedy, serta grafik TD-error. Jangan mencampurkan hasil epsilon dinamis dan horizon tetap sebagai satu rangkaian.
-4. Tentukan state kandidat dari keberhasilan loop terlebih dahulu, lalu galat jarak dan comfort sebagai pembeda. Return progress dan reward dibaca sebagai metrik pendukung.
-5. Lima seed cukup untuk eksperimen saat ini, tetapi pembahasan BAB IV harus menyebutnya sebagai stabilitas empiris pada lima seed, bukan klaim generalisasi.
+1. Tinjau dan pindahkan naskah, tabel, serta aset dari `docs/temp/BAB_4_DRAFT.md` ke dokumen utama BAB IV.
+2. Bandingkan A--C dengan jumlah episode sama, evaluasi greedy, serta grafik TD-error. Jangan mencampurkan hasil epsilon dinamis dan horizon tetap sebagai satu rangkaian.
+3. Tetapkan Scenario B fixed 75k sebagai kandidat sementara berdasarkan urutan prioritas: loop valid, galat jarak, lalu comfort. Return progress dan reward dibaca sebagai metrik pendukung.
+4. Lima seed cukup untuk eksperimen saat ini, tetapi pembahasan BAB IV harus menyebutnya sebagai stabilitas empiris pada lima seed, bukan klaim generalisasi.
 
 ## Berkas utama
 
@@ -77,3 +78,6 @@ Tabel juga memuat `mean_total_reward` dan `mean_comfort`. Reward bukan indikator
 - `scenario_A.ipynb`, `scenario_B.ipynb`, `scenario_C.ipynb`: eksperimen state dan sensitivitas episode.
 - `IMPLEMENTASI.md`: wiki teknis lengkap.
 - `hasil_bab_4/training_qlearning_5km/`: artefak CSV, grafik, dan peta hasil running.
+- `docs/temp/BAB_4_DRAFT.docx`: draf Word mandiri BAB IV yang memuat naskah, tabel, dan visualisasi hasil final sementara; telah dirender untuk pemeriksaan tata letak sebelum dipindahkan ke dokumen skripsi utama.
+- `docs/temp/BAB_4_5_DAFTAR_PUSTAKA_DRAFT.docx`: draf Word gabungan BAB IV, BAB V, dan daftar pustaka yang telah dirender serta diperiksa tata letaknya. BAB V menyimpulkan hasil fixed decay 75k secara terbatas pada lima seed dan memuat saran penelitian lanjutan.
+- `referensi.md`: daftar referensi final telah diseragamkan dengan draf BAB IV--V. Saat merevisi BAB I--III, sitasi OpenStreetMap Wiki perlu menggunakan `n.d.-a`, `n.d.-b`, dan `n.d.-c` agar konsisten dengan daftar pustaka.

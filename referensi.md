@@ -89,3 +89,20 @@ Dokumen ini adalah daftar sumber yang telah digunakan atau direncanakan untuk di
   - OpenStreetMap Wiki contributors. (2026b). *Key: surface*. OpenStreetMap Wiki. Retrieved September 21, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
   - OpenStreetMap Wiki contributors. (2026c). *Key: width*. OpenStreetMap Wiki. Retrieved September 21, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
 - **Tautan:** [highway](https://wiki.openstreetmap.org/wiki/Key:highway), [surface](https://wiki.openstreetmap.org/wiki/Key:surface), dan [width](https://wiki.openstreetmap.org/wiki/Key:width).
+
+## Daftar pustaka final untuk draf BAB I--V
+
+Daftar berikut telah disinkronkan dengan draf BAB IV--V pada 26 September 2026 dan dirapikan ke gaya APA. Hanya sumber yang digunakan atau direncanakan untuk disitasi pada naskah revisi yang dicantumkan. Sumber daring tanpa tahun publikasi menggunakan `n.d.`; sitasi di BAB II yang sebelumnya memakai `2026a--c` perlu diseragamkan menjadi `n.d.-a--c` saat dokumen utama direvisi.
+
+- Boeing, G. (2017). OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks. *Computers, Environment and Urban Systems, 65*, 126–139. https://doi.org/10.1016/j.compenvurbsys.2017.05.004
+- Garmin Indonesia. (2025, December 12). *Garmin Connect Data Report 2025: Masyarakat Indonesia tunjukkan tren positif menuju gaya hidup lebih aktif dan sehat*. https://www.garmin.co.id/news/press-release/news-2025-dec-year-review/
+- Loepp, B., & Ziegler, J. (2018). Recommending running routes: Framework and demonstrator. In *ComplexRec ’18: Proceedings of the 2nd Workshop on Recommendation in Complex Scenarios* (pp. 26–29). https://interactivesystems.info/system/pdfs/858/original/ComplexRec-18-Final.pdf
+- OpenStreetMap contributors. (n.d.). *Copyright and license*. Retrieved September 26, 2026, from https://www.openstreetmap.org/copyright
+- OpenStreetMap Wiki contributors. (n.d.-a). *Key: highway*. OpenStreetMap Wiki. Retrieved September 26, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway
+- OpenStreetMap Wiki contributors. (n.d.-b). *Key: surface*. OpenStreetMap Wiki. Retrieved September 26, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
+- OpenStreetMap Wiki contributors. (n.d.-c). *Key: width*. OpenStreetMap Wiki. Retrieved September 26, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
+- OSMnx Developers. (2026). *OSMnx user reference* (Version 2.1.1). Retrieved September 26, 2026, from https://osmnx.readthedocs.io/en/stable/user-reference.html
+- Sutton, R. S., & Barto, A. G. (2018). *Reinforcement learning: An introduction* (2nd ed.). The MIT Press.
+- Tegart, A. D., Schuurman, N., & Harden, S. R. (2025). Runnability: A scoping review. *International Journal of Environmental Research and Public Health, 22*(1), Article 71. https://doi.org/10.3390/ijerph22010071
+- Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. *Machine Learning, 8*(3–4), 279–292. https://doi.org/10.1007/BF00992698
+- Zhang, X., Li, H., Peng, J., & Liu, W. (2015). A cooperative Q-learning path planning algorithm for origin-destination pairs in urban road networks. *Mathematical Problems in Engineering, 2015*, Article 146070. https://doi.org/10.1155/2015/146070
