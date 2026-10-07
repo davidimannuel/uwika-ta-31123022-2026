@@ -51,6 +51,8 @@ Notebook scenario dapat membuat GraphML bila belum ada, tetapi analisis tetap se
 
 ### 2.1 Pemisahan cell training dan tampilan hasil
 
+Pesan pada cell pemuatan graf hanya menampilkan jumlah seed. Nilai default `EPISODES=10.000` dipakai untuk uji cepat di core dan tidak ditampilkan lagi karena seluruh eksperimen notebook mengirim jumlah episode secara eksplisit.
+
 Setiap konfigurasi eksperimen pada `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` sekarang memiliki dua cell berurutan:
 
 1. **Cell training** memanggil `run_scenario_experiment(..., display_results=False)`. Cell ini menjalankan lima seed, melakukan evaluasi greedy, lalu menyimpan artefak; tabel, grafik, dan peta tidak ditampilkan agar output training tidak berat.
@@ -466,6 +468,15 @@ Walaupun Q-Learning memerlukan pilihan acak, hasil eksperimen perlu dapat diuji 
     rng = np.random.default_rng(seed)
 
 `seed` adalah angka awal pembentuk urutan pseudoacak, bukan nilai yang menghilangkan pengacakan. Generator ini dipakai ketika `choose_action()` memilih action legal secara acak pada eksplorasi epsilon-greedy dan ketika beberapa action memiliki Q-value terbaik yang sama. Dengan graf, kode, konfigurasi, dan seed yang sama, urutan pilihan acak pada training seharusnya sama sehingga hasil dapat direproduksi.
+
+Pengaruh seed terhadap rute terjadi **secara bertahap melalui pemilihan edge**, bukan dengan memilih satu rute lengkap secara langsung. Pada setiap langkah training, generator dipakai dua kali ketika eksplorasi terjadi:
+
+    if rng.random() < epsilon:
+        action = actions[int(rng.integers(len(actions)))]
+
+`rng.random()` menentukan apakah agen melakukan eksplorasi. Jika ya, `rng.integers(len(actions))` memilih indeks salah satu action legal. Dalam graf proyek ini, satu action adalah edge spesifik `(next_node, key)`, sehingga pengacakan tersebut benar-benar dapat menentukan ruas jalan berikutnya yang dipilih agen. Action acak pada langkah awal dapat membawa agen ke node berbeda; akibatnya daftar action legal, reward yang diterima, pembaruan Q-value, dan rute pada langkah berikutnya juga dapat berbeda.
+
+Dengan seed yang sama, kedua nilai pseudoacak tersebut muncul dalam urutan yang sama saat training diulang. Karena graf, daftar action legal, dan aturan environment juga sama, agen biasanya memilih edge eksplorasi yang sama dan memperoleh rute hasil training yang sama. Jika seed diubah, urutan eksplorasi dapat berubah; rute akhirnya dapat berbeda, meskipun tidak harus selalu berbeda apabila kebijakan greedy yang dipelajari akhirnya mengarah ke rute dominan yang sama. Ketika agen tidak mengeksplorasi, action dipilih berdasarkan Q-value tertinggi, bukan melalui `rng.integers()`; pengecualian hanya terjadi bila beberapa Q-value tertinggi seri.
 
 Contoh sederhana: training dengan `seed=0` yang dijalankan dua kali akan menerima urutan angka pseudoacak yang sama, sehingga pilihan eksplorasi dan hasilnya dapat sama persis. Training dengan `seed=1` memakai urutan pseudoacak lain sehingga jalur eksplorasinya dapat berbeda. Dengan kata lain, hasil yang sama ketika notebook dijalankan ulang bukan berarti Q-Learning tidak menggunakan pengacakan; pengacakan tersebut sengaja dikendalikan agar dapat direproduksi.
 
