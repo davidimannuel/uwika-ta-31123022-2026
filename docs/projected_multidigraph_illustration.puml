@@ -1,0 +1,59 @@
+@startdot
+digraph projected_multidigraph {
+  // Posisi tetap diperlukan agar sumbu dan proyeksi node saling sejajar.
+  // Satu satuan posisi diagram mewakili 20 meter pada ilustrasi.
+  graph [layout=neato, overlap=true, splines=true, outputorder=edgesfirst,
+         bgcolor="white", dpi=180, pad=0.3];
+  node [fontname="Arial", fontsize=18, pin=true];
+  edge [fontname="Arial", fontsize=16, arrowsize=0.8];
+
+  // Titik ujung sumbu dan kaki garis bantu.
+  node [shape=point, width=0.025, label="", color="#65758B"];
+  origin [pos="0,0!"];
+  x_end [pos="6.5,0!"];
+  y_end [pos="0,5.3!"];
+  x_20 [pos="1,0!"];
+  x_100 [pos="5,0!"];
+  y_20 [pos="0,1!"];
+  y_80 [pos="0,4!"];
+
+  // Sumbu X dan Y benar-benar digambar sebagai garis berpanah.
+  origin -> x_end [color="#344054", penwidth=2];
+  origin -> y_end [color="#344054", penwidth=2];
+
+  // Label sumbu dan angka dalam meter.
+  node [shape=plain, fontcolor="#344054"];
+  zero [pos="-0.22,-0.25!", label="0"];
+  x_20_text [pos="1,-0.32!", label="20"];
+  x_100_text [pos="5,-0.32!", label="100"];
+  y_20_text [pos="-0.4,1!", label="20"];
+  y_80_text [pos="-0.4,4!", label="80"];
+  x_label [pos="7.15,0!", label="X (meter)"];
+  y_label [pos="0,5.65!", label="Y (meter)"];
+
+  // Angka koordinat relatif merupakan contoh, bukan data wilayah penelitian.
+  node [shape=ellipse, style=filled, fillcolor="#EEF3F8", color="#17365D",
+        fontcolor="#17365D", fontsize=18, margin=0.12];
+  a [pos="1,1!", label="A\n(20, 20)"];
+  b [pos="5,1!", label="B\n(100, 20)"];
+  c [pos="5,4!", label="C\n(100, 80)"];
+
+  // Garis bantu menghubungkan posisi node ke angka pada sumbu.
+  edge [color="#B7BFC8", style=dashed, penwidth=1, dir=none];
+  x_20 -> a;
+  y_20 -> a;
+  x_100 -> b;
+  y_80 -> c;
+
+  // Ruas berarah: A dan B terhubung oleh dua edge dengan key berbeda.
+  // Panjang ruas dapat lebih besar daripada jarak lurus antar-node.
+  edge [style=solid, dir=forward, penwidth=2.5];
+  a -> b [color="#17365D", fontcolor="#17365D", label="key = 0\n120 m"];
+  a -> b [color="#27845B", fontcolor="#27845B", label="key = 1\n150 m"];
+  b -> c [color="#65758B", fontcolor="#65758B", label="key = 0\n90 m"];
+
+  node [shape=plain, style="", fontcolor="#344054", fontsize=16];
+  explanation [pos="3.4,-1.15!",
+    label="Garis putus-putus: proyeksi koordinat ke sumbu\nPanah berwarna: ruas jalan berarah\nKoordinat relatif dan panjang ruas hanya ilustrasi"];
+}
+@enddot

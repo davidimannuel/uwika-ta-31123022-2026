@@ -302,7 +302,7 @@ Konfigurasi tetap untuk semua scenario:
 
 Ini penting: A–C diuji secara adil karena tidak mempunyai environment berbeda.
 
-Kondisi early_return tetap ada dalam step sebagai penjagaan, tetapi action mask normal tidak menawarkan edge ke start sebelum jarak valid. Jadi early_return biasanya tidak muncul kecuali action mask atau pemanggilan step diubah.
+Kepulangan ke start di luar rentang 4.500--5.500 m dicegah oleh action mask sebelum action dipilih. Fungsi step juga menolak action yang tidak legal. Terminasi aktif hanya success, over_distance, no_available_action, dan step_limit.
 
 Setiap kali `closing_actions` tidak kosong, environment mencatat `closing_action_was_available=True` untuk episode tersebut. Flag ini **tidak** mengubah daftar action, reward, atau policy; ia hanya mencatat bahwa agen pernah memiliki kesempatan legal untuk langsung menutup loop.
 
@@ -316,7 +316,7 @@ Urutan fungsi **step()** harus dipahami sebelum dimodifikasi:
 4. Mengubah posisi, total jarak, previous node, riwayat rute, jumlah kunjungan, dan jumlah langkah.
 5. Menghitung reward comfort edge.
 6. Menambahkan penalti jika terjadi revisit ke node selain start.
-7. Memeriksa terminal dengan urutan: success, early_return, over_distance, step_limit.
+7. Memeriksa terminal dengan urutan: success, over_distance, step_limit. Kondisi no_available_action ditangani saat tidak ada action legal.
 8. Jika belum terminal dan jarak sudah 50% target, menambahkan reward arah pulang.
 9. Mengembalikan next state, reward, done, dan info.
 
@@ -377,7 +377,6 @@ Contoh: pada jarak rute 1.800 m, agen melewati edge dengan reward comfort `+0,25
 | SUCCESS_BONUS | +80 | Loop valid. |
 | OVER_DISTANCE_PENALTY | -50 | Jarak melebihi 5.500 m. |
 | NO_ACTION_PENALTY | -45 | Tidak ada action legal. |
-| EARLY_RETURN_PENALTY | -45 | Kembali ke start di luar jarak valid. |
 | STEP_LIMIT_PENALTY | -40 | Mencapai 220 langkah. |
 | REVISIT_PENALTY | -8 | Revisit node selain start. |
 | OUTWARD_PENALTY_SCALE | 0,40 | Skala penalti bila, sebelum 2.500 m, action membuat agen mendekati start. |
@@ -426,7 +425,6 @@ Seluruh penalti berikut adalah konfigurasi operasional, bukan nilai standar univ
 |---|---:|---|
 | `OVER_DISTANCE_PENALTY` | -50 | Rute yang melampaui 5.500 m tidak lagi memenuhi batas valid. Nilai ini paling besar di antara penalti kegagalan karena target jarak sudah terlewati. Kontras terminal terhadap sukses adalah `+80 - (-50) = 130`. |
 | `NO_ACTION_PENALTY` | -45 | Agen tidak memiliki edge legal untuk melanjutkan rute. Nilainya dekat dengan -50 agar kondisi buntu tetap jelas merupakan kegagalan, tetapi sedikit lebih kecil karena tidak selalu berarti rute telah melewati batas jarak. |
-| `EARLY_RETURN_PENALTY` | -45 | Kembali ke start di luar rentang valid adalah kegagalan karena loop terlalu pendek. Dalam action mask normal kondisi ini hampir tidak muncul karena edge ke start hanya ditawarkan pada jarak valid; penalti dipertahankan sebagai pengaman bila pemanggilan `step()` berubah. |
 | `STEP_LIMIT_PENALTY` | -40 | Agen belum membentuk loop setelah 220 langkah. Nilainya tetap negatif, tetapi sedikit lebih kecil karena kondisi ini membatasi episode yang terlalu panjang, bukan pelanggaran langsung terhadap batas jarak. |
 | `REVISIT_PENALTY` | -8 | Revisit dibutuhkan sebagai opsi pulang setelah 50% target, sehingga tidak dilarang. Penalti ini membuat pengulangan node kurang menarik dibanding memilih edge baru, tetapi tetap memungkinkan agen kembali melalui jaringan yang telah dilalui. |
 
@@ -631,7 +629,7 @@ Setelah training selesai untuk **setiap seed**, Q-table seed tersebut langsung d
 | distance_to_start_at_end_m | Jarak lurus posisi akhir ke start dalam meter. Makin kecil berarti agen setidaknya mendekati start sebelum terminasi. Ini tidak membuktikan loop karena agen dapat dekat start tanpa kembali ke node start. |
 | return_progress_ratio | Proporsi langkah pada fase pulang yang mengurangi jarak lurus ke start. Fase pulang dicatat setelah total jarak mencapai 2.500 m. Nilai mendekati 1 berarti arah pulang lebih konsisten; lihat penjelasan dan contoh pada Bagian 9.2.1. |
 | closing_action_available | Bernilai True bila selama evaluasi pernah tersedia edge legal langsung menuju start yang akan menghasilkan total jarak 4.500–5.500 m. Ini menunjukkan kesempatan menutup loop, bukan bukti edge tersebut dipilih. |
-| termination_reason | Alasan terminal setiap seed: success, over_distance, no_available_action, early_return, atau step_limit. |
+| termination_reason | Alasan terminal setiap seed: success, over_distance, no_available_action, atau step_limit. |
 
 Tabel evaluasi utama dan berkas `evaluation_metrics_{scenario}.csv` kini langsung menampilkan `closing_action_available` per seed. Nilai tersebut bersumber dari flag internal `closing_action_was_available`; bernilai True bila selama evaluasi tersedia edge legal langsung ke start dengan proyeksi total jarak 4.500–5.500 m. Nilai True berarti kesempatan menutup loop pernah ada, bukan bahwa edge itu pasti dipilih. Sementara itu, `closing_action_available_rate` serta rate semua tipe terminasi adalah **diagnosis training** yang tetap ditampilkan pada grafik diagnosis.
 

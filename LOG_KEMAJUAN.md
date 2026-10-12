@@ -13,6 +13,12 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - Hasil fixed decay final: A selalu 0/5; B mencapai 5/5 pada 75k, 100k, dan 150k; C mencapai 5/5 pada 75k dan 100k, kemudian 4/5 pada 150k. B pada 75k adalah kandidat sementara terbaik berdasarkan 5/5 loop, galat jarak 112,16 m, dan comfort 0,766.
 - Paket draf BAB IV tersedia pada `docs/temp/`: naskah sementara, manifest aset, ringkasan CSV, gambar analisis graf, grafik sensitivitas, grafik training/diagnosis B-C 75k, serta peta interaktif B-C 75k.
 
+## Pembaruan terminasi environment
+
+- Terminasi aktif hanya `success`, `over_distance`, `no_available_action`, dan `step_limit`.
+- Cabang terminasi kepulangan di luar rentang valid, konstanta penaltinya, serta label dan warna grafik terkait telah dihapus. Action mask tetap hanya menawarkan edge ke start jika menghasilkan total jarak 4.500--5.500 m; `step()` tetap menolak action yang tidak legal.
+- Output notebook dan artefak eksperimen lama merupakan hasil tersimpan. Baris terminasi lama yang bernilai nol dan legenda grafik lama dapat tetap terlihat pada arsip tersebut; tabel dan grafik yang dibuat dari core terbaru memakai empat terminasi aktif.
+
 ## Pembaruan penyimpanan dan tampilan hasil
 
 - `run_scenario_experiment` kini memiliki parameter `display_results`. Notebook scenario mengirim `False` agar cell training hanya menyimpan hasil, tidak memaksa tampilan tabel, grafik, dan peta.

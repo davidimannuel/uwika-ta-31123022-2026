@@ -1,0 +1,44 @@
+@startuml
+top to bottom direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 20
+skinparam ArrowColor #27845B
+skinparam ArrowThickness 3
+skinparam ArrowFontColor #17365D
+skinparam nodesep 70
+skinparam ranksep 65
+skinparam dpi 180
+
+' Node pada rute yang dilalui.
+usecase "Start /\nFinish" as start #DDF2E5
+usecase "A" as a #EEF3F8
+usecase "B" as b #EEF3F8
+usecase "C" as c #EEF3F8
+
+' Node alternatif memperlihatkan bahwa jaringan memiliki ruas lain.
+usecase "D" as d #F1F3F5
+usecase "E" as e #F1F3F5
+usecase "F" as f #F1F3F5
+
+' Rute loop: Start -> A -> B -> C -> Start.
+' Panjang bagian perjalanan berjumlah 4.900 meter.
+start -right-> a : 1.200 m
+a -down-> b : 1.500 m
+b -left-> c : 1.100 m
+c -up-> start : 1.100 m
+
+' Ruas alternatif tetap terlihat, tetapi tidak dilalui pada ilustrasi ini.
+' Garis abu-abu menunjukkan koneksi jalan; panah hijau menunjukkan arah rute.
+a -[#B7BFC8,thickness=1]right- d
+b -[#B7BFC8,thickness=1]down- e
+c -[#B7BFC8,thickness=1]left- f
+
+legend bottom
+  <b>Total jarak rute: 4.900 m (4,9 km)</b>
+  Hijau: rute yang dilalui
+  Abu-abu: ruas lain yang tidak dilalui
+  Ilustrasi, bukan hasil eksperimen
+endlegend
+@enduml

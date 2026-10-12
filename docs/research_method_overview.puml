@@ -1,0 +1,22 @@
+@startuml
+' Diagram aktivitas tersusun vertikal secara bawaan.
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 20
+skinparam dpi 180
+skinparam activity {
+  BackgroundColor #EEF3F8
+  BorderColor #17365D
+  FontColor #17365D
+}
+
+start
+:Ambil dan olah data jaringan jalan\nOpenStreetMap;
+:Hitung skor karakter ruas jalan;
+:Rancang environment, state,\naction, dan reward;
+:Latih agen Q-Learning;
+:Evaluasi rute setelah pelatihan;
+:Bandingkan hasil dan analisis\npengaruh representasi state;
+stop
+@enduml

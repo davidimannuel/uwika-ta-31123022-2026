@@ -56,7 +56,6 @@ OUTWARD_PENALTY_SCALE = 0.40
 SUCCESS_BONUS = 80.0
 OVER_DISTANCE_PENALTY = -50.0
 NO_ACTION_PENALTY = -45.0
-EARLY_RETURN_PENALTY = -45.0
 STEP_LIMIT_PENALTY = -40.0
 REVISIT_PENALTY = -8.0
 
@@ -75,7 +74,6 @@ TERMINATION_REASONS = (
     "success",
     "over_distance",
     "no_available_action",
-    "early_return",
     "step_limit",
 )
 
@@ -480,15 +478,13 @@ class RunningRouteEnvironment:
             self.revisit_count += 1
             reward += REVISIT_PENALTY
 
+        # Action ke start sudah disaring pada available_actions(), sehingga
+        # kepulangan hanya dapat terjadi pada rentang jarak loop yang valid.
         if next_node == self.start_node and MIN_DISTANCE_M <= self.total_distance_m <= MAX_DISTANCE_M:
             self.done = True
             self.is_loop = True
             self.termination_reason = "success"
             reward += SUCCESS_BONUS
-        elif next_node == self.start_node:
-            self.done = True
-            self.termination_reason = "early_return"
-            reward += EARLY_RETURN_PENALTY
         elif self.total_distance_m > MAX_DISTANCE_M:
             self.done = True
             self.termination_reason = "over_distance"
@@ -881,7 +877,6 @@ TERMINATION_LABELS = {
     "success": "Berhasil loop",
     "over_distance": "Melebihi 5,5 km",
     "no_available_action": "Tidak ada action",
-    "early_return": "Kembali terlalu awal",
     "step_limit": "Batas langkah",
 }
 
@@ -890,7 +885,6 @@ TERMINATION_COLORS = {
     "success": "#16A34A",
     "over_distance": "#DC2626",
     "no_available_action": "#7C3AED",
-    "early_return": "#EA580C",
     "step_limit": "#475569",
 }
 
@@ -918,7 +912,7 @@ def plot_diagnosis_charts(
     )
 
     # Lima diagnosis memakai tata letak vertikal. Termination rate dibuat
-    # selebar dua kolom karena memuat lima garis sekaligus.
+    # selebar dua kolom agar empat tipe terminasi mudah dibandingkan.
     figure = plt.figure(figsize=(14, 14))
     grid = figure.add_gridspec(3, 2)
     distance_axis = figure.add_subplot(grid[0, 0])

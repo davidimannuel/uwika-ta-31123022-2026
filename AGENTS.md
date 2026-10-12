@@ -25,6 +25,7 @@ Keberhasilan tersebut direpresentasikan oleh `is_loop=True`. Comfort score adala
 | `IMPLEMENTASI.md` | Wiki implementasi dan keputusan teknis lengkap. |
 | `LOG_KEMAJUAN.md` | Handover hasil dan pekerjaan terakhir. |
 | `referensi.md` | Daftar sumber, format sitasi, tautan, dan pemakaian referensi pada naskah TA. |
+| `docs/PANDUAN-TA-SKRIPSI-LENGKAP.pdf` | Panduan penulisan TA/skripsi; rujukan sistematika dan ketentuan penulisan naskah. |
 | `docs/` | Kode PlantUML dan panduan aset visual untuk naskah TA. |
 | `hasil_bab_4/training_qlearning_5km/` | CSV, grafik, peta, dan artefak eksperimen. |
 
@@ -74,6 +75,7 @@ Interpretasi penting:
 
 ## Praktik kerja dan dokumentasi
 
+- Gunakan `docs/PANDUAN-TA-SKRIPSI-LENGKAP.pdf` sebagai rujukan saat meninjau atau menyusun naskah TA. Baca bagian yang relevan sebelum memberikan saran mengenai sistematika, format penulisan, dan sitasi.
 - Gunakan komentar kode berbahasa Indonesia yang menjelaskan alasan, terutama pada reward, action mask, dan state.
 - Setelah perubahan desain atau hasil penting, sinkronkan `IMPLEMENTASI.md` dan `LOG_KEMAJUAN.md`.
 - Setelah memakai sumber baru dalam naskah TA, sinkronkan `referensi.md`; jangan memakai angka atau klaim dari sumber yang belum dicatat di sana.
