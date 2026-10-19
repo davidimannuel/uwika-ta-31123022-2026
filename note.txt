@@ -25,3 +25,11 @@ coba di 40000 episode
 - skenario C = masih acak, dan reward masih menurun
 apakah ada korelasi state dan korelasi training ?
 lebih valuable kombinasi state nya maka lebih sedikit waktu training nya agar mendapat hasil yang diinginkan
+
+14 october 2026 (bimbingan)
+- deploy beberapa point static
+- check research chess / go dll untuk cara validasi data, snake
+- validasi perhitungan manual
+- cek literasi graph
+- tidak bisa training semua karena tiap lintasan butuh training berbeda
+- reach dosen penguji, untuk hasil revisian nya 2 minggu ini
