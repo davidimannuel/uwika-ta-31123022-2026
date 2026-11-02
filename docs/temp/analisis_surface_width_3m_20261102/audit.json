@@ -1,0 +1,272 @@
+{
+  "group": "surface_width_3m_20261102",
+  "history_rows": 6750000,
+  "training_runs": 60,
+  "configuration_folders": 12,
+  "valid_routes": 27,
+  "unique_ordered_valid_routes": 27,
+  "failed_terminations": {
+    "over_distance": 29,
+    "no_available_action": 4
+  },
+  "failures_with_closing_action": 0,
+  "replayed_evaluations": 60,
+  "input_files_preserved": 228,
+  "metadata_rules_verified": true,
+  "checks": [
+    {
+      "folder": "dinamis_75000_A",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "dinamis_75000_B",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "dinamis_75000_C",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "dinamis_150000_A",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "dinamis_150000_B",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "dinamis_150000_C",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_75000_A",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_75000_B",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_75000_C",
+      "rows": 375000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_150000_A",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_150000_B",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    },
+    {
+      "folder": "tetap_50000_episode_150000_C",
+      "rows": 750000,
+      "epsilon_verified": true,
+      "replayed_seeds": 5
+    }
+  ],
+  "summary": [
+    {
+      "strategy": "dinamis",
+      "episodes": 75000,
+      "scenario": "A",
+      "success_count": 0,
+      "seeds": 5,
+      "mean_error_all_m": 575.944216514455,
+      "mean_error_success_m": null,
+      "mean_comfort_success": null,
+      "mean_q_states": 4287.0,
+      "closing_rate": 0.0,
+      "training_success_last_10000": 0.00138,
+      "representative_seed": 3,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "dinamis",
+      "episodes": 75000,
+      "scenario": "B",
+      "success_count": 0,
+      "seeds": 5,
+      "mean_error_all_m": 499.70284880191304,
+      "mean_error_success_m": null,
+      "mean_comfort_success": null,
+      "mean_q_states": 25996.2,
+      "closing_rate": 0.0,
+      "training_success_last_10000": 0.00208,
+      "representative_seed": 0,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "dinamis",
+      "episodes": 75000,
+      "scenario": "C",
+      "success_count": 5,
+      "seeds": 5,
+      "mean_error_all_m": 331.46316122324754,
+      "mean_error_success_m": 331.46316122324754,
+      "mean_comfort_success": 0.9270856681785234,
+      "mean_q_states": 45109.8,
+      "closing_rate": 1.0,
+      "training_success_last_10000": 0.42654,
+      "representative_seed": 4,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "dinamis",
+      "episodes": 150000,
+      "scenario": "A",
+      "success_count": 0,
+      "seeds": 5,
+      "mean_error_all_m": 499.2758151420068,
+      "mean_error_success_m": null,
+      "mean_comfort_success": null,
+      "mean_q_states": 4812.2,
+      "closing_rate": 0.0,
+      "training_success_last_10000": 0.00098,
+      "representative_seed": 3,
+      "training_rows": 750000
+    },
+    {
+      "strategy": "dinamis",
+      "episodes": 150000,
+      "scenario": "B",
+      "success_count": 0,
+      "seeds": 5,
+      "mean_error_all_m": 495.74801586193314,
+      "mean_error_success_m": null,
+      "mean_comfort_success": null,
+      "mean_q_states": 30498.4,
+      "closing_rate": 0.0,
+      "training_success_last_10000": 0.00106,
+      "representative_seed": 2,
+      "training_rows": 750000
+    },
+    {
+      "strategy": "dinamis",
+      "episodes": 150000,
+      "scenario": "C",
+      "success_count": 5,
+      "seeds": 5,
+      "mean_error_all_m": 394.1665129622128,
+      "mean_error_success_m": 394.1665129622128,
+      "mean_comfort_success": 0.9290949622549736,
+      "mean_q_states": 52099.2,
+      "closing_rate": 1.0,
+      "training_success_last_10000": 0.66916,
+      "representative_seed": 4,
+      "training_rows": 750000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 75000,
+      "scenario": "A",
+      "success_count": 1,
+      "seeds": 5,
+      "mean_error_all_m": 483.03255868078304,
+      "mean_error_success_m": 211.51225511038592,
+      "mean_comfort_success": 0.9055770721875316,
+      "mean_q_states": 4754.2,
+      "closing_rate": 0.2,
+      "training_success_last_10000": 0.02558,
+      "representative_seed": 0,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 75000,
+      "scenario": "B",
+      "success_count": 1,
+      "seeds": 5,
+      "mean_error_all_m": 441.75607412180216,
+      "mean_error_success_m": 135.6408086633446,
+      "mean_comfort_success": 0.9284840838710312,
+      "mean_q_states": 25475.0,
+      "closing_rate": 0.2,
+      "training_success_last_10000": 0.0743,
+      "representative_seed": 1,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 75000,
+      "scenario": "C",
+      "success_count": 5,
+      "seeds": 5,
+      "mean_error_all_m": 334.1674029896274,
+      "mean_error_success_m": 334.1674029896274,
+      "mean_comfort_success": 0.9251400309604207,
+      "mean_q_states": 43899.0,
+      "closing_rate": 1.0,
+      "training_success_last_10000": 0.69872,
+      "representative_seed": 1,
+      "training_rows": 375000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 150000,
+      "scenario": "A",
+      "success_count": 0,
+      "seeds": 5,
+      "mean_error_all_m": 569.1448097376928,
+      "mean_error_success_m": null,
+      "mean_comfort_success": null,
+      "mean_q_states": 5415.0,
+      "closing_rate": 0.0,
+      "training_success_last_10000": 0.0217,
+      "representative_seed": 3,
+      "training_rows": 750000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 150000,
+      "scenario": "B",
+      "success_count": 5,
+      "seeds": 5,
+      "mean_error_all_m": 268.4688566284647,
+      "mean_error_success_m": 268.4688566284647,
+      "mean_comfort_success": 0.9033535497312097,
+      "mean_q_states": 28103.2,
+      "closing_rate": 1.0,
+      "training_success_last_10000": 0.76578,
+      "representative_seed": 1,
+      "training_rows": 750000
+    },
+    {
+      "strategy": "horizon_50000",
+      "episodes": 150000,
+      "scenario": "C",
+      "success_count": 5,
+      "seeds": 5,
+      "mean_error_all_m": 339.90950856384933,
+      "mean_error_success_m": 339.90950856384933,
+      "mean_comfort_success": 0.9193282989197386,
+      "mean_q_states": 46671.6,
+      "closing_rate": 1.0,
+      "training_success_last_10000": 0.80756,
+      "representative_seed": 4,
+      "training_rows": 750000
+    }
+  ]
+}

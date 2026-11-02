@@ -33,3 +33,9 @@ lebih valuable kombinasi state nya maka lebih sedikit waktu training nya agar me
 - cek literasi graph
 - tidak bisa training semua karena tiap lintasan butuh training berbeda
 - reach dosen penguji, untuk hasil revisian nya 2 minggu ini
+
+29-30 oct
+tempat tinggal disekitaran
+-7.281946, 112.708952
+dan ada smoothness dan access yang perlu di perhatikan sebagai acuan reward
+untuk access permisive perlu di adjust

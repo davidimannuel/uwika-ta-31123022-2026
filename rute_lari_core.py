@@ -42,6 +42,22 @@ MIN_DISTANCE_M = TARGET_DISTANCE_M * (1 - DISTANCE_TOLERANCE)
 MAX_DISTANCE_M = TARGET_DISTANCE_M * (1 + DISTANCE_TOLERANCE)
 DOWNLOAD_RADIUS_M = 3_025
 
+# Kategori access yang tidak dibentuk menjadi action oleh build_actions().
+# Kebijakan penelitian ini mengecualikan seluruh kategori berikut,
+# termasuk bila ada foot=yes; bukan penerapan seluruh hierarki izin OSM.
+ACCESS_BLACKLIST = frozenset({
+    "no",
+    "private",
+    "destination",
+    "customers",
+    "delivery",
+    "agricultural",
+    "forestry",
+    "military",
+    "permit",
+    "discouraged",
+})
+
 ALLOW_REVISIT = True
 REVISIT_AFTER_RATIO = 0.50
 MAX_NODE_VISITS = 2
@@ -58,6 +74,8 @@ OVER_DISTANCE_PENALTY = -50.0
 NO_ACTION_PENALTY = -45.0
 STEP_LIMIT_PENALTY = -40.0
 REVISIT_PENALTY = -8.0
+# Preferensi mengurangi panjang ruas permissive, tanpa melarang jalan pulang.
+PERMISSIVE_PENALTY_PER_100M = -0.10
 
 ALPHA = 0.15
 GAMMA = 0.95
@@ -146,27 +164,34 @@ def load_or_download_graph(force_download: bool = False):
 # B. COMFORT SCORE PADA EDGE
 # ============================================================
 
-HIGHWAY_SCORES = {
-    "footway": 0.95, "pedestrian": 0.95, "path": 0.85,
-    "living_street": 0.80, "residential": 0.75, "service": 0.60,
-    "unclassified": 0.55, "tertiary": 0.45, "tertiary_link": 0.45,
-    "secondary": 0.35, "secondary_link": 0.35, "track": 0.35,
-    "primary": 0.20, "primary_link": 0.20, "trunk": 0.10,
-    "trunk_link": 0.10, "steps": 0.10,
-}
-SURFACE_SCORES = {
-    "asphalt": 1.00, "concrete": 0.90, "paved": 0.90,
-    "paving_stones": 0.75, "sett": 0.65, "compacted": 0.55,
-    "fine_gravel": 0.45, "gravel": 0.30, "dirt": 0.25,
-    "ground": 0.20, "unpaved": 0.20,
-}
+# Kelompok preferensi penelitian, bukan ukuran keselamatan aktual.
+HIGHWAY_PRIORITY_1 = frozenset({
+    "footway", "pedestrian", "living_street", "residential",
+})
+HIGHWAY_PRIORITY_2 = frozenset({
+    "path", "service", "unclassified", "tertiary", "tertiary_link",
+})
+HIGHWAY_PRIORITY_1_SCORE = 1.00
+HIGHWAY_PRIORITY_2_SCORE = 0.60
+HIGHWAY_OTHER_SCORE = 0.20
+HIGHWAY_MISSING_SCORE = 0.50
+
+# Satu kelompok preferensi material; bukan pengukuran kondisi aktual ruas.
+SURFACE_PRIORITY = frozenset({
+    "asphalt", "concrete", "paving_stones", "paved",
+})
+SURFACE_PRIORITY_SCORE = 1.00
+SURFACE_OTHER_SCORE = 0.20
+SURFACE_MISSING_SCORE = 0.50
 WEIGHT_HIGHWAY = 0.55
 WEIGHT_SURFACE = 0.30
 WEIGHT_WIDTH = 0.15
-WIDTH_MIN_M = 1.0
-WIDTH_MAX_M = 5.0
-WIDTH_MIN_SCORE = 0.25
-WIDTH_MAX_SCORE = 1.00
+# Batas preferensi penelitian untuk mengurangi pilihan ruas sempit.
+# Lebar >= batas tidak mendapat tambahan skor meskipun jalan makin lebar.
+WIDTH_PRIORITY_MIN_M = 3.0
+WIDTH_PRIORITY_SCORE = 1.00
+WIDTH_OTHER_SCORE = 0.20
+WIDTH_MISSING_SCORE = 0.50
 
 
 def is_missing(value: Any) -> bool:
@@ -214,23 +239,60 @@ def conservative_score(value: Any, score_map: dict[str, float], neutral: float) 
     return neutral if not values else min(score_map.get(item, neutral) for item in values)
 
 
+def calculate_highway_score(value: Any) -> float:
+    """Memetakan dua prioritas, jenis lain, dan tag kosong ke skor highway."""
+    values = [
+        part.strip()
+        for item in osm_values(value)
+        for part in item.split(";")
+        if part.strip()
+    ]
+    if not values:
+        return HIGHWAY_MISSING_SCORE
+
+    # Nilai yang terisi tetapi tidak dikenal mendapat skor jenis lain.
+    # Ambil minimum agar edge gabungan tidak dinilai dari bagian terbaik saja.
+    return min(
+        HIGHWAY_PRIORITY_1_SCORE if item in HIGHWAY_PRIORITY_1
+        else HIGHWAY_PRIORITY_2_SCORE if item in HIGHWAY_PRIORITY_2
+        else HIGHWAY_OTHER_SCORE
+        for item in values
+    )
+
+
+def calculate_surface_score(value: Any) -> float:
+    """Memetakan satu prioritas surface, jenis lain, dan tag kosong."""
+    values = [
+        part.strip()
+        for item in osm_values(value)
+        for part in item.split(";")
+        if part.strip()
+    ]
+    if not values:
+        return SURFACE_MISSING_SCORE
+
+    # Material terisi di luar prioritas, termasuk yang belum dikenal, bernilai
+    # rendah. Minimum mempertahankan bagian kurang diprioritaskan pada gabungan.
+    return min(
+        SURFACE_PRIORITY_SCORE if item in SURFACE_PRIORITY else SURFACE_OTHER_SCORE
+        for item in values
+    )
+
+
 def width_score(value: Any) -> float:
+    """Skor ambang lebar, dengan nilai pengganti untuk data tidak terpakai."""
     width_m = parse_width_m(value)
     if width_m is None:
-        return NEUTRAL_COMFORT_SCORE
-    proportion = np.clip((width_m - WIDTH_MIN_M) / (WIDTH_MAX_M - WIDTH_MIN_M), 0.0, 1.0)
-    return float(WIDTH_MIN_SCORE + proportion * (WIDTH_MAX_SCORE - WIDTH_MIN_SCORE))
+        return WIDTH_MISSING_SCORE
+    # Ini preferensi reward, bukan larangan action atau standar keamanan lari.
+    return WIDTH_PRIORITY_SCORE if width_m >= WIDTH_PRIORITY_MIN_M else WIDTH_OTHER_SCORE
 
 
 def add_comfort_scores(graph: nx.MultiDiGraph) -> None:
     """Menambahkan komponen dan comfort score ke semua edge."""
     for _, _, _, data in graph.edges(keys=True, data=True):
-        highway_score = conservative_score(
-            data.get("highway"), HIGHWAY_SCORES, NEUTRAL_COMFORT_SCORE
-        )
-        surface_score = conservative_score(
-            data.get("surface"), SURFACE_SCORES, NEUTRAL_COMFORT_SCORE
-        )
+        highway_score = calculate_highway_score(data.get("highway"))
+        surface_score = calculate_surface_score(data.get("surface"))
         edge_width_score = width_score(data.get("width"))
         comfort = (
             WEIGHT_HIGHWAY * highway_score
@@ -269,9 +331,19 @@ class EdgeAction:
 
 
 def build_actions(graph: nx.MultiDiGraph) -> dict[int, list[EdgeAction]]:
-    """Menyimpan semua edge keluar tanpa membuang edge paralel."""
+    """Membentuk action edge yang lolos blacklist tanpa mengubah graf asli."""
     actions_by_node: dict[int, list[EdgeAction]] = defaultdict(list)
     for u, v, key, data in graph.edges(keys=True, data=True):
+        # Satu kategori terlarang cukup untuk menolak seluruh edge gabungan.
+        # Penyaringan berlaku sama untuk eksplorasi, greedy, dan edge ke start.
+        access_values = {
+            part.strip()
+            for value in osm_values(data.get("access"))
+            for part in value.split(";")
+            if part.strip()
+        }
+        if access_values & ACCESS_BLACKLIST:
+            continue
         length_m = float(data.get("length", 0.0))
         if length_m > 0:
             actions_by_node[int(u)].append(
@@ -318,6 +390,11 @@ class RunningRouteEnvironment:
         self.actions_by_node = actions_by_node
         self.node_xy = node_xy
         self.reset()
+
+    @property
+    def latest_state(self) -> tuple:
+        """Membaca state dari kondisi terbaru tanpa menyimpan salinan terpisah."""
+        return build_state(self, self.scenario)
 
     def reset(self) -> tuple:
         self.current_node = self.start_node
@@ -474,9 +551,29 @@ class RunningRouteEnvironment:
             action.length_m / 100.0
         )
 
+        # Tag gabungan hasil simplify diperiksa tanpa mengubah comfort score.
+        # Jika mengandung permissive, seluruh panjang edge mendapat penalti;
+        # pembagian panjang per way asal belum tersedia pada action ini.
+        access_values = {
+            part.strip()
+            for value in osm_values(action.data.get("access"))
+            for part in value.split(";")
+            if part.strip()
+        }
+        access_reward = (
+            PERMISSIVE_PENALTY_PER_100M * action.length_m / 100.0
+            if "permissive" in access_values else 0.0
+        )
+        # Catat kontribusi pada cabang perhitungan aslinya untuk penelusuran.
+        reward_components = {"edge": float(reward), "access": float(access_reward),
+                             "direction": 0.0, "revisit": 0.0, "terminal": 0.0}
+        reward += access_reward
+        direction_rule = "tidak diterapkan"
+
         if is_revisit and next_node != self.start_node:
             self.revisit_count += 1
             reward += REVISIT_PENALTY
+            reward_components["revisit"] = REVISIT_PENALTY
 
         # Action ke start sudah disaring pada available_actions(), sehingga
         # kepulangan hanya dapat terjadi pada rentang jarak loop yang valid.
@@ -485,26 +582,39 @@ class RunningRouteEnvironment:
             self.is_loop = True
             self.termination_reason = "success"
             reward += SUCCESS_BONUS
+            reward_components["terminal"] = SUCCESS_BONUS
         elif self.total_distance_m > MAX_DISTANCE_M:
             self.done = True
             self.termination_reason = "over_distance"
             reward += OVER_DISTANCE_PENALTY
+            reward_components["terminal"] = OVER_DISTANCE_PENALTY
         elif self.step_count >= MAX_STEPS_PER_EPISODE:
             self.done = True
             self.termination_reason = "step_limit"
             reward += STEP_LIMIT_PENALTY
+            reward_components["terminal"] = STEP_LIMIT_PENALTY
         elif in_outward_phase and distance_after < distance_before:
             # Pada fase awal, agen tidak dilarang bergerak mendekati start,
             # tetapi menerima penalti proporsional terhadap besar gerakannya.
             # Ini menyeimbangkan reward comfort tinggi yang dapat menarik agen
             # kembali ke area start terlalu cepat.
-            reward -= OUTWARD_PENALTY_SCALE * (
+            direction_penalty = OUTWARD_PENALTY_SCALE * (
                 distance_before - distance_after
             ) / 100.0
+            reward -= direction_penalty
+            reward_components["direction"] = -float(direction_penalty)
+            direction_rule = "penalti fase awal"
         elif in_return_phase:
-            reward += RETURN_REWARD_SCALE * (distance_before - distance_after) / 100.0
+            direction_reward = RETURN_REWARD_SCALE * (distance_before - distance_after) / 100.0
+            reward += direction_reward
+            reward_components["direction"] = float(direction_reward)
+            direction_rule = "progres fase pulang"
 
         info = self.info()
+        info["reward_components"] = reward_components
+        info["direction_rule"] = direction_rule
+        info["straight_distance_before_m"] = distance_before
+        info["straight_distance_after_m"] = distance_after
         info["is_revisit"] = is_revisit
         info["edge_comfort"] = action.comfort_score
         info["edge_length_m"] = action.length_m
@@ -613,6 +723,145 @@ def route_metrics(environment: RunningRouteEnvironment, total_reward: float) -> 
     }
 
 
+def train_step(
+    environment: RunningRouteEnvironment,
+    q_table,
+    rng,
+    epsilon: float,
+    action: EdgeAction | None = None,
+    verbose: bool = False,
+) -> dict:
+    """Menjalankan satu langkah training, termasuk pembaruan Q.
+
+    Action opsional dipakai untuk pengujian manual; tanpa action, pemilihan tetap
+    epsilon-greedy. Verbose mencetak angka dari perhitungan yang sama, bukan
+    menghitung ulang persamaan khusus untuk tampilan.
+    """
+    if environment.done:
+        raise RuntimeError("Episode selesai. Panggil reset() sebelum train_step().")
+
+    state = environment.latest_state
+    actions = environment.available_actions()
+    reward_step = 0.0
+    stop_penalty = 0.0
+    q_before = max_next_q = td_target = td_error = q_after = None
+
+    if not actions:
+        if action is not None:
+            raise ValueError("Tidak ada action legal untuk environment saat ini.")
+        next_state, reward, done, info = environment.stop_without_action()
+        stop_penalty = reward
+    else:
+        if action is None:
+            action = choose_action(q_table, state, actions, rng, epsilon)
+        next_state, reward, done, info = environment.step(action)
+        reward_step = reward
+        next_actions = [] if done else environment.available_actions()
+
+        # Penalti buntu setelah perpindahan tetap masuk ke reward untuk update Q.
+        if not done and not next_actions:
+            _, stop_penalty, done, stop_info = environment.stop_without_action()
+            reward += stop_penalty
+            info.update(stop_info)
+
+        max_next_q = max(
+            (
+                q_table[next_state].get(next_action.get_action_id(), 0.0)
+                for next_action in next_actions
+            ),
+            default=0.0,
+        )
+        q_before = q_table[state].get(action.get_action_id(), 0.0)
+        td_target = reward + GAMMA * max_next_q
+        td_error = td_target - q_before
+        q_after = q_before + ALPHA * td_error
+        q_table[state][action.get_action_id()] = q_after
+
+    reward_components = info.get("reward_components", {
+        "edge": 0.0, "access": 0.0, "direction": 0.0,
+        "revisit": 0.0, "terminal": 0.0,
+    }).copy()
+    reward_components["no_action"] = stop_penalty
+    info["reward_components"] = reward_components
+
+    result = {
+        "state": state,
+        "action_id": None if action is None else action.get_action_id(),
+        "next_state": next_state,
+        "epsilon": epsilon,
+        "reward_step": reward_step,
+        "stop_penalty": stop_penalty,
+        "reward": reward,
+        "reward_components": reward_components,
+        "done": done,
+        "info": info,
+        "q_before": q_before,
+        "max_next_q": max_next_q,
+        "td_target": td_target,
+        "td_error": td_error,
+        "q_after": q_after,
+    }
+    if verbose:
+        print(f"Langkah       : {environment.step_count}")
+        print(f"Epsilon       : {epsilon}")
+        print(f"State sebelum : {state}")
+        print(f"Action legal  : {[item.get_action_id() for item in actions]}")
+        print(f"Action dipilih: {result['action_id']}")
+        print(f"State sesudah : {next_state}")
+        print(f"Jarak total   : {environment.total_distance_m} m")
+        if action is not None:
+            road = action.data
+            print(f"Data jalan    : highway={road.get('highway')}, "
+                  f"surface={road.get('surface')}, width={road.get('width')}, "
+                  f"access={road.get('access')}")
+            if all(name in road for name in ("highway_score", "surface_score", "width_score")):
+                print(f"Skor atribut  : H={road['highway_score']}, "
+                      f"S={road['surface_score']}, W={road['width_score']}")
+                print(f"C = {WEIGHT_HIGHWAY} * {road['highway_score']} + "
+                      f"{WEIGHT_SURFACE} * {road['surface_score']} + "
+                      f"{WEIGHT_WIDTH} * {road['width_score']} = {action.comfort_score}")
+            print(f"R ruas = ({action.comfort_score} - {NEUTRAL_COMFORT_SCORE}) * "
+                  f"({action.length_m} / 100) = {reward_components['edge']}")
+            if reward_components["access"] != 0.0:
+                print(f"R akses = {PERMISSIVE_PENALTY_PER_100M} * "
+                      f"({action.length_m} / 100) = {reward_components['access']}")
+            else:
+                print(f"R akses       : {reward_components['access']}")
+            print(f"Jarak lurus ke start: {info['straight_distance_before_m']} "
+                  f"-> {info['straight_distance_after_m']} m")
+            print(f"R arah        : {reward_components['direction']} "
+                  f"({info['direction_rule']})")
+            if info["direction_rule"] != "tidak diterapkan":
+                scale = (-OUTWARD_PENALTY_SCALE if info["direction_rule"] == "penalti fase awal"
+                         else RETURN_REWARD_SCALE)
+                print(f"R arah = {scale} * ({info['straight_distance_before_m']} - "
+                      f"{info['straight_distance_after_m']}) / 100 = "
+                      f"{reward_components['direction']}")
+        print(f"R revisit     : {reward_components['revisit']}")
+        print(f"R terminasi   : {reward_components['terminal']} "
+              f"({environment.termination_reason})")
+        print(f"R total = {reward_components['edge']} + {reward_components['access']} + "
+              f"{reward_components['direction']} + "
+              f"{reward_components['revisit']} + {reward_components['terminal']} + "
+              f"{reward_components['no_action']} = {reward}")
+        print(f"Reward langkah: {reward_step}")
+        print(f"Penalti buntu : {stop_penalty}")
+        print(f"Reward untuk Q: {reward}")
+        print(f"Selesai       : {done} ({environment.termination_reason})")
+        if td_error is None:
+            print("Tidak ada action; Q-table tidak diperbarui.")
+        else:
+            print(f"Q sebelum     : {q_before}")
+            print(f"Max Q berikut : {max_next_q}")
+            print(f"Alpha / Gamma : {ALPHA} / {GAMMA}")
+            print(f"Target Q      : {td_target}")
+            print(f"TD-error      : {td_error}")
+            print(f"Q baru = {q_before} + {ALPHA} * "
+                  f"[{reward} + {GAMMA} * {max_next_q} - {q_before}]")
+            print(f"       = {q_after}")
+    return result
+
+
 def train_q_learning(
     scenario: str,
     seed: int,
@@ -634,7 +883,7 @@ def train_q_learning(
     q_table = defaultdict(dict)
     history_rows = []
     for episode in range(total_episodes):
-        state = environment.reset()
+        environment.reset()
         epsilon = epsilon_for_episode(
             episode, total_episodes, epsilon_decay_episodes
         )
@@ -645,42 +894,14 @@ def train_q_learning(
         td_error_values = []
 
         for _ in range(MAX_STEPS_PER_EPISODE):
-            actions = environment.available_actions()
-            if not actions:
-                next_state, stop_reward, done, _ = environment.stop_without_action()
-                reward = stop_reward
-                episode_reward += stop_reward
-                next_actions = []
-            else:
-                action = choose_action(q_table, state, actions, rng, epsilon)
-                next_state, reward, done, _ = environment.step(action)
-                episode_reward += reward
-                next_actions = [] if done else environment.available_actions()
-
-                if not done and not next_actions:
-                    _, stop_reward, done, _ = environment.stop_without_action()
-                    reward += stop_reward
-                    episode_reward += stop_reward
-
-                future_value = max(
-                    (
-                        q_table[next_state].get(
-                            next_action.get_action_id(), 0.0
-                        )
-                        for next_action in next_actions
-                    ),
-                    default=0.0,
-                )
-                old_value = q_table[state].get(action.get_action_id(), 0.0)
-                # TD-error adalah selisih antara target nilai Q dengan nilai
-                # Q lama. Target terdiri dari reward saat ini dan nilai terbaik
-                # yang masih mungkin diperoleh pada state berikutnya.
-                td_error = reward + GAMMA * future_value - old_value
-                q_table[state][action.get_action_id()] = old_value + ALPHA * td_error
-                td_error_values.append(abs(td_error))
-
-            state = next_state
-            if done:
+            result = train_step(environment, q_table, rng, epsilon)
+            # Urutan penjumlahan reward dipertahankan agar hasil numerik sama
+            # dengan sebelum pemisahan fungsi, termasuk penalti buntu.
+            episode_reward += result["reward_step"]
+            episode_reward += result["stop_penalty"]
+            if result["td_error"] is not None:
+                td_error_values.append(abs(result["td_error"]))
+            if result["done"]:
                 break
 
         if not environment.done:
@@ -1457,6 +1678,9 @@ def run_scenario_experiment(
             f"{epsilon_decay_episodes:,} episode, lalu tetap {EPSILON_END:.2f}"
         )
 
+    print(f"Penalti access permissive: {PERMISSIVE_PENALTY_PER_100M} per 100 m")
+    print(f"Blacklist access aktif: {sorted(ACCESS_BLACKLIST)}")
+
     for seed in SEEDS:
         q_table, history = train_q_learning(
             scenario, seed, start_node, actions_by_node, node_xy,
@@ -1581,6 +1805,34 @@ def run_scenario_experiment(
         "episodes": total_episodes,
         "epsilon_decay_episodes": epsilon_decay_episodes,
         "seeds": list(SEEDS),
+        "highway_scoring": {
+            "priority_1": sorted(HIGHWAY_PRIORITY_1),
+            "priority_2": sorted(HIGHWAY_PRIORITY_2),
+            "priority_1_score": HIGHWAY_PRIORITY_1_SCORE,
+            "priority_2_score": HIGHWAY_PRIORITY_2_SCORE,
+            "other_score": HIGHWAY_OTHER_SCORE,
+            "missing_score": HIGHWAY_MISSING_SCORE,
+            "mixed_policy": "minimum",
+        },
+        "surface_scoring": {
+            "priority": sorted(SURFACE_PRIORITY),
+            "priority_score": SURFACE_PRIORITY_SCORE,
+            "other_score": SURFACE_OTHER_SCORE,
+            "missing_score": SURFACE_MISSING_SCORE,
+            "mixed_policy": "minimum",
+        },
+        "width_scoring": {
+            "policy": "threshold",
+            "priority_min_m": WIDTH_PRIORITY_MIN_M,
+            "priority_score": WIDTH_PRIORITY_SCORE,
+            "below_threshold_score": WIDTH_OTHER_SCORE,
+            "missing_invalid_multiple_score": WIDTH_MISSING_SCORE,
+        },
+        "permissive_penalty_per_100m": PERMISSIVE_PENALTY_PER_100M,
+        "permissive_mixed_edge_policy": "any_permissive_full_edge_length",
+        "access_blacklist_applied": True,
+        "access_blacklist_values": sorted(ACCESS_BLACKLIST),
+        "access_blacklist_policy": "any_blacklisted_access_no_foot_override",
         "representative_seed": int(selected_metrics["seed"]),
         "representative_reason": representative_reason,
         "artifact_files": {

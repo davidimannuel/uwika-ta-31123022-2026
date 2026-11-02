@@ -118,6 +118,73 @@ Tinjau diff lockfile dan uji kode yang terdampak. Dependensi terkait dapat ikut 
 - Simpan hasil baru ke folder berbeda bila konfigurasi berubah.
 - Catat konfigurasi, seed, snapshot graf, commit kode, versi lengkap Python, dan lockfile yang dipakai untuk hasil yang akan dilaporkan.
 
+## Empat konfigurasi eksperimen A–C
+
+Setiap notebook A/B/C memakai dinamis 75.000/150.000 episode serta horizon epsilon
+50.000 pada training 75.000/150.000 episode. Semua konfigurasi menggunakan lima
+seed dan dimulai dari Q-table kosong. Training total 50.000/100.000 tidak lagi ada
+pada notebook aktif. Evaluasi akhirnya greedy (`epsilon=0`).
+
+Jalankan cell pemuatan graf, lalu pasangan training/tampilan hasil sesuai urutan.
+Kedua ringkasan membaca CSV dari `RESULT_GROUP="surface_width_3m_20261102"`.
+Grup ini sudah dijalankan pengguna dan diperiksa pada 2 November 2026. Hasil
+sebelumnya tetap tersimpan; gunakan nama baru yang sama di A/B/C untuk eksperimen
+berikutnya agar tidak menimpa hasil.
+Agent hanya memeriksa artefak dan mengulang evaluasi greedy dari Q-table;
+training penelitian dijalankan pengguna. Jangan menjalankan cell training hanya
+untuk menampilkan ulang hasil: gunakan pasangan cell tampilan hasil tersimpan.
+
+## Aturan skor yang aktif
+
+- Highway: dua prioritas 1,00/0,60; lainnya 0,20; kosong 0,50.
+- Surface: asphalt/concrete/paving_stones/paved = 1,00; lainnya 0,20; kosong 0,50.
+- Width: >=3 m = 1,00; positif <3 m = 0,20; kosong/invalid/gabungan = 0,50.
+- Bobot H/S/W tetap 0,55/0,30/0,15. Permissive mendapat -0,10 per 100 m;
+  kategori ACCESS_BLACKLIST dikeluarkan dari action. Ruas <3 m tidak dilarang.
+- Ketiga komponen skor analisis memakai fungsi core bersama. Peta atribut memiliki
+  radio Highway/Surface/Smoothness dan overlay marker access; Highway default.
+- Laporan terbaru: [Analisis hasil](docs/temp/analisis_surface_width_3m_20261102/ANALISIS.md).
+  Rencana lanjutan: [Verifikasi, validasi, dan katalog](docs/VERIFIKASI_VALIDASI_DAN_KATALOG.md).
+
+## Notebook verifikasi manual
+
+**Status 2 November 2026:** penjelasan berikut merekam notebook yang tersedia,
+tetapi acuan angka/assertion masih aturan lama. Jangan menganggap output lama
+sebagai verifikasi konfigurasi terbaru. Tinjauan ulang ditunda sampai diminta;
+perlu menyesuaikan highway/surface/width, akses dan blacklist terlebih dahulu.
+
+Buka `verifikasi.ipynb` dari root proyek dengan kernel **TA Rute Lari (Python 3.13)**.
+Notebook membuat graf sintetis `nx.MultiDiGraph` dengan highway/surface/width,
+menghitung skor melalui `core.add_comfort_scores(G)`, membentuk action lewat
+`core.build_actions(G)`, lalu menjalankan satu `train_step()` per cell.
+Cell berikutnya menampilkan graf melalui fungsi gambar bawaan NetworkX, termasuk
+ruas paralel, panah arah, dan label key/panjang/skor.
+Fungsi yang sama dipakai `train_q_learning()`; `verbose=True` mencetak state, action,
+komponen H/S/W, formula skor, reward ruas/arah/revisit/terminasi/buntu, total reward,
+serta persamaan Q dengan angka dan hasilnya. Komponen dicatat saat perhitungan asli
+dijalankan di core. `env.latest_state` membaca state terbaru.
+
+Contoh memuat dua episode, masing-masing tiga langkah. Epsilon dihitung melalui
+`epsilon_for_episode()` pada awal episode: 1,00 lalu 0,05. Saat reset episode,
+Q-table dan generator acak diteruskan. Cell pembuatan environment memulai ulang semuanya.
+Input Q awal dapat diisi langsung pada `q_table`; action tertentu dapat dipaksa lewat
+parameter `action`, sehingga pemilihan action tersebut tidak dipengaruhi epsilon.
+
+Bagian berikutnya memakai snapshot OSM lokal untuk tiga langkah awal satu episode,
+dengan Q-table/RNG sendiri dan satu contoh hitungan manual Q. GraphML wajib
+tersedia; jika belum ada, notebook berhenti sebelum loader agar tidak mengunduh.
+
+Bagian lanjutan menguji poin 2–5: state/action mask, integritas graf dan jarak,
+terminasi, serta skor/komponen reward. Acuan ditulis pada cell agar bisa diperiksa
+manual; assertion menghentikan eksekusi jika hasil tidak cocok. Setelah acuan
+angka disesuaikan, gunakan **Restart Kernel and Run All** untuk mengeksekusi
+seluruh bagian secara berurutan.
+
+Analisis reward terpisah menyertakan stres edge sintetis 100 km yang melampaui rentang
+data penelitian. Counterexample tersebut membatasi klaim reward global, bukan hasil
+rute nyata atau perubahan aturan. Tidak ada helper, class tambahan, unduhan, atau
+ekspor otomatis. Bukti tersimpan pada output notebook; verifikasi bukan validasi lapangan.
+
 ## Menyimpan pekerjaan ke Git
 
 Simpan notebook, lalu periksa dari terminal proyek:
