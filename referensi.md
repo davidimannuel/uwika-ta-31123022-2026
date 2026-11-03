@@ -252,5 +252,6 @@ melaporkan performa tidak otomatis melakukan unit test atau manual Bellman.
   menyatakan badan jalan 3 m adalah standar nyaman/aman bagi pelari.** Pengguna
   memilih 3 m untuk mengurangi preferensi gang sempit.
 - Definisi [access](https://wiki.openstreetmap.org/wiki/Key:access) digunakan dalam
-  diskusi akses; blacklist penelitian tidak menerapkan seluruh hierarki izin OSM.
+  diskusi akses; whitelist penelitian (yes/permissive/kosong) tidak menerapkan
+  seluruh hierarki izin OSM.
   Permissive tidak sama dengan keberadaan pagar tertutup.

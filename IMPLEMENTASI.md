@@ -13,21 +13,44 @@ Sistem membentuk rute lari **loop 5.000 m** menggunakan Q-Learning tabular pada 
 
 Kedua syarat tersebut direpresentasikan oleh **is_loop=True**. Node yang berulang tidak membatalkan loop, tetapi dinilai terpisah melalui metrik revisit dan pengulangan edge.
 
-Tujuan agen bukan hanya mencapai jarak. Agen juga diarahkan memilih edge dengan **comfort score** lebih tinggi, yaitu proxy spasial dari atribut OSM: highway, surface, dan width. Comfort score bukan survei persepsi pelari dan bukan skor keamanan aktual.
+Tujuan agen bukan hanya mencapai jarak. Agen juga diarahkan memilih edge dengan **comfort score** lebih tinggi, yaitu proxy spasial dari atribut OSM: highway, surface, dan width. Comfort score bukan survei persepsi pelari dan bukan skor keamanan aktual; nama legacy ini kini menyimpan preferensi bertanda tanpa pembatasan rentang.
 
 Status hasil yang tersimpan sekarang:
 
-- **Hasil aktif per 2 November 2026:** `surface_width_3m_20261102` selesai
-  dijalankan pengguna; 60 training dan 6.750.000 episode telah diperiksa,
-  seluruh 60 evaluasi direproduksi. Lihat bagian 8.2.2 dan
-  `docs/temp/analisis_surface_width_3m_20261102/ANALISIS.md`.
+- **Hasil aktif per 3 November 2026:** `reward_revisit_10_overlap_count_20261103`
+  lengkap A--C,60 training/6.750.000 episode,25/60 greedy valid. Seluruh60
+  direproduksi; lihat `docs/temp/analisis_ABC_revisit10_20261103/ANALISIS.md`.
+- `reward_direct_20261103` adalah arsip sebelumnya (bagian8.2.3).
+- `surface_width_3m_20261102` adalah arsip reward lama (bagian 8.2.2).
 - Ringkasan/angka 29 Oktober di bawah adalah riwayat baseline, bukan hasil aktif.
 
 - Scenario state A, B, dan C adalah eksperimen final. Ketiganya memakai action, reward, action mask, dan aturan revisit yang sama; hanya representasi state yang berbeda.
 - Hasil evaluasi terbaru harus selalu dibaca dari CSV setelah notebook dijalankan ulang. Evaluasi yang dipakai untuk pelaporan adalah evaluasi greedy, bukan episode training yang masih mengandung eksplorasi.
 - Pada eksperimen epsilon dinamis awal, State C sempat menjadi kandidat utama karena menambahkan konteks arah kedatangan melalui `previous_node`. Namun, hasil epsilon decay tetap menunjukkan State B juga dapat membentuk loop secara konsisten; perbandingan final harus memakai hasil A--C dengan konfigurasi epsilon tetap yang sama.
 - Terminasi paling sering masih `no_available_action` dan `over_distance`; hasil perlu dibaca bersama closing action available rate.
-- Per 29 Oktober 2026, pengguna telah menyelesaikan empat konfigurasi: dinamis 75k/150k dan horizon epsilon 50k pada training 75k/150k, untuk A--C dan lima seed (60 training). Analisis hasil aktif ada pada bagian 8.2.1 dan `docs/temp/analisis_empat_konfigurasi_20261029/ANALISIS.md`. Hasil lama tetap sebagai arsip; agent hanya membaca history dan mengulang evaluasi dari Q-table, tanpa training ulang.
+- Per 29 Oktober 2026, pengguna telah menyelesaikan empat konfigurasi: dinamis 75k/150k dan horizon epsilon 50k pada training 75k/150k, untuk A--C dan lima seed (60 training). Analisis baseline ada pada bagian 8.2.1 dan `docs/temp/analisis_empat_konfigurasi_20261029/ANALISIS.md`. Hasil lama tetap sebagai arsip; agent hanya membaca history dan mengulang evaluasi dari Q-table, tanpa training ulang.
+
+### 1.1 Reward langsung aktif 3 November 2026
+
+Seluruh kesepakatan reward diterapkan ke core dan notebook rute lari: H/S/W
++1/-1/0, satu prioritas highway termasuk tertiary, bobot 0,55/0,30/0,15, tanpa
+pengurangan 0,50. Akses permissive -0,10 per 100 m; arah 0,60 kedua fase;
+revisit -10; sukses +100; tiga kegagalan -50. Fase/mask/state/epsilon/seed/Q tetap.
+
+Grup aktif reward_revisit_10_overlap_count_20261103 lengkap A--C:60 training,
+25/60 evaluasi valid dan seluruh60 direproduksi. Pengguna
+meminta penalti -10 menggantikan -5 dan MAX_WORKERS=3 pada A--C. Grup -5 tetap
+arsip lengkap B/C (35/40 greedy valid). Komponen reward lain/Q/mask/state/epsilon
+serta implementasi paralel tetap. Verifikasi 32 cell lulus dengan expected
+literal -10 dan total -8,40. Uji Jupyter tiga worker/lima seed menghasilkan
+Q/history/metrik/rute identik dengan mode berurutan pada kasus sintetis.
+
+### 1.2 Pencatatan overlap aktif
+
+Grup aktif reward_revisit_10_overlap_count_20261103 lengkap A--C; audit terbaru
+ada di bagian akhir dokumen.
+Grup -5 lengkap B/C tetap pembanding; angka audit di bagian akhir adalah riwayat
+-5. Definisi overlap, kolom tiap episode/evaluasi dan grafik tidak berubah.
 
 ## 2. Struktur Proyek dan Urutan Eksekusi
 
@@ -39,6 +62,7 @@ Status hasil yang tersimpan sekarang:
 | **scenario_B.ipynb** | Training dan evaluasi state B. | Memanggil core bersama. |
 | **scenario_C.ipynb** | Training dan evaluasi state C. | Memanggil core bersama. |
 | **verifikasi.ipynb** | Verifikasi poin 1–5 melalui core bersama. | Contoh manual, kasus terkontrol, dan snapshot OSM; Python 3.13. |
+| **uji_titik_start.ipynb** | Unduh graf baru sekitar koordinat dan jalankan tiga seed acak. | Default B 150k horizon 50k; graf, seed, dan hasil tersimpan terpisah. |
 | **training.ipynb** | Notebook gabungan versi lama. | Jangan gunakan untuk eksperimen baru. |
 | **data_osm_5km/graf_jalan_kaki_5km.graphml** | Snapshot graf jalan terproyeksi. | Input utama training. |
 | **data_osm_5km/** | Menyimpan GraphML serta peta analisis highway dan comfort. | Artefak analisis. |
@@ -50,7 +74,7 @@ Urutan kerja yang benar:
 1. Buka proyek dari direktori root agar path relatif berfungsi.
 2. Jalankan **analisa.ipynb** dari atas sampai GraphML berhasil disimpan.
 3. Buka salah satu **scenario_A.ipynb** sampai **scenario_C.ipynb**. Notebook memuat GraphML dengan fungsi core yang sama; jika GraphML belum ada, fungsi yang sama mengunduh data OSM.
-4. Jalankan Scenario A, B, lalu C. Setiap scenario menjalankan lima seed, menampilkan tabel evaluasi greedy per seed, dua berkas grafik (training utama dan diagnosis), serta peta interaktif. Termination rate berada di dalam grafik diagnosis. Data hasil juga disimpan dalam CSV.
+4. Jalankan Scenario A, B, lalu C. Setiap scenario menjalankan lima seed, menampilkan tabel evaluasi greedy per seed, tiga berkas grafik (training utama, diagnosis, overlap), serta peta interaktif. Termination rate berada di dalam grafik diagnosis. Data hasil juga disimpan dalam CSV.
 5. Jalankan perbandingan akhir A–C.
 6. Gunakan CSV hasil sebagai sumber angka untuk BAB IV dan BAB V.
 
@@ -63,7 +87,7 @@ Pesan pada cell pemuatan graf hanya menampilkan jumlah seed. Nilai default `EPIS
 Setiap konfigurasi eksperimen pada `scenario_A.ipynb`, `scenario_B.ipynb`, dan `scenario_C.ipynb` sekarang memiliki dua cell berurutan:
 
 1. **Cell training** memanggil `run_scenario_experiment(..., display_results=False)`. Cell ini menjalankan lima seed, melakukan evaluasi greedy, lalu menyimpan artefak; tabel, grafik, dan peta tidak ditampilkan agar output training tidak berat.
-2. **Cell tampilkan hasil tersimpan** memanggil `display_saved_experiment_results(...)`. Cell ini **tidak melakukan training**. Cell hanya membaca berkas hasil, lalu menampilkan metrik per seed, diagnosis, termination rate, dua grafik PNG, dan peta HTML interaktif.
+2. **Cell tampilkan hasil tersimpan** memanggil `display_saved_experiment_results(...)`. Cell ini **tidak melakukan training**. Cell hanya membaca berkas hasil, lalu menampilkan metrik per seed, diagnosis, termination rate, tiga grafik PNG pada section terpisah, dan peta HTML interaktif.
 
 Pemisahan ini memungkinkan pengguna memuat ulang peta yang gagal tampil, melihat lagi tabel, atau membuat screenshot grafik tanpa menjalankan ulang training yang memakan waktu. Cell ringkasan sensitivitas juga memakai `summarize_saved_experiments(...)`, sehingga membaca CSV yang tersimpan dan tidak lagi bergantung pada variabel `result_*` yang hanya ada di RAM kernel.
 
@@ -74,7 +98,7 @@ Untuk setiap eksperimen baru, folder `hasil_bab_4/training_qlearning_5km/<result
 | `training_history_<scenario>.csv` | Metrik setiap episode untuk lima seed, termasuk reward, epsilon, TD-error, jarak, comfort, dan alasan terminasi. |
 | `evaluation_metrics_<scenario>.csv` | Metrik evaluasi greedy per seed yang dipakai sebagai hasil utama. |
 | `diagnosis_metrics_<scenario>.csv` dan `termination_rates_*.csv` | Ringkasan diagnosis dan termination rate training maupun evaluasi greedy. |
-| `grafik_training_<scenario>.png` dan `grafik_diagnosis_<scenario>.png` | Diagram hasil training yang sudah dirender. |
+| `grafik_training_<scenario>.png`, `grafik_diagnosis_<scenario>.png`, `grafik_overlap_<scenario>.png` | Tiga bagian grafik; overlap terpisah. |
 | `peta_interaktif_scenario_<scenario>.html` | Peta Folium untuk rute representatif. |
 | `qtable_scenario_<scenario>_seed_<seed>.pkl` | Q-table tabular hasil training untuk setiap seed. |
 | `rute_evaluasi_scenario_<scenario>_seed_<seed>.json` | Urutan node dan action hasil evaluasi greedy untuk setiap seed. Setiap action menyimpan `from_node`, `next_node`, dan `key` agar edge MultiDiGraph dapat dikenali kembali. |
@@ -87,6 +111,45 @@ Pada tampilan hasil tersimpan, bagian **Ringkasan Diagnosis Evaluasi: Agregat Li
 Sebelum peta ditampilkan, cell juga mencetak seed yang dipakai serta alasan pemilihannya. Informasi ini diambil dari `metadata_eksperimen_<scenario>.json` apabila tersedia. Untuk folder hasil lama tanpa metadata, seed dihitung ulang dari `evaluation_metrics_<scenario>.csv` memakai aturan pemilihan peta yang sama.
 
 Fungsi `display_saved_experiment_results(...)` khusus untuk tampilan dan sengaja tidak mengembalikan nilai, sehingga notebook tidak mencetak dictionary besar setelah peta. Jika data CSV perlu diolah pada cell lain, gunakan `load_saved_experiment_results(...)`. Peta Folium ditampilkan dengan memasukkan HTML tersimpan ke `iframe.srcdoc` melalui JavaScript Jupyter. Cara ini tidak bergantung pada alamat `file://` maupun endpoint `/files/`, yang dapat diblokir atau memakai root berbeda pada JupyterLab desktop.
+
+### 2.2 Training seed paralel
+
+`run_scenario_experiment(..., max_workers=1)` tetap berurutan untuk kompatibilitas.
+Notebook A--C memakai `MAX_WORKERS=3` di cell muat graf, kemudian meneruskan
+`max_workers=MAX_WORKERS` pada empat cell training. Nilai 1 berurutan; nilai >1
+memakai multiprocessing Pool dengan start method spawn yang sesuai macOS/Jupyter.
+Jumlah proses efektif dibatasi jumlah seed dan CPU. Tidak ada dependensi baru.
+
+Setiap task memanggil train_q_learning lalu evaluate_greedy yang sama. Setiap seed
+memiliki RNG, environment dan Q-table sendiri; episode/langkah di dalam seed tetap
+berurutan. Snapshot parameter training/reward dari induk dipasang ke proses spawn.
+Graf dibangun induk dan data action/koordinat dikirim ke worker, tanpa unduh baru.
+Proses induk menerima seed sesuai urutan selesai dan menyimpan Q/rute JSON-nya.
+CSV, grafik, peta dan metadata digabung setelah semua seed selesai. Hasil akhir
+history/evaluasi/trials diurutkan kembali menurut seeds masukan. Referensi graf
+environment yang diterima disamakan ke data induk agar tidak menahan salinan
+seluruh graf per trial. Workers tidak menulis ke folder eksperimen.
+
+Cell Jupyter tetap menunggu seluruh seed selesai; percepatan berasal dari beberapa
+seed berjalan bersamaan. Tambahan proses memerlukan RAM dan biaya mulai/transfer
+data; jangan mengklaim 2 proses pasti 2 kali lebih cepat. Konfigurasi terbaru 3 worker sesuai permintaan pengguna; jalankan satu
+konfigurasi training dulu. Uji titik kini tiga seed acak dengan MAX_WORKERS=3,
+tanpa mengubah SEEDS global. Menambah worker tidak mempercepat satu seed.
+
+Metadata execution menyimpan mode, max_workers_requested, workers, start_method,
+dan result_order=input_seed_order. Jika terjadi error/interupsi, Pool context
+menghentikan workers; Q/rute seed yang sudah selesai mungkin tersimpan, tetapi
+ringkasan lengkap baru tersedia setelah seluruh seed selesai. Ini bukan fitur
+resume: menjalankan ulang cell memulai seed dari Q-table kosong.
+
+Uji 3 November: 18 kombinasi A/B/C, seed dan epsilon cocok dengan core sebelum
+paralelisasi setelah penalti disamakan -5; dua jadwal B menghasilkan Q/history/
+metrik/rute identik berurutan vs 2 proses, termasuk seeds tidak berurutan. Snapshot
+parameter runtime, error worker, validasi jumlah worker dan seluruh state diuji.
+Graf OSM nyata diuji 35 episode per seed (dua seed), hasil kedua mode identik.
+Kernel Jupyter bersih berhasil memanggil 2 proses setelah reload modul. Verifikasi
+32 cell lulus. Ini uji implementasi, bukan training penelitian atau benchmark.
+Audit: docs/temp/verifikasi_revisit5_paralel_20261103/.
 
 ## 3. Konfigurasi Bersama
 
@@ -283,58 +346,99 @@ legenda, dan kembali ke Highway tanpa error JavaScript; tampilan diperiksa visua
 Pengguna membatasi pengembangan berikutnya pada access agar sederhana.
 Pengamatan pengguna: sekitar lokasi start banyak ruas permissive.
 
-### 4.8 Blacklist akses aktif (30 Oktober 2026)
+### 4.8 Whitelist akses aktif (2 November 2026)
 
-`ACCESS_BLACKLIST` berisi no, private, destination, customers, delivery,
-agricultural, forestry, military, permit, discouraged. Atas instruksi pengguna,
-build_actions() tidak membuat EdgeAction bila satu nilai access termasuk daftar
-tersebut. Graf asli/GraphML tidak dihapus atau diubah; hanya daftar action.
+Blacklist sepuluh nilai yang dibuat 30 Oktober diganti daftar izin singkat:
 
-Nilai tunggal, huruf besar/kecil, list hasil simplify, string list, dan pemisah
-titik koma ditangani. Jika gabungan memuat satu kategori blacklist, seluruh
-edge dikeluarkan. Edge paralel lain yang lolos tetap action terpisah. Berlaku
-untuk fresh/revisit/closing, eksplorasi, dan greedy pada seluruh A--C.
+    ACCESS_WHITELIST = frozenset({"yes", "permissive"})
 
-Ini batasan penelitian yang sengaja ketat terhadap access: foot=yes tidak
-membatalkan blacklist. Belum menerapkan seluruh hierarki izin pejalan kaki OSM.
-Yes/permissive/kosong tetap dibentuk sebagai action bila panjang positif;
-permissive tetap menerima penalti -0,10 per 100 m. Unknown/variable/nilai baru
-dan akses bersyarat belum mendapat penyaringan tambahan, sehingga bisa tetap
-terbentuk jika tidak mengandung kategori blacklist. Ini bukan jaminan izin
-publik atau keterlintasan lapangan. Titik start dan aturan revisit tetap.
+| Kondisi access | Perlakuan |
+|---|---|
+| yes | Dibentuk menjadi action; reward akses nol |
+| permissive | Dibentuk menjadi action; penalti -0,10 per 100 m |
+| Kosong/tidak tersedia | Tetap dibentuk menjadi action; reward akses nol |
+| Nilai terisi lainnya, termasuk tidak dikenal | Tidak dibentuk menjadi action |
+| Gabungan/list/string list/titik koma | Semua nilai terisi harus masuk whitelist |
 
-Metadata eksperimen menyimpan penanda blacklist aktif, daftar nilai, dan
-kebijakan gabungan tanpa override foot. Saat pengaktifan blacklist, grupnya
-`reward_access_blacklist_010_20261030`, terpisah dari grup percobaan reward saja
-`reward_access_010_20261030` dan baseline `konfigurasi_empat_20261029`. Grup aktif
-setelah perubahan surface/width 2 November dijelaskan pada bagian 5.4.
-Perbandingan dengan baseline lama kini mencakup reward dan penyaringan akses;
-jangan mengatribusikan seluruh perubahan hasil hanya pada koefisien penalti.
+build_actions() memakai access_values.issubset(ACCESS_WHITELIST). Himpunan kosong
+lolos untuk mempertahankan ruas tanpa tag. Satu komponen non-whitelist cukup
+menolak seluruh edge, termasuk closing ke start. Edge paralel lain tetap tersedia.
+Huruf besar/kecil dan spasi dinormalisasi oleh osm_values(). Foot=yes tidak
+mengganti kebijakan access. Atribut conditional terpisah dan hierarki izin lengkap
+OSM belum ditafsirkan; tag kosong bukan bukti izin publik atau keterlintasan aktual.
+
+Penalti permissive tidak berubah dan tetap berlaku pada seluruh panjang edge
+jika gabungan memuat permissive. Skor H/S/W, Q-update, state, epsilon dan seed
+juga tetap. Filter ini digunakan bersama untuk A--C dan notebook uji titik.
+
+Pada snapshot penelitian ada tag kosong/yes/permissive/destination/no; whitelist
+baru menghasilkan 21.300 action identik dengan blacklist sebelumnya. Graf uji
+terbaru menghasilkan 22.058 action identik. Tidak ada perubahan notebook A--C,
+RESULT_GROUP, file graf atau hasil training. Metadata hasil lama tidak ditulis
+ulang: blacklist merupakan kebijakan pada saat training tersebut. Jika graf baru
+memuat unknown/variable/nilai lain, whitelist lebih ketat; kesetaraan tidak
+berlaku otomatis untuk semua lokasi atau pembaruan OSM.
+
+Metadata run berikutnya mencatat access_whitelist_applied, access_whitelist_values,
+access_missing_allowed=True dan access_whitelist_policy=
+all_values_whitelisted_no_foot_override. Field blacklist tidak lagi ditulis pada
+run baru. Loader tampilan tetap dapat membaca metadata hasil lama.
+
+### 4.9 Koreksi skor highway service (2 November 2026)
+
+Pengguna mengklarifikasi bahwa service hanya dikeluarkan dari HIGHWAY_PRIORITY_2,
+bukan dari daftar action. Service mengikuti HIGHWAY_OTHER_SCORE=0,20; gabungan
+memakai minimum seperti sebelumnya. Prioritas kedua tersisa path, unclassified,
+tertiary dan tertiary_link, seluruhnya 0,60. Tidak ada filter highway tambahan.
+Build_actions, whitelist access, mask, Q, state, epsilon dan seed kembali persis
+seperti sebelum salah tafsir. Ruas service tetap bisa dilalui/menutup loop jika
+lolos aturan access, jarak dan kunjungan biasa.
+
+Larangan action service dan perubahan grup/output A--C sebelumnya dibatalkan.
+Notebook A--C dikembalikan utuh termasuk hasil tampilannya; hasil tersebut memakai
+skor service lama 0,60, bukan hasil reward terbaru. Grup baru tidak dipilih otomatis.
+Jika melatih ulang, gunakan grup baru yang sama di A--C untuk menjaga artefak lama.
+Uji titik tetap mengikuti core; restart kernel dan ulangi pencarian/peta sebelum
+training. Uji titik memakai satu folder terbaru yang selalu ditimpa.
+Metadata highway_scoring yang sudah ada otomatis mencatat service di luar prioritas;
+tidak ada metadata pengecualian highway baru. Data/graf/hasil lama tetap utuh.
+
+Contoh service/asphalt/width 3 m: H=0,20, S=1,00, W=1,00 menghasilkan C=0,56.
+Reward edge per 100 m = +0,06; jika permissive, komponen akses -0,10 sehingga
+jumlah kedua komponen -0,04 sebelum komponen arah, revisit atau terminal.
+Skor rendah mengurangi preferensi, tidak menjamin ruas tersebut tak dipilih.
+Analisis hanya diperbarui keterangannya; output skor lama belum dijalankan ulang.
+Notebook verifikasi tetap ditunda dan acuan numeriknya perlu disesuaikan nanti.
 
 ## 5. Comfort Score pada Edge
 
 ### 5.1 Formula
 
-    comfort_score =
-        0,55 × highway_score
-      + 0,30 × surface_score
-      + 0,15 × width_score
+    B = 0,55*r_H + 0,30*r_S + 0,15*r_W
+    R_ruas = B * panjang_meter / 100
 
-Comfort score berada pada 0–1. Highway mendapat bobot terbesar karena karakter fungsi ruas lebih informatif; surface menunjukkan karakter fisik permukaan; width diberi bobot terkecil karena lebar badan jalan kendaraan belum tentu sama dengan ruang lari yang nyaman.
+Nilai default komponen +1/-1/0; gabungan B disimpan tanpa clipping. Rentang
+mengikuti parameter komponen dan bobot. Titik netral sudah 0 dan tidak
+ada pengurangan 0,50. Nama atribut comfort_score, highway_score, surface_score,
+width_score dan API add_comfort_scores dipertahankan agar notebook/loader tetap
+kompatibel, tetapi makna dan rentang angka berubah. Metadata versi baru menandai
+reward_scheme=direct_signed_unclipped_20261103, comfort_score_range=null dan
+comfort_score_clipped=false. Metadata arsip lama tidak diubah.
 
 ### 5.2 Kebijakan nilai
 
-| Komponen | Implementasi |
-|---|---|
-| highway | Prioritas 1: footway/pedestrian/living_street/residential = 1,00; prioritas 2: path/service/unclassified/tertiary/tertiary_link = 0,60; jenis lain/tidak dikenal = 0,20; kosong = 0,50. |
-| surface | Satu prioritas: asphalt/concrete/paving_stones/paved = 1,00; nilai terisi lainnya/tidak dikenal = 0,20; kosong = 0,50. |
-| width | Lebar valid >=3 m = 1,00; positif <3 m = 0,20; tidak ada kenaikan skor setelah ambang. |
-| data tidak terpakai | Highway/surface kosong = 0,50; width kosong/invalid/gabungan = 0,50. Nilai surface terisi di luar prioritas = 0,20. |
-| edge gabungan | Bila highway/surface berupa list setelah simplify, dipilih skor minimum secara konservatif. |
+| Komponen | +1 | -1 | 0 |
+|---|---|---|---|
+| Highway | footway/pedestrian/living_street/residential/tertiary | Nilai terisi lainnya/tidak dikenal, termasuk service/path/unclassified/tertiary_link | Kosong |
+| Surface | asphalt/concrete/paving_stones/paved | Nilai terisi lainnya/tidak dikenal | Kosong |
+| Width | Nilai valid >=3 m | Positif <3 m | Kosong/invalid/gabungan |
 
-Fungsi inti: **is_missing**, **osm_values**, **calculate_highway_score**, **calculate_surface_score**, **parse_width_m**, **width_score**, dan **add_comfort_scores**. Ketiga cell skor analisis memakai fungsi core yang sama dengan A--C.
+Highway/surface gabungan minimum; width menerima satu angka positif dalam meter,
+koma desimal dikenali. Semua penghitungan terpusat di core, termasuk analisis.
+Nilai ini preferensi desain, bukan standar keamanan/kenyamanan. Highway nonprioritas
+serta ruas sempit tetap menjadi action bila lolos aturan access/mask.
 
-Comfort score adalah proxy spasial. Jangan menyebutnya sebagai hasil validasi pengalaman pelari tanpa survei atau validasi lapangan.
+Bagian 5.3--5.4 di bawah menyimpan riwayat pemetaan, bukan kebijakan aktif.
 
 ### 5.3 Riwayat dua prioritas highway (1 November 2026)
 
@@ -368,7 +472,7 @@ grup sebelumnya reward_access_blacklist_010_20261030. Output lama pada notebook
 scenario dikosongkan; artefak hasil lama tetap utuh. Belum ada training baru.
 Notebook verifikasi tetap ditunda; acuan numeriknya adalah konfigurasi lama.
 
-### 5.4 Surface satu prioritas dan width 3 m (2 November 2026)
+### 5.4 Riwayat surface satu prioritas dan width 3 m (2 November 2026)
 
 Surface disederhanakan karena kategori dominan pada snapshot adalah paving_stones,
 asphalt, dan concrete. SURFACE_PRIORITY berisi asphalt/concrete/paving_stones/paved;
@@ -407,6 +511,57 @@ Semua notebook scenario memanggil **load_or_download_graph()** dari `rute_lari_c
 
 Setelah GraphML dimuat, **add_comfort_scores(G)** dipanggil lagi untuk membuat atribut skor tersedia pada memori. Dictionary **NODE_XY** menyimpan koordinat meter semua node.
 
+### 6.1.1 Notebook uji titik start (2 November 2026)
+
+Notebook khusus percobaan koordinat baru memakai satu folder kerja tetap:
+hasil_bab_4/training_qlearning_5km/uji_titik_start/terbaru/.
+Tidak ada RUN_LABEL/POINT_NAME atau opsi memuat cache pada notebook terbaru.
+Koordinat yang telah diisi pengguna dipertahankan.
+
+1. Cell unduh selalu memanggil load_or_download_graph(force_download=True,
+   center_point=input, graph_path=path khusus, use_cache=False). GraphML dan cache
+   HTTP dilewati. Graf/metadata unduhan ditimpa; hasil training/ dan peta marker
+   lama di folder terbaru dibuang setelah unduhan berhasil.
+2. Cell peta membuat marker input biru/START hijau dan garis snap. Radio Highway
+   default/Surface mengganti warna seluruh graf; overlay marker Access tersedia
+   per kategori (default mati), tanpa smoothness. Legenda mengikuti pilihan.
+   Ruas awal legal overlay default mati agar tidak menutupi warna highway.
+   Tooltip memuat H/S/W/access/panjang dan reward dasar. Marker tengah ruas
+   dihitung pada CRS meter; dua arah identik digabung, key paralel tetap terpisah.
+   Popup menunjukkan tag dan status whitelist, bukan lokasi pagar. Graf lengkap
+   termasuk ruas yang ditolak tetap tampil untuk inspeksi. HTML tetap ditimpa pada
+   peta_titik_start.html. Tidak ada unduhan tambahan; hanya memakai G dalam memori.
+3. Cell training memakai graf G dalam memori tanpa mengunduh/memuat ulang.
+   Folder training/ selalu dibersihkan dan ditimpa. Q-table dimulai dari kosong;
+   hasil seed/konfigurasi lama tidak bercampur. File graf, metadata_graf.json dan
+   peta_titik_start.html di folder induk tidak berubah ketika training diulang.
+4. Cell hasil menampilkan metrik/grafik/peta dari training terakhir tanpa melatih.
+   Setelah training ulang, jalankan cell hasil untuk memperbarui tampilannya.
+
+Default B/150000 episode per seed/horizon epsilon50000; alternatif C/75000/None.
+RANDOM_SEEDS=None memilih tiga seed acak berbeda tiap batch. Tuple tiga angka
+dapat diisi untuk mengulang. MAX_WORKERS=3 memakai proses mandiri core. Metadata
+titik ditulis setelah seluruh hasil/peta per seed selesai, memuat input/start/snap,
+hash graf/core, metadata graf, konfigurasi dan tiga seed. Cell hasil membandingkan
+urutan edge serta menampilkan semua peta. Rincian revisi tiga seed pada akhir dokumen.
+
+Konteks pencarian/peta/konfigurasi/training dibatalkan saat unduhan dimulai.
+Unduhan gagal tidak membolehkan training/peta lama dipakai untuk titik baru.
+Koordinat atau radius berubah harus diikuti unduhan/peta; konfigurasi berubah
+harus diikuti cell konfigurasi/training. Hasil lama tidak ditampilkan sebagai
+hasil titik/konfigurasi baru. Snap default >100 m dan tidak ada action awal legal
+masih mencegah training. Tidak ada FileExistsError untuk hasil yang sudah ada.
+
+Pengaturan ini hanya notebook uji titik. Core, seed A--C, graf utama dan artefak
+penelitian tetap. Folder uji titik/run lama tidak dibaca atau dihapus oleh revisi.
+File graf tersimpan merupakan rekaman masukan; cell unduh tidak memakainya sebagai
+cache. Tile basemap tetap mengikuti layanan peta/browser, berbeda dari unduhan graf.
+
+Unduhan live sebelumnya pada input -7.281521,112.710178 berhasil tanpa cache HTTP:
+8.284 node dan 22.136 edge. Ini riwayat, bukan unduhan baru pada revisi overwrite.
+Alur overwrite diuji terkontrol memakai graf sintetis dan training singkat pada
+folder sementara. Training panjang serta validasi lapangan belum dijalankan agent.
+
 ### 6.2 Action
 
 Satu action adalah objek **EdgeAction** yang menyimpan:
@@ -415,7 +570,7 @@ Satu action adalah objek **EdgeAction** yang menyimpan:
 
 ID action di Q-table adalah **(next_node, key)**. Node saat ini sudah bagian dari state, sehingga action tidak perlu menyimpan current node. Identitas edge lengkap untuk log rute adalah **(current_node, next_node, key)**.
 
-Fungsi **build_actions(G)** membuat ACTIONS_BY_NODE setelah mengecualikan edge yang access-nya mengandung kategori ACCESS_BLACKLIST. Edge paralel yang lolos tetap menjadi action berbeda. Tidak ada pemilihan edge berdasarkan comfort secara paksa; agen mempelajarinya melalui reward dan Q-table.
+Fungsi **build_actions(G)** membuat ACTIONS_BY_NODE hanya untuk edge yang semua nilai access terisinya masuk ACCESS_WHITELIST, atau tag access-nya kosong. Edge paralel yang lolos tetap menjadi action berbeda. Tidak ada pemilihan edge berdasarkan comfort secara paksa; agen mempelajarinya melalui reward dan Q-table.
 
 Contoh, `(u, v, key=0)` dan `(u, v, key=1)` adalah **dua action berbeda** walaupun sama-sama berakhir di node `v`. Q-table menyimpan nilai masing-masing secara terpisah: `Q[state][(v, 0)]` dan `Q[state][(v, 1)]`. Saat eksplorasi, salah satunya dapat dipilih acak; saat eksploitasi, action dengan Q-value terbesar dipilih. Perbedaan panjang, comfort score, atau nilai masa depan dapat membuat Q-value keduanya berbeda. Namun aturan revisit tetap berbasis ID node tujuan `v`: memilih edge dengan key berbeda tetapi menuju `v` yang sudah dikunjungi tetap dianggap revisit.
 
@@ -509,136 +664,67 @@ is_loop hanya menjadi True apabila action memasuki start dan jarak total valid. 
 
 ### 7.1 Reward
 
-Reward edge:
+    R = R_ruas + R_akses + R_arah + R_revisit + R_terminal + R_buntu
 
-    r_edge = (comfort_score − 0,50) × length_m ÷ 100
+| Komponen | Aturan |
+|---|---|
+| Ruas | (0,55*rH+0,30*rS+0,15*rW)*L/100 |
+| Akses | permissive -0,10*L/100; yes/kosong 0 |
+| Arah awal | Sebelum langkah <2.500 m dan mendekat: -0,60*(d_before-d_after)/100 |
+| Arah pulang | Jika cabang awal tidak berlaku, setelah langkah >=2.500 m: +0,60*(d_before-d_after)/100 |
+| Revisit | -10 per kunjungan ulang node non-start yang masih legal |
+| Sukses | +100, kembali ke start pada 4.500--5.500 m |
+| Kelebihan jarak/buntu/batas langkah | Masing-masing -50 |
 
-Per 30 Oktober 2026, terdapat komponen reward akses terpisah:
+L adalah panjang ruas; d jarak lurus ke start. Ruas gabungan yang memuat
+permissive dikenai penalti sepanjang edge. Action access di luar whitelist tidak
+pernah ditawarkan, bukan hanya diberi penalti. Tidak ada reward smoothness.
 
-    r_access = -0,10 × length_m ÷ 100  jika tag access mengandung permissive
-    r_access = 0                     untuk nilai lainnya
+Urutan terminal: sukses, over_distance, step_limit, lalu arah. Terminal langsung
+tidak menambah arah; kembali ke start bebas penalti revisit. Jika setelah langkah
+masih berjalan tetapi tidak ada action, train_step menambahkan -50 sekali dan
+bootstrap Q nol. Buntu sejak awal memberi -50 tanpa perpindahan/update Q.
+Ruas melintasi 2.500 m memeriksa penalti fase awal dahulu. Ambang dan mask tetap.
 
-Konstanta `PERMISSIVE_PENALTY_PER_100M=-0.10` tidak mengubah comfort score,
-state, atau daftar action. Ini preferensi mengurangi panjang ruas permissive,
-bukan klaim bahwa ruas tersebut dilarang, berpagar, atau tidak aman. Untuk
-100 m dengan comfort 0,80, reward ruas +0,30 menjadi +0,20 setelah komponen
-akses, sebelum arah/revisit/terminal. Seratus meter permissive menuju start
-pada loop valid tetap memperoleh bonus +80, dan akses tetap diperhitungkan.
+Metadata baru merekam formula/bobot/rentang, prioritas H/S/W, direction_reward,
+revisit_penalty, terminal_rewards, whitelist dan penalti permissive. Metadata/CSV/
+Q-table lama tidak ditulis ulang. Hasil beda versi reward tidak langsung sebanding.
 
-Nilai dibaca melalui osm_values (huruf kecil/list/string list) dan pemisah
-titik koma. Jika edge gabungan mengandung permissive, penalti dikenakan pada
-seluruh panjang edge karena panjang bagian per way belum tersedia pada action.
-Ini pendekatan konservatif yang harus disebut saat menafsirkan panjang akses.
-Komponen access dicatat pada info/train_step dan dicetak saat verbose=True,
-termasuk nol pada kasus tanpa action. Metadata eksperimen menyimpan koefisien,
-aturan gabungan, serta penanda/daftar/kebijakan blacklist aktif.
+### 7.1.1 Dasar skala koefisien arah = 0,60
 
-Notebook A--C memakai grup `surface_width_3m_20261102`, dengan empat konfigurasi
-serta lima seed yang sama. Pengguna menyelesaikan training; hasil pada 8.2.2.
-Hasil lama tetap arsip. Jika menguji efek koefisien akses saja, graf/mask/seed
-harus sama; hasil lintas perubahan surface/width bukan isolasi koefisien akses.
-Notebook verifikasi ditunda dan acuan numeriknya masih konfigurasi lama.
+Koefisien kedua fase dipilih 0,60 agar sederhana dan memberi pengaruh arah yang
+cukup terlihat. Perubahan jarak lurus 100 m berkontribusi +/-0,60; 50 m +/-0,30.
+Reward ruas maksimum 100 m adalah +1. Jadi pada perpindahan lurus penuh pengaruh
+arah 60% dari kontribusi ruas maksimum. Ini analisis skala, bukan bukti optimal.
 
-Nilai **0,50** adalah titik netral. Jika comfort edge tepat 0,50, reward edge bernilai 0. Edge di atas 0,50 memberi reward positif; edge di bawah 0,50 memberi reward negatif. Dengan demikian agen tidak hanya mengejar ruas yang panjang, tetapi mengejar ruas panjang yang kualitasnya lebih baik dari netral.
+### 7.1.2 Dasar skala bonus berhasil = +100
 
-Panjang edge digunakan agar reward merepresentasikan **berapa jauh** agen menikmati atau melewati ruas tersebut. Jika panjang tidak digunakan, edge 10 m dan edge 100 m dengan comfort sama akan memberi reward sama, padahal pengaruhnya terhadap keseluruhan rute berbeda.
-
-Pembagi **100** berarti reward dinyatakan dalam skala per 100 meter. Ini adalah parameter skala, bukan aturan baku matematika. Tujuannya menjaga reward per edge tetap kecil dan sebanding dengan reward terminal seperti bonus sukses `+80` serta penalti `-50`. Tanpa pembagi 100, sebuah edge 100 m dengan comfort 0,80 akan memberi reward `0,30 × 100 = 30`; nilai ini terlalu besar dibanding bonus sukses dan dapat membuat agen lebih mengejar comfort lokal daripada menyelesaikan loop.
-
-Simulasi reward edge dengan comfort 0,80:
-
-| Panjang edge | Perhitungan | Reward edge |
-|---:|---|---:|
-| 20 m | `(0,80 − 0,50) × 20 ÷ 100` | `+0,06` |
-| 50 m | `(0,80 − 0,50) × 50 ÷ 100` | `+0,15` |
-| 100 m | `(0,80 − 0,50) × 100 ÷ 100` | `+0,30` |
-| 200 m | `(0,80 − 0,50) × 200 ÷ 100` | `+0,60` |
-
-Lima edge masing-masing 20 m dan comfort 0,80 memberi total `5 × 0,06 = +0,30`, sama dengan satu edge 100 m dengan comfort yang sama. Ini alasan utama reward dikalikan panjang: pemecahan satu ruas jalan menjadi banyak edge tidak mengubah total reward secara material.
-
-Pengurangan `0,50` pada rumus comfort adalah **titik netral**, bukan batas nyaman atau tidak nyaman yang berasal dari survei pelari. Karena comfort score berada pada rentang 0--1, pengurangan ini membuat edge dengan skor tepat 0,50 memberi reward nol; skor di atasnya positif dan skor di bawahnya negatif. Tanpa pengurangan tersebut, edge dengan comfort rendah tetap selalu memberi reward positif hanya karena panjangnya bertambah. Contoh edge 100 m dengan comfort 0,35 adalah:
-
-    tanpa titik netral: 0,35 × 100 / 100 = +0,35
-    dengan titik netral: (0,35 - 0,50) × 100 / 100 = -0,15
-
-Sebagai ilustrasi skala total, rute 5.000 m dengan comfort rata-rata 0,68 menghasilkan reward comfort sekitar:
-
-    (0,68 - 0,50) × 5.000 / 100 = +9
-
-Nilai `+9` adalah jumlah reward karakter ruas jika mean comfort berbobot panjang tepat 0,68 dan panjang total tepat 5.000 m. Total reward episode masih memasukkan akses, arah, revisit, dan terminal/buntu; return terdiskonto untuk Q juga berbeda dari jumlah reward tanpa diskonto.
-
-Setelah agen menempuh minimal 50% target, atau 2.500 m, diberikan reward arah pulang:
-
-    r_return = 0,40 × (distance_before − distance_after) ÷ 100
-
-distance before dan distance after adalah jarak Euclidean meter terhadap start. Jika agen mendekat ke start, reward arah pulang bernilai positif. Ini hanya shaping signal; bukan jarak rute sebenarnya.
-
-Sebelum 50% target, agen tidak diberi bonus karena menjauh dari start. Namun, bila sebuah action membuatnya mendekati start terlalu awal, diberlakukan penalti ringan:
-
-    r_early_inward = -0,40 × (distance_before − distance_after) ÷ 100
-
-Penalti ini hanya diterapkan jika `distance_after < distance_before` dan fase action dimulai sebelum 2.500 m. Agen tetap boleh memilih action tersebut; aturan ini bukan action mask. Pendekatan ini dipilih agar comfort edge yang tinggi tidak terlalu mudah menarik agen kembali ke area start pada fase awal, tanpa memberi dorongan berlebihan untuk menjauh sampai berisiko `over_distance`.
-
-Contoh: pada jarak rute 1.800 m, agen melewati edge dengan reward comfort `+0,25`, tetapi posisi akhirnya 50 m lebih dekat ke start. Penalti fase awal adalah `-0,40 × 50 ÷ 100 = -0,20`, sehingga total reward action menjadi `+0,05` sebelum komponen lain.
-
-| Parameter | Nilai | Kondisi |
-|---|---:|---|
-| SUCCESS_BONUS | +80 | Loop valid. |
-| OVER_DISTANCE_PENALTY | -50 | Jarak melebihi 5.500 m. |
-| NO_ACTION_PENALTY | -45 | Tidak ada action legal. |
-| STEP_LIMIT_PENALTY | -40 | Mencapai 220 langkah. |
-| REVISIT_PENALTY | -8 | Revisit node selain start. |
-| PERMISSIVE_PENALTY_PER_100M | -0,10 | Per 100 meter edge yang mengandung access permissive. |
-| OUTWARD_PENALTY_SCALE | 0,40 | Skala penalti bila, sebelum 2.500 m, action membuat agen mendekati start. |
-
-Nilai reward dapat dituning, tetapi setiap perubahan reward harus dievaluasi ulang pada seluruh A–C dengan seed sama.
-
-### 7.1.1 Dasar skala koefisien arah = 0,40
-
-Koefisien `0,40` pada reward arah dan penalti bergerak menuju start terlalu awal bukan nilai standar Q-Learning. Nilai ini adalah konfigurasi yang menentukan seberapa besar perubahan jarak lurus dihargai atau diberi penalti. Untuk perubahan jarak lurus sebesar 100 m, nilai ini menghasilkan:
-
-    0,40 × 100 / 100 = 0,40
-
-Artinya, setelah fase pulang dimulai, bergerak 100 m lebih dekat ke start memberi `+0,40`. Sebelum fase pulang, bergerak 100 m lebih dekat ke start memberi `-0,40`. Nilai ini membuat arah perjalanan menjadi sinyal tambahan yang nyata di samping comfort, tanpa mendekati bonus terminal `+80`.
-
-Koefisien `0,40` **tidak selalu lebih besar** daripada reward comfort. Sebagai contoh, edge 100 m dengan comfort 0,68 memberi `+0,18`, sehingga pada contoh tersebut reward arah 100 m lebih besar. Namun edge 100 m dengan comfort 1,00 memberi `+0,50`, sehingga reward comfort lebih besar. Oleh karena itu, dokumentasi tidak mengklaim bahwa koefisien arah selalu mendominasi comfort; keduanya sengaja digabungkan sebagai sinyal pembelajaran yang berbeda.
-
-### 7.1.2 Dasar skala bonus berhasil = +80
-
-Nilai `+80` bukan nilai standar Q-Learning dan bukan berasal dari data OSM. Nilai ini adalah parameter desain agar keberhasilan loop valid menjadi tujuan utama. Dasar numeriknya dapat dilihat dari batas atas konservatif reward positif non-terminal pada rute valid.
-
-**Batas atas reward comfort.** Comfort score berada pada rentang 0--1, sehingga nilai positif terbesar per 100 m adalah `(1,00 - 0,50) = 0,50`. Rute valid paling panjang adalah 5.500 m. Dengan demikian:
-
-    R_comfort maksimum = 0,50 × 5.500 / 100 = +27,5
-
-**Batas atas reward arah.** Setelah fase pulang, reward arah menjumlahkan perubahan jarak lurus. Bila agen bergerak menjauh, nilai perubahan menjadi negatif dan mengurangi akumulasi reward arah. Karena jarak lurus awal fase pulang secara konservatif tidak dapat melebihi total panjang rute valid 5.500 m, batas atas yang sengaja dibuat longgar adalah:
-
-    R_arah maksimum = 0,40 × 5.500 / 100 = +22
-
-Dengan demikian, batas atas akumulasi reward positif comfort dan arah adalah:
-
-    R_nonterminal maksimum = +27,5 + +22 = +49,5
-
-Bonus keberhasilan memenuhi:
-
-    +80 > +49,5
-
-Dengan bukti batas ini, bonus `+80` lebih besar daripada akumulasi positif comfort dan arah yang mungkin diperoleh pada rute valid. Selisihnya adalah `80 - 49,5 = 30,5`. Pada dua rute yang sama-sama valid, keduanya menerima bonus `+80` yang sama; perbedaan comfort dan arah tetap digunakan untuk membedakan kualitas kedua rute tersebut.
-
-Pernyataan bahwa `+80` "tidak terlalu besar" bukan fakta matematis dan tidak diklaim sebagai nilai optimal. Yang dapat dinyatakan adalah bahwa `+80` menciptakan hierarki reward yang jelas: keberhasilan loop memberi sinyal terminal terbesar, sedangkan comfort dan arah tetap menjadi komponen pembeda. Sensitivitas terhadap nilai bonus hanya dapat dibuktikan melalui eksperimen ulang dengan konfigurasi lain.
+Reward ruas ideal pada target 5 km = 1*5.000/100 = 50. Bonus dipilih dua kali
+nilai itu, yaitu +100. Faktor dua merupakan asumsi desain untuk menekankan tujuan
+loop, bukan ketentuan Q-Learning. Pada panjang maksimum valid 5.500 m, batas ruas
+55. Jika perubahan jarak lurus tidak melebihi panjang ruas, batas kontribusi arah
+positif yang longgar 0,60*5.500/100 = 33. Jumlah batas 88 di bawah bonus 100,
+namun ini bukan jaminan urutan return semua sukses/gagal. Kegagalan bisa melewati
+batas jarak dan gamma=0,95 memberi pengaruh waktu penerimaan bonus.
 
 ### 7.1.3 Dasar penalti terminal dan revisit
 
-Seluruh penalti berikut adalah konfigurasi operasional, bukan nilai standar universal. Nilai dipilih untuk memberi konsekuensi negatif pada hasil yang tidak memenuhi syarat loop, sambil tetap membedakan jenis kegagalan dan tidak melarang revisit sepenuhnya.
+Semua kegagalan diberi -50 karena sama-sama tidak memenuhi tugas; tidak ada dasar
+kuat untuk membedakan -50/-45/-40. Skala -50 setara reward ruas ideal 5 km.
+Penalti ditambahkan ke reward perjalanan, sehingga total gagal tidak wajib negatif.
+Revisit -10 setara reward ruas ideal 1.000 m. Pengguna memilih nilai ini agar
+kunjungan ulang kurang menarik, sambil tetap diizinkan untuk pulang. Contoh
+100 m seluruh prioritas, mendekat 100 m pada fase pulang dan revisit legal:
++1+0,60-10 = -8,40 sebelum akses/terminal; pada -5 totalnya -3,40,
+pada -3 totalnya -1,40 dan
+pada -1 totalnya +0,60.
+Ini asumsi desain yang akan diuji, bukan nilai optimal atau jaminan overlap turun.
+Revisit dihitung berdasarkan node, sedangkan overlap berdasarkan ruas fisik;
+mengunjungi persimpangan lama melalui ruas baru tetap terkena penalti revisit.
+Aturan action mask, ambang 2.500 m dan maksimum dua kunjungan tidak berubah.
 
-| Parameter | Nilai | Dasar penggunaan |
-|---|---:|---|
-| `OVER_DISTANCE_PENALTY` | -50 | Rute yang melampaui 5.500 m tidak lagi memenuhi batas valid. Nilai ini paling besar di antara penalti kegagalan karena target jarak sudah terlewati. Kontras terminal terhadap sukses adalah `+80 - (-50) = 130`. |
-| `NO_ACTION_PENALTY` | -45 | Agen tidak memiliki edge legal untuk melanjutkan rute. Nilainya dekat dengan -50 agar kondisi buntu tetap jelas merupakan kegagalan, tetapi sedikit lebih kecil karena tidak selalu berarti rute telah melewati batas jarak. |
-| `STEP_LIMIT_PENALTY` | -40 | Agen belum membentuk loop setelah 220 langkah. Nilainya tetap negatif, tetapi sedikit lebih kecil karena kondisi ini membatasi episode yang terlalu panjang, bukan pelanggaran langsung terhadap batas jarak. |
-| `REVISIT_PENALTY` | -8 | Revisit dibutuhkan sebagai opsi pulang setelah 50% target, sehingga tidak dilarang. Penalti ini membuat pengulangan node kurang menarik dibanding memilih edge baru, tetapi tetap memungkinkan agen kembali melalui jaringan yang telah dilalui. |
-
-Untuk `REVISIT_PENALTY = -8`, tidak ada pembuktian bahwa angka tersebut optimal. Dasarnya adalah fungsi perilaku: penalti harus cukup terlihat dibanding reward comfort per edge yang umumnya kecil, agar agen tidak membentuk putaran pendek berulang, tetapi revisit tetap tersedia melalui action mask pada fase pulang. Nilai ini harus dianggap sebagai hyperparameter dan hanya boleh diubah melalui eksperimen terkontrol pada semua scenario serta seed yang sama.
+Nilai ini konfigurasi awal yang disepakati, belum hasil optimasi. Penilaian akhirnya
+berdasarkan keberhasilan, jarak, karakter ruas dan perilaku, bukan total reward saja.
 
 ### 7.2 Epsilon-greedy
 
@@ -745,7 +831,7 @@ Setiap konfigurasi melatih ulang seed `(0,1,2,3,4)` dari Q-table kosong. Beban s
 scenario 20 training/2.250.000 episode, total A--C 60 training/6.750.000 episode.
 Graf, reward, mask, dan parameter lain tetap sama. Evaluasi akhir greedy (`epsilon=0`).
 
-`RESULT_GROUP="surface_width_3m_20261102"` pada cell pemuatan graf harus sama di
+`RESULT_GROUP="reward_revisit_10_overlap_count_20261103"` pada cell pemuatan graf harus sama di
 A/B/C. Artefak memakai subfolder `<RESULT_GROUP>/dinamis_<jumlah>_<scenario>` atau
 `<RESULT_GROUP>/tetap_50000_episode_<jumlah>_<scenario>` di folder hasil training.
 Hasil sebelumnya, termasuk grup lima konfigurasi, tetap disimpan. Untuk menyimpan
@@ -803,7 +889,7 @@ Tidak ada perubahan core, notebook, reward, mask, snapshot, atau hasil mentah.
 Pembahasan notebook verifikasi tetap ditunda; analisis hasil ini tidak menambah
 kasus verifikasi. Ekspor GPX dan validasi lapangan belum dilakukan.
 
-### 8.2.2 Hasil aktif surface dan width 3 m (2 November 2026)
+### 8.2.2 Arsip surface dan width 3 m (2 November 2026)
 
 Sumber: `hasil_bab_4/training_qlearning_5km/surface_width_3m_20261102/`.
 Empat konfigurasi A--C, lima seed, 60 training, 6.750.000 baris history.
@@ -834,6 +920,124 @@ verifikasi notebook atau validasi lapangan.
 Laporan dan CSV per seed: `docs/temp/analisis_surface_width_3m_20261102/`.
 Skor/reward dari pemetaan lama tidak langsung sebanding. Perbandingan ke grup
 highway lama mengubah surface dan width sekaligus, bukan uji satu faktor.
+
+### 8.2.3 Hasil aktif reward langsung (3 November 2026)
+
+Pengguna menyelesaikan reward_direct_20261103: 12 folder/60 training dan
+6.750.000 episode. Greedy A/B/C dari lima seed: dinamis 75K=0/5/5,
+dinamis 150K=0/5/5, horizon 50K total 75K=2/5/5, total 150K=1/5/5.
+B/C masing-masing 20/20 valid; ini berlaku pada snapshot/start/seed teruji.
+
+B horizon 50K total 150K memiliki galat rata-rata terkecil dan skor ruas tertinggi
+di antara konfigurasi B/C: 289,82 m/0,9356/Q-state 15.779,0; C pada konfigurasi
+sama 321,18 m/0,9255/37.710,2. B horizon total 75K sudah 5/5, dengan
+321,74 m/0,9285/15.106,8 Q-state. Horizon lebih kecil galatnya untuk B,
+sedangkan dinamis lebih kecil untuk C pada kedua durasi. Jangan menyebut horizon
+syarat mutlak keberhasilan B atau tambahan previous_node selalu lebih baik.
+
+Ada 43 loop valid, hanya 33 urutan edge unik. Seluruhnya 4.509,00--4.915,66 m,
+di bawah 5.000 m tetapi sah toleransi. Reward tidak memiliki komponen khusus
+untuk memperkecil galat absolut ke 5.000 m. Semua loop masih permissive,
+width <3 m/unknown dan revisit; 30 menggunakan ruas nonprioritas/negatif.
+Ini legal desain. Gagal 17 seluruhnya A: 12 over_distance dan 5 buntu, semuanya
+tidak pernah memiliki closing action legal. A bukan selalu gagal.
+
+Keberhasilan 10K episode training terakhir B/C: dinamis 75K 66,19%/54,35%;
+dinamis 150K 81,55%/76,06%; horizon total 75K 84,83%/79,63%; horizon total
+150K 87,11%/80,73%. Training bereksplorasi, evaluasi akhir greedy epsilon=0.
+Perbedaan rate bukan bukti konvergensi umum atau efek state saja.
+
+Seluruh metadata/history/epsilon diperiksa; 60 evaluasi direproduksi dari
+Q-table, metrik serta node/action cocok. Core/GraphML dan 228 berkas input tetap.
+Agent tidak menjalankan training baru/unduhan atau mengubah kode/notebook/mask.
+Kandidat katalog B horizon total 150K; total 75K layak bila jumlah episode
+menjadi pertimbangan. B seed 0 pada keduanya identik: 4.915,66 m, galat 84,34 m,
+skor 0,9644 dan 14 revisit. Pemeriksaan peta/akses dan validasi lapangan tetap perlu.
+Laporan/CSV/grafik: docs/temp/analisis_reward_direct_20261103/.
+Skor/reward arsip lama tidak dibandingkan langsung; banyak komponen berubah.
+
+### 8.2.4 Pengamatan B epsilon dinamis dengan overlap hitungan (3 November 2026)
+
+Pengguna menyelesaikan B dinamis 75K dan 150K pada grup
+reward_direct_overlap_count_20261103: 10 training/lima seed per konfigurasi,
+1.125.000 baris history. Metadata basis count, episode/epsilon dan artefak lengkap.
+Seluruh 10 evaluasi Q-table direproduksi; metrik/path sesuai dan count diperiksa
+langsung dari geometri. Rute akhir serta metrik lama sama dengan arsip reward
+langsung pada seed/konfigurasi yang sama. Tidak ada training baru oleh agent.
+
+| Ukuran | 75K | 150K |
+|---|---:|---:|
+| Loop greedy | 5/5 | 5/5 |
+| Overlap greedy rata-rata | 12,98% | 15,35% |
+| Galat rata-rata | 399,63 m | 340,90 m |
+| Skor ruas rata-rata | 0,9125 | 0,9247 |
+| Rata-rata Q-state | 15.446,4 | 17.439,4 |
+| Overlap seluruh episode, 10K terakhir | 11,97% | 12,82% |
+| Keberhasilan training, 10K terakhir | 66,19% | 81,55% |
+
+150K lebih dekat ke target rata-rata 58,72 m dan skor lebih tinggi, tetapi overlap
+bertambah 2,37 poin persentase. Tidak unggul semua metrik. Kurva seluruh episode
+naik dari sekitar 0,4% menjadi 12--13%; awal training rata-rata jarak hanya ~1 km,
+sering belum mencapai izin revisit 2.500 m. Overlap rendah di awal bukan bukti
+rute lebih baik. Overlap belum menjadi reward. Tidak membuat grafik yang memisah
+berhasil/gagal. Epsilon rata-rata 10K terakhir berbeda (~0,1133 vs ~0,0817), jadi
+jangan mengisolasi efek jumlah episode dari perbedaan fase eksplorasi itu.
+
+Overlap greedy per seed 75K: 13,95%;20,93%;10%;10%;10%.
+150K: 13,95%;11,63%;18,60%;18,60%;13,95%. Seed 1 membaik, lainnya tidak seragam.
+75K tiga urutan edge unik (seed 2/3/4 sama), 150K empat (seed 0/4 sama).
+Seluruh loop masih <5.000 m tetapi sah toleransi. Ini pengamatan B satu start/
+snapshot, bukan hasil A--C lengkap atau validasi lapangan. Pembanding berikutnya
+sesuai rancangan adalah B horizon 50K, tanpa mengubah reward dahulu.
+
+Laporan/CSV/grafik: docs/temp/analisis_B_dinamis_overlap_count_20261103/ANALISIS.md.
+Tidak mengubah core/notebook/reward/mask atau hasil mentah; hanya laporan dan
+konteks markdown disinkronkan. Hasil count lain belum ditinjau pada audit ini.
+
+### 8.2.5 Pengamatan empat konfigurasi B dengan overlap hitungan (3 November 2026)
+
+Lengkap pada grup reward_direct_overlap_count_20261103: empat konfigurasi B,
+20 training/lima seed per konfigurasi, 2.250.000 baris history. A/C belum tersedia
+pada grup ini saat pemeriksaan. Seluruh metadata/episode/epsilon/artifact lengkap;
+20 evaluasi Q-table direproduksi dan count diverifikasi. Nilai/rute akhir cocok
+arsip reward_direct_20261103 untuk konfigurasi/seed sama. 80 berkas sumber tetap.
+
+| Konfigurasi | Loop | Galat rata-rata | Overlap rata-rata | Skor ruas |
+|---|---:|---:|---:|---:|
+| Dinamis 75K | 5/5 | 399,63 m | 12,98% | 0,9125 |
+| Dinamis 150K | 5/5 | 340,90 m | 15,35% | 0,9247 |
+| Horizon 50K total 75K | 5/5 | 321,74 m | 15,05% | 0,9285 |
+| Horizon 50K total 150K | 5/5 | 289,82 m | 17,43% | 0,9356 |
+
+Saran praktis sementara B horizon total 75K: mean galat/overlap/skor lebih baik
+sedikit dari dinamis 150K dengan setengah episode. Horizon 150K lebih baik galat/
+skor, tetapi dibanding horizon 75K hanya memperbaiki galat 31,92 m sambil menambah
+overlap 2,38 poin dan dua kali episode. Dinamis 75K paling rendah mean overlap.
+Tidak satu konfigurasi unggul semua ukuran; selisih deskriptif pada lima seed,
+bukan klaim signifikansi/generalitas. Semua konfigurasi tetap untuk laporan.
+
+Training seluruh episode pada 10K akhir: overlap 11,97/12,82/13,75/14,21%;
+keberhasilan 66,19/81,55/84,83/87,11% pada urutan konfigurasi tabel. Horizon
+memiliki epsilon 0,05; dynamic window masih berbeda epsilon. Tidak menyimpulkan
+konvergensi formal dari kurva mendatar atau bahwa overlap harus turun.
+
+Pemilihan peta saat ini berdasarkan galat, tidak mempertimbangkan overlap.
+Pada dua konfigurasi horizon, seed 0 terpilih: 4.915,66 m tetapi overlap 26,67%,
+tertinggi di seed masing-masing. Kandidat kompromi yang dapat diperiksa:
+- Dinamis 75K seed 0: 4.685,49 m / overlap 13,95% / skor 0,9255; identik
+  dinamis 150K seed 0/4 serta horizon 150K seed 1/4.
+- Horizon 75K seed 2: 4.614,91 m / overlap 11,36% / skor 0,9411.
+20 hasil hanya 13 urutan edge unik; belum jaminan 13 rute geografis berbeda.
+
+Belum mengubah reward/mask atau memilih kandidat katalog final. Periksa beberapa
+rute/pagar/akses aktual dahulu. Untuk rumusan masalah kedua tetap pakai A--C
+setelan sama; overlap akhir arsip A/C bisa dihitung ulang tanpa training, tetapi
+tren overlap tiap episode A/C memerlukan pencatatan baru. Jangan menambah episode
+atau faktor baru hanya untuk mengejar overlap rendah tanpa tujuan yang disepakati.
+
+Laporan/CSV/grafik: docs/temp/analisis_B_empat_konfigurasi_overlap_count_20261103/ANALISIS.md.
+Hanya laporan/dokumentasi diperbarui, tanpa training/unduhan/ubah kode atau
+hasil mentah. Ini hasil B lokal, bukan validasi lapangan atau hasil lengkap A--C count.
 
 ### 8.3 Arsip hasil sebelum rancangan episode final
 
@@ -950,7 +1154,7 @@ Contoh: bila 3.750 dari 12.500 episode training berakhir karena `over_distance`,
 
 ### 9.1.2 Grafik yang ditampilkan notebook scenario
 
-Workflow `run_scenario_experiment()` telah menjalankan `evaluate_greedy()` untuk setiap Q-table. Hasilnya langsung dimasukkan ke tabel evaluasi utama, termasuk `closing_action_available`; tidak diperlukan cell evaluasi tambahan. Selain tabel evaluasi, notebook menampilkan dua gambar berikut.
+Workflow `run_scenario_experiment()` telah menjalankan `evaluate_greedy()` untuk setiap Q-table. Hasilnya langsung dimasukkan ke tabel evaluasi utama, termasuk `closing_action_available`; tidak diperlukan cell evaluasi tambahan. Selain tabel evaluasi, notebook menampilkan grafik training, diagnosis dan overlap pada section terpisah.
 
 1. **Grafik training utama**: keberhasilan loop, reward, jarak, mean comfort, jumlah state Q-table, dan epsilon. Semuanya selain epsilon memakai rata-rata bergerak 50 episode.
 2. **Grafik diagnosis training**: rata-rata jarak akhir ke start, return progress ratio, closing action available rate, rata-rata nilai absolut TD-error, dan lima termination rate. Seluruh panel memakai rata-rata bergerak 50 episode dari lima seed; termination rate ditempatkan pada panel yang sama, bukan sebagai gambar tersendiri.
@@ -971,20 +1175,13 @@ Tiga metrik berikut membantu mendiagnosis kegagalan pulang: `distance_to_start_a
 
 ### 9.2 Cara membaca mean_comfort
 
-`mean_comfort` adalah skor comfort keseluruhan rute. Nilainya dihitung sebagai jumlah setiap **comfort edge × panjang edge**, kemudian dibagi total panjang rute. Karena itu edge panjang memberi pengaruh lebih besar daripada edge pendek.
-
-    mean_comfort = jumlah(comfort_edge × panjang_edge) ÷ jumlah(panjang_edge)
-
-Simulasi:
-
-| Edge | Panjang | Comfort |
-|---|---:|---:|
-| A | 100 m | 0,80 |
-| B | 900 m | 0,60 |
-
-Perhitungannya adalah `(100 × 0,80 + 900 × 0,60) ÷ (100 + 900) = 0,62`. Hasil ini berbeda dari rata-rata biasa `(0,80 + 0,60) ÷ 2 = 0,70`, karena rata-rata biasa keliru menganggap edge 100 m dan 900 m sama pentingnya.
-
-Semakin `mean_comfort` mendekati 1, semakin besar bagian panjang rute yang melewati edge dengan comfort score tinggi. Semakin mendekati 0, semakin banyak panjang rute melalui edge dengan skor rendah. Interpretasi ini tetap terbatas pada proxy OSM; nilai 0,90 tidak berarti pelari pasti menilai rute sangat nyaman atau aman.
+Nama kolom dipertahankan untuk kompatibilitas artefak. Pada reward langsung,
+mean_comfort = sum(B_edge*panjang)/sum(panjang), tanpa batas rentang tetap.
+Nilai lebih besar menunjukkan kontribusi preferensi H/S/W lebih positif menurut
+aturan penelitian. Nilai 0 dapat berasal dari data kosong atau keseimbangan
+kontribusi, bukan persepsi kenyamanan sedang. Ini bukan persentase dan tidak
+mengukur keamanan aktual. Arsip sebelum direct_signed_20261103 memakai skala
+0--1; jangan membandingkan angkanya langsung dengan versi baru.
 
 ### 9.2.1 Cara membaca return_progress_ratio
 
@@ -1053,120 +1250,30 @@ Ringkasan singkat: proyek menggunakan Q-Learning tabular dari scratch pada graf 
 
 ## 11. Verifikasi implementasi
 
-**Status 2 November 2026:** uraian angka contoh dan kelulusan di bawah merekam
-notebook versi 29 Oktober. Assertion/output belum disesuaikan dengan perubahan
-highway, surface, width, reward akses dan blacklist. Jangan menyatakan notebook
-lulus pada konfigurasi terbaru; rencana tinjauan ada di dokumen pendamping.
+Per 3 November verifikasi.ipynb disesuaikan dan 32 cell kode (49 cell total)
+dijalankan ulang pada kernel Python bersih. Semua lima poin sesuai expected:
 
-`verifikasi.ipynb` membuat `nx.MultiDiGraph` sintetis dengan CRS EPSG:32749, atribut
-node `x`/`y`, serta edge `length`, `highway`, `surface`, `width`, dan `osmid`
-sintetis positif (101–104). `core.add_comfort_scores(G)` menghitung skor, lalu
-`core.build_actions(G)` membentuk action seperti implementasi utama; dua key
-paralel tetap menjadi dua action berbeda. Tidak ada skor yang ditetapkan langsung.
+1. Dua episode sintetis MultiDiGraph melalui train_step, tiga langkah OSM lokal,
+   hitungan manual angka tetap, next Q legal nonnol, terminal tanpa bootstrap.
+2. State A/B/C, progres/reset/previous_node, mask fresh/revisit/closing, key paralel,
+   penolakan action ilegal, greedy/eksplorasi legal serta whitelist access.
+3. CRS/koordinat/geometri/panjang dan akumulasi; 21.374 edge snapshot, 21.300 action
+   legal setelah 74 edge access ditolak. Bukan semua edge dijadikan action.
+4. Sukses inklusif 4.500/5.500, overshoot, buntu sebelum/sesudah langkah, 220 langkah
+   serta prioritas terminal. Tidak ada early_return atau penalti gagal ganda.
+5. Nilai literal H/S/W bertanda, gabungan, akses, fase, revisit, terminal serta jumlah
+   komponen. Uji stres 100 km tetap membantah jaminan reward global, bukan rute nyata.
 
-Cell setelah pembentukan graf menggambarkan `G` melalui `nx.draw_networkx()` dan
-`nx.draw_networkx_edge_labels()`. Panah memperlihatkan arah, lengkung memisahkan
-dua edge paralel, dan label memuat key, panjang, serta skor ruas. Gambar merupakan
-skema konektivitas; lengkung bukan geometri jalan sebenarnya.
+Expected independen dari fungsi reward yang diuji; toleransi numerik kecil. Manual
+OSM pertama: residential/paving_stones/4 m memberi B=1, access permissive,
+L=157,32164137901165 m, R=0,9*L/100=1,415894772411105 dan Q baru
+0,15*R=0,212384215861666. Snapshot berubah memerlukan tinjauan acuan manual.
 
-Notebook memuat dua episode pada lintasan 0 → 1 → 2 → 0,
-panjang ruas 1.700 + 1.700 + 1.600 = 5.000 m. Dua action paralel 0 → 1
-memiliki skor 0,80625 (residential/asphalt/3 m) dan 0,620625
-(service/paving_stones/2 m) agar epsilon-greedy memiliki alternatif.
-Koordinat node memakai meter; panjang ruas merupakan input perjalanan tersendiri,
-bukan panjang garis lurus. Contoh ini tidak memerlukan snapshot OSM.
-
-Satu cell menjalankan satu `train_step(..., verbose=True)` dan menampilkan state,
-action legal/dipilih, jarak, reward langkah, penalti buntu, reward untuk Q, target,
-TD-error, serta substitusi lengkap persamaan Q. Dictionary `result` memuat angka
-langkah terakhir. Jika buntu sejak awal, `td_error=None` dan Q tidak diperbarui;
-jika buntu setelah perpindahan, penalti ditambahkan sebelum update Q.
-
-Epsilon dihitung pada awal episode melalui `epsilon_for_episode()`: dua episode
-contoh memakai 1,00 lalu 0,05. Environment di-reset antar-episode; Q-table dan RNG
-berlanjut. Untuk mengulang semuanya dari nol, jalankan cell pembuatan environment.
-Parameter `action` dapat dipakai untuk memilih manual; `step()` tetap memeriksa
-legalitasnya. Jika action diberikan manual, epsilon tidak menentukan action tersebut.
-
-Tidak ada class baru, helper notebook, unduhan, atau ekspor otomatis. Saat training,
-`verbose=False`. Pengujian lengkap state/mask, graf, terminasi, reward, dan validasi
-lapangan berada di luar contoh manual awal; cakupan poin 2–5 ditambahkan di bagian berikutnya.
-
-Bagian OSM memuat snapshot penelitian lokal dengan loader core setelah pemeriksaan
-keberadaan file, lalu `add_comfort_scores()` dan `build_actions()`. Tiga langkah awal
-state B, seed 0, episode berindeks 0 ditelusuri satu per cell memakai Q-table/RNG
-tersendiri. Epsilon dihitung sekali melalui `epsilon_for_episode(0, 2)`.
-Tidak ada unduhan, penulisan GraphML, atau perubahan hasil eksperimen.
-
-Langkah pertama pada snapshot saat ini memilih edge (1720975931, 1720975893, 0),
-panjang 157,32164137901165 m, skor 0,759375. Hitungan manual reward sekitar
-0,4080530073268113 dan Q baru 0,0612079510990217 dicantumkan dengan angka tetap,
-kemudian dibandingkan dengan hasil core dan nilai Q-table. Identitas edge juga
-diperiksa; acuan harus ditinjau bila data/konfigurasi contoh diubah. Penelusuran
-singkat ini belum merupakan pengujian seluruh graf atau validasi lapangan.
-
-Komponen reward dicatat langsung pada cabang asli `RunningRouteEnvironment.step()`:
-`edge`, `access` (ditambahkan 30 Oktober), `direction`, `revisit`, dan `terminal`, disertai aturan arah serta jarak
-lurus sebelum/sesudah. `train_step()` menambahkan `no_action` dan menempatkan
-rincian pada `result["reward_components"]` serta info. `verbose=True` mencetak
-atribut jalan, komponen H/S/W, formula skor, reward ruas, formula arah, kontribusi
-revisit/terminasi/buntu, total reward, dan persamaan Q. Cabang dan urutan penjumlahan
-reward dipertahankan. Pencatatan ini berlaku pada contoh sintetis dan snapshot OSM;
-belum merupakan verifikasi lengkap seluruh aturan reward.
-
-
-### 11.1 Kasus lanjutan poin 2–5
-
-Seluruh kasus berada langsung di `verifikasi.ipynb`, tanpa helper/class tambahan.
-Tidak ada perubahan core, parameter, aturan reward, mask, atau hasil eksperimen.
-
-- Poin 2 memeriksa state A/B/C sepanjang lintasan yang sama, reset/previous node,
-  indeks progres pada batas kategori, revisit sebelum/tepat 2.500 m, dua kunjungan,
-  dua key paralel, fresh/revisit/closing bersamaan, penolakan aksi ilegal, dan
-  pemilihan acak/greedy dari daftar legal. Mask/reward tetap memakai kondisi penuh
-  environment; kelulusan bukan jaminan sifat Markov semua representasi state.
-- Poin 3 memeriksa seluruh snapshot: CRS meter, koordinat, panjang positif/berhingga,
-  geometri eksplisit dan ujungnya (toleransi 0,1 m), serta kecocokan seluruh action
-  dengan edge. Akumulasi jarak diuji pada edge paralel berlainan panjang dan jejak OSM.
-- Poin 4 memeriksa sukses inklusif 4.500/5.000/5.500 m, closing di luar rentang
-  yang ditolak, non-start tepat/melewati 5.500 m, buntu awal/setelah action, batas
-  220 langkah nyata, prioritas success/over_distance, serta penolakan setelah done.
-- Poin 5 memeriksa skor atribut kosong/gabungan/lebar, hitungan reward ruas/arah,
-  fase yang melintasi 2.500 m, revisit, terminal/buntu, dan penjumlahan komponen.
-  Analisis lintasan membandingkan total reward dan return dengan diskonto.
-
-Uji stres edge sintetis 100 km berada di luar rentang panjang ruas snapshot.
-Reward kegagalan pada contoh ini dapat melebihi contoh loop valid, sehingga klaim
-“reward tertinggi selalu hanya untuk sukses” tidak dinyatakan lulus. Ini batas desain,
-bukan perubahan aturan atau hasil lapangan. Aritmetika dan analisis dilaporkan terpisah.
-Ringkasan notebook menyatakan bagian yang selesai, bukan jaminan sistem bebas bug.
-
-
-### 11.2 Status tersimpan dan agenda tinjauan ulang
-
-Per 29 Oktober 2026, `verifikasi.ipynb` terdiri dari 47 cell, termasuk 31 cell kode.
-Seluruh cell kode berhasil dieksekusi dari kernel Python 3.13 bersih. Poin 1–5
-tersedia dengan angka acuan, output per langkah/tabel, dan assertion. Penambahan
-poin 2–5 tidak mengubah core, snapshot GraphML, notebook scenario, atau hasil
-training. Bukti berada pada output notebook; tidak ada helper/class verifikasi
-atau ekspor artefak terpisah.
-
-Pengguna meminta menyimpan konteks ini dan beralih ke pembahasan lain.
-**Pengembangan dan pembahasan verifikasi ditunda sampai pengguna meminta
-meninjaunya kembali.** Ketersediaan implementasi tidak berarti semua kasus lanjutan
-sudah disetujui pengguna, seluruh sistem bebas bug, atau rute telah tervalidasi di lapangan.
-
-Agenda saat ditinjau kembali:
-
-1. Review keterbacaan, acuan manual, dan relevansi kasus poin 2–5 bersama pengguna.
-2. Bahas batas desain reward secara terpisah dari ketepatan aritmetika. Dalam uji
-   stres edge sintetis 100 km, reward gagal 256,25 melampaui contoh loop sukses
-   95,08609245282265. Kasus tersebut di luar rentang panjang ruas snapshot, sehingga
-   perlu dibahas relevansinya terhadap penelitian sebelum menyimpulkan atau
-   memutuskan perbaikan. Belum ada keputusan atau perubahan aturan reward.
-3. Jika nanti reward/tag OSM diubah atas arahan pengguna, tinjau kembali expected
-   pada notebook dan kebutuhan eksperimen A–C dengan konfigurasi yang sama.
-   Ekspor GPX dan validasi lapangan tetap ditunda sebagai pekerjaan terpisah.
+Seluruh komponen dicatat saat dihitung pada core, tidak dihitung ulang khusus
+untuk tampilan. Tidak ada QValueUpdater/framework baru. Kelulusan hanya bukti
+kasus yang ditulis, bukan jaminan bebas bug, konvergensi, sifat Markov atau
+validasi lapangan. Review pengguna terhadap seluruh kasus tidak dianggap selesai
+otomatis. Tidak menjalankan training penelitian, unduhan atau menulis ulang GraphML.
 
 ## 12. Kesepakatan verifikasi, validasi, dan katalog rute
 
@@ -1187,3 +1294,454 @@ Rencana rinci dan status implementasi: [Verifikasi, validasi, dan katalog](docs/
   Katalog mendukung pemanfaatan; inti penelitian tetap reward dan pengaruh state.
 - Kandidat rujukan aplikasi Q-Learning ada pada referensi.md; belum otomatis masuk
   daftar pustaka naskah. Mayoritas paper mengevaluasi performa, bukan bukti unit test/manual Bellman.
+
+
+## Pengukuran overlap dalam satu rute (3 November 2026)
+
+Riwayat tahap awal: overlap dihitung terpisah atas 60 rute evaluasi tersimpan.
+Keputusan lanjutan pengguna menyederhanakan menjadi satu kolom overlap_ratio dan
+meminta pencatatan tiap episode. Implementasi aktif sudah mencatatnya pada core
+serta section grafik terpisah; lihat bagian Pencatatan overlap selama training.
+Angka di bawah tetap hasil postprocessing grup reward_direct_20261103.
+
+Identitas ruas berdasarkan geometri tanpa membedakan arah; ruas paralel berbeda
+geometri tetap terpisah, persimpangan satu titik tidak dihitung. Panjang memakai
+edge.length agar konsisten dengan jarak lama. Pada 60 rute ini union geometri
+memastikan tidak ada overlap parsial tambahan. Tanpa geometry memakai garis node,
+sesuai representasi graf. Data lain dengan overlap parsial perlu perluasan metode.
+
+Semua 43 loop valid overlap, rentang 5,94--26,43%. Rata-rata B/C: dinamis
+75K 17,28%/15,67%; dinamis 150K 18,57%/19,21%; horizon total 75K
+19,41%/10,90%; horizon total 150K 20,19%/15,89%. Semua B/C lima loop valid.
+A hanya dua/satu loop pada horizon, jadi tidak dibandingkan rate overlap saja.
+
+B horizon seed 0 (75K/150K identik): panjang 4.915,66 m, ruas unik 3.616,22 m,
+pengulangan 1.299,45 m/26,43%, 12 lintasan ulang, 14 revisit node.
+Seluruh pengulangan contoh ini reverse; unique_edge_ratio terarah tetap 1,00.
+B terbaik rata-rata galat/skor belum tentu terbaik overlap. C horizon total 75K
+paling rendah overlap di B/C: 505,78 m/10,90%, tetapi galat 365,27 m/skor 0,9149.
+Belum ada ambang overlap, perubahan pemilihan katalog, reward atau aturan revisit.
+
+Laporan: docs/temp/analisis_reward_direct_20261103/OVERLAP.md, CSV per seed/
+ringkasan/ruas berulang, grafik dan peta contoh berwarna merah. Sembilan kasus
+kecil dan identitas jarak lulus; 228 berkas hasil mentah/GraphML tetap. Browser
+peta contoh: 33 ruas fisik unik, 12 ruas berulang, toggle lulus tanpa error JS;
+screenshot diperiksa. Menghitung hanya evaluasi akhir, bukan jutaan episode.
+
+
+## Pencatatan overlap selama training (3 November 2026)
+
+Definisi aktif yang disepakati pengguna adalah hitungan lintasan ruas:
+overlap_ratio = (N_total - N_unik) / N_total. N_total adalah jumlah lintasan edge,
+N_unik adalah jumlah ruas fisik unik tanpa membedakan arah. Panjang dalam meter
+tidak menjadi bobot. Satu ruas dilalui tiga kali berarti dua lintasan ulang.
+Geometri ter-normalisasi menjadi identitas ruas; paralel berbeda geometri tetap
+terpisah. Identitas dipersiapkan sekali pada build_actions. Tanpa lintasan, nilai
+NaN/null; hanya satu kolom overlap_ratio (0--1) disimpan tiap episode/evaluasi/JSON.
+
+Grafik overlap tetap section tersendiri, tetapi hanya SATU PANEL untuk SELURUH
+EPISODE, tanpa pemisahan atau penyaringan berhasil/gagal. Kurva persen memakai
+jendela 50 episode dan rata-rata observasi antar-seed. Section 3.3 notebook A--C
+juga memakai seluruh seed evaluasi; agregat bernama mean_overlap_ratio.
+Metadata basis=physical_road_traversal_count dengan rumus hitungan, bukan panjang.
+Reward, mask (revisit >=2.500 m), state, epsilon, seed dan pemilihan peta tetap.
+
+Target training A--C sekarang reward_direct_overlap_count_20261103. Pengguna sudah
+memiliki hasil pada reward_direct_overlap_20261103 yang berbasis meter, sehingga
+folder itu dipertahankan. Jangan mencampur persentase berbasis meter dan hitungan.
+Hasil reward_direct_20261103 tetap arsip tanpa pencatatan overlap tiap episode.
+Muat ulang notebook dan jalankan cell muat graf untuk memperbarui RESULT_GROUP
+sebelum training. Uji titik tetap memakai overwrite training terbaru melalui core
+bersama, tanpa unduhan ulang bila hanya training diulang. Koordinat tetap.
+
+Pengujian lulus: 180 episode sintetis A--C/dua seed menghasilkan Q-table dan semua
+metrik selain overlap identik terhadap versi sebelumnya; 60 rute arsip cocok
+hitungan lintasan audit independen. Contoh lima lintasan/empat ruas unik menghasilkan
+20%, meskipun ruas ulang 1.500 m dari total 5.000 m (metode meter akan 30%).
+Grafik diuji tanpa kolom is_loop, satu panel, rata-rata semua observasi. Alur simpan/
+baca/tampil A/B/C satu seed dan label arsip meter lulus. Verifikasi kernel bersih
+49 cell/32 code lulus; gambar diperiksa visual. 290 berkas hasil lama serta graf,
+analisa dan dependensi tidak diubah. Tidak ada training penelitian/unduhan baru.
+
+
+### Identitas ruas untuk overlap dan asal fungsi Shapely
+
+Perhitungan aktif hanya menggunakan jumlah lintasan: `(N_total - N_unik) / N_total`.
+Geometri dipakai untuk mengenali ruas yang sama, bukan untuk memberi bobot meter.
+`physical_road_id` adalah identitas pengamatan pada EdgeAction; identitas action
+Q-Learning tetap `(next_node, key)`. Perbedaan ini penting pada MultiDiGraph.
+
+Alur implementasi:
+
+1. `build_actions()` membentuk action legal dan mengisi `action.physical_road_id`
+   lewat `_physical_road_identity()`, sekali saat action dibentuk.
+2. Jika geometri tersedia, identitasnya `geometry.normalize().wkb`.
+   `normalize()` adalah method Shapely yang menata koordinat secara konsisten;
+   `.wkb` adalah properti (tanpa tanda kurung) yang menghasilkan `bytes`, yaitu
+   representasi Well-Known Binary. Ini representasi bentuk, bukan ID way OSM.
+3. Geometri garis yang sama dengan urutan terbalik menghasilkan identitas sama
+   setelah normalisasi. Dua edge paralel dengan geometri berbeda tetap berbeda.
+   Key berbeda dengan geometri persis sama digabung sebagai satu ruas untuk
+   metrik overlap; keduanya tetap action berbeda untuk agen.
+4. Bila atribut geometry tidak tersedia, kode mencoba garis lurus
+   antar-koordinat node. Jika tidak ada geometri valid/koordinat pada graf uji,
+   fallback adalah `(min(u,v), max(u,v), str(key))`. Pada dua edge yang sama-sama
+   tidak menyimpan geometry dan memiliki endpoint sama, fallback garis lurus
+   dapat menyamakan identitasnya meskipun key berbeda. Pembedaan bergantung pada
+   representasi geometri yang tersedia; tidak menggunakan buffer atau kedekatan.
+5. Setelah episode selesai, `route_metrics()` memasukkan seluruh physical_road_id
+   pada `environment.path_actions` ke set. Ukuran set menjadi N_unik; panjang
+   path_actions menjadi N_total. Tanpa lintasan menghasilkan NaN/null.
+6. Metrik dikumpulkan ke history setiap episode; CSV history ditulis ketika
+   eksperimen menyimpan hasil. Evaluasi greedy akhir memakai route_metrics yang
+   sama. Grafik adalah satu panel seluruh episode, rata-rata jendela 50 episode
+   antar-seed, tanpa pemisahan berhasil/gagal. Metadata menyatakan basis hitungan.
+
+Contoh dari snapshot utama: pasangan node 5575519685 -> 1720976331 memiliki
+key 0 sepanjang 64,51 m dengan dua titik koordinat (garis node karena geometry
+absen), dan key 1 sepanjang 203,12 m dengan 15 titik koordinat. Identitasnya
+berbeda karena geometri berbeda; perbedaan panjang bukan syarat identitasnya.
+
+Pada Jalan Dukuh Kupang Timur XX, edge (1720906005, 1720906028, 0) memiliki
+identitas WKB sepanjang 73 byte. Identitas arah balik cocok. Nilainya dapat
+diperiksa pada graf utama dengan:
+
+```python
+geometry = G.edges[1720906005, 1720906028, 0]["geometry"]
+print(geometry)
+print(geometry.normalize())
+print(geometry.normalize().wkb)        # bytes yang dipakai sebagai identitas
+print(geometry.normalize().wkb.hex())  # tampilan hex dari nilai yang sama
+```
+
+Untuk rute B horizon 50K total 150K seed 0 pada arsip reward_direct_20261103:
+45 lintasan, 33 ruas fisik unik, sehingga metrik hitungan = 12/45 = 26,67%.
+Angka 26,43% pada laporan OVERLAP.md lama adalah rasio berbasis meter. Jangan
+menyamakan kedua definisi atau mengubah makna kolom arsip secara diam-diam.
+
+Shapely sudah tercantum sebagai dependensi pada pyproject.toml sejak setup uv
+(commit 9fd76a0, 9 Oktober 2026); versi yang diperiksa 2.2.0. Tidak ada instalasi
+paket baru atau perubahan lockfile untuk fitur overlap. Library ini sudah
+menyediakan LineString, normalize dan WKB yang dipakai di atas.
+Rujukan teknis: [normalisasi Shapely](https://shapely.readthedocs.io/en/stable/reference/shapely.normalize.html)
+dan [representasi WKB](https://shapely.readthedocs.io/en/stable/reference/shapely.to_wkb.html).
+
+Pengguna memilih menjalankan Scenario B terlebih dahulu sebagai referensi pada
+reward_direct_overlap_count_20261103. Hasil training tersebut belum dianalisis
+pada sinkronisasi penjelasan ini. Tidak ada perubahan kode atau training baru.
+
+
+## Pengamatan B dinamis 75K: reward lama, langsung -1 dan -3 (3 November 2026)
+
+Pengguna sudah menjalankan B dinamis 75K pada reward_revisit_3_overlap_count_20261103.
+375.000 history lengkap, lima seed; sepuluh evaluasi -1/-3 diulang dan cocok
+metrik serta node/action. Episode/seed/epsilon ketiga versi cocok persis.
+
+| Versi | Loop 10K terakhir per seed, agregat lima seed | Loop greedy | Overlap greedy |
+|---|---:|---:|---:|
+| surface_width_3m_20261102: netral 0,50, revisit -8 | 0,116% | 0/5 | Tidak dihitung pada audit ini |
+| reward_direct_overlap_count_20261103: revisit -1 | 66,19% | 5/5 | 12,98% |
+| reward_revisit_3_overlap_count_20261103: revisit -3 | 51,66% | 5/5 | 6,70% |
+
+Reward lama/banyak faktor berubah: revisit -8 ke -1/-3, arah 0,40 ke 0,60,
+bonus 80 ke 100, pemetaan/rumus reward ruas. Jangan menyimpulkan penghapusan
+netral 0,50 sendiri penyebab peningkatan. Versi lama greedy tidak pernah punya
+closing action; kedua baru 5/5 pernah tersedia dan berhasil. -1 ke -3 hanya
+mengubah penalti: tradeoff training loop turun 14,53 poin tetapi overlap greedy
+turun 6,28 poin; galat greedy rata-rata turun 399,63 ke 351,03 m.
+B dinamis 150K -3 juga memiliki artefak tetapi belum ditinjau dalam audit ini.
+Tidak mengubah kode/notebook/hasil mentah, training atau unduhan.
+Laporan: docs/temp/analisis_B75_perbandingan_reward_20261103/ANALISIS.md.
+
+
+
+## Pengamatan B dinamis 75K dan 150K, penalti -3 (3 November 2026)
+
+Dua durasi -3 selesai lima seed. Dibanding -1 pada durasi/seed/epsilon sama:
+
+| Episode | Loop greedy -1/-3 | Overlap greedy -1 -> -3 | Loop 10K akhir -1 -> -3 |
+|---|---:|---:|---:|
+| 75K | 5/5 dan 5/5 | 12,98% -> 6,70% | 66,19% -> 51,66% |
+| 150K | 5/5 dan 5/5 | 15,35% -> 6,94% | 81,55% -> 78,77% |
+
+Seluruh sepuluh pasangan seed/durasi menurun overlap-nya. -3 sudah berpengaruh
+cukup besar secara deskriptif; tidak menyimpulkan optimalitas atau signifikansi.
+150K -3 mean galat 296,65 m (lama -1 340,90 m), skor ruas 0,9172 (lama 0,9247).
+Peta 150K -3 seed 0: 4.808,07 m, overlap 2/47=4,26%, node revisit 5. Dua ruas
+berulang bernama Dukuh Kupang Barat XVI/XVII; belum terbukti wajib atau minimal.
+Sepuluh evaluasi 150K direproduksi; metrik/path cocok. Audit 75K sebelumnya cocok.
+Saran -5 hanya eksperimen lanjutan bila diinginkan, belum diterapkan; core tetap -3.
+Tidak mengubah kode/notebook/hasil mentah atau menjalankan training/unduhan.
+Laporan: docs/temp/analisis_B_dinamis_revisit3_20261103/ANALISIS.md.
+
+
+
+## Kemiripan seed B dinamis 75K -3 (3 November 2026)
+
+Urutan edge diperiksa: hanya seed 1/2 identik (4.604,73 m, overlap 4,65%, 43
+langkah); seed 3 berbeda (5.117,60 m, 3,77%, 53 langkah). Seed 0 juga berbeda
+meskipun panjang dekat. Q-table 1/2 berbeda (17.116/17.213 state); nilai Q action
+terpilih berbeda pada 42/43 langkah tetapi action terbaik sama, tanpa seri Q
+terbaik pada seluruh 43 langkah keduanya. Evaluasi greedy tidak mengeksplorasi.
+Seed berbeda bukan tujuan keragaman antar-rute; revisit mengatur satu episode.
+Versi -3 memiliki empat urutan unik/5 loop, -1 tiga/5 loop (seed 2/3/4 identik),
+versi lama netral lima urutan berbeda tetapi 0/5 loop. Bukan bukti optimalitas atau
+konvergensi global. Core/reward/mask/evaluasi tetap; tidak ada training/unduhan.
+Laporan: docs/temp/analisis_kemiripan_seed_B75_20261103/ANALISIS.md.
+
+
+
+## Reward, epsilon dan state: pembanding terbaru 75K -3 (3 November 2026)
+
+C dinamis 75K dan B horizon 50K total 75K sudah tersedia. Pada reward -3 sama:
+B dinamis loop 5/5, galat 351,03 m, overlap 6,70%; B horizon loop 5/5,
+galat 195,68 m, overlap 7,33%; C dinamis loop 5/5, galat 290,92 m, overlap
+4,74%. Seluruh 15 evaluasi direproduksi, metrik/path cocok. Ini hasil lokal lima
+seed, bukan superioritas umum atau signifikansi. Training 10K akhir masing-masing
+51,66%/77,58%/52,95%, tetapi epsilon B horizon lebih rendah saat pengukuran.
+Rekomendasi pembahasan: perbandingan A/B/C tetap inti rumusan masalah state;
+dua epsilon tetap berguna sebagai konfigurasi pendukung walau loop sudah 5/5.
+B sukses tidak membuat C redundan. Insentif reward lama-baru berubah bersama;
+jangan menyebut penghapusan netral 0,50 sebagai penyebab tunggal. Rancangan,
+core, notebook dan hasil mentah tidak diubah; tanpa training/unduhan baru.
+Laporan: docs/temp/analisis_reward_epsilon_state_20261103/ANALISIS.md.
+
+
+
+## Seluruh empat konfigurasi B penalti -3 selesai (3 November 2026)
+
+Grup reward_revisit_3_overlap_count_20261103: 20 training/2.250.000 episode,
+semua 20 greedy valid. Dinamis 75K/150K overlap 6,70%/6,94%; horizon 50K total
+75K/150K 7,33%/8,12%. Pembanding -1 berturut-turut 12,98/15,35/15,05/17,43%.
+Training loop 10K akhir -3: 51,66/78,77/77,58/82,20%. Seluruh parameter metadata
+selain penalti/pemilihan peta cocok, seed/episode/epsilon antarversi cocok persis.
+Lima evaluasi horizon total 150K direproduksi, metrik/path cocok; konfigurasi
+lain sudah direproduksi sebelumnya. Saran -5 sebagai eksperimen lanjutan tetap
+belum diterapkan. Core masih -3. Hasil hanya lokal lima seed/start penelitian.
+Peta horizon150K memilih seed 1 overlap 12,24%; seed 3 hanya 1,96%, karena peta
+dipilih menurut galat jarak, bukan overlap. Jangan menyamakan peta dengan mean.
+Laporan: docs/temp/analisis_B_empat_konfigurasi_revisit3_20261103/ANALISIS.md.
+Tidak mengubah kode/notebook/hasil mentah atau menjalankan training/unduhan.
+
+## Audit awal B/C penalti -5, sebelum konfigurasi C terakhir selesai (3 November 2026)
+
+B lengkap empat konfigurasi; C lengkap tiga. C horizon 50K total 150K belum punya
+metadata/history/evaluasi akhir (saat laporan disimpan 4/5 rute seed ada).
+35 training/3.750.000 history, 30/35 greedy valid; seluruh 35 direproduksi dengan
+metrik/path cocok dan overlap geometri diverifikasi, 140 berkas sumber tetap.
+
+| Konfigurasi | Loop B/C | Overlap B/C |
+|---|---:|---:|
+| Dinamis 75K | 1/5 dan 4/5 | 6,92% / 4,13% |
+| Dinamis 150K | 5/5 dan 5/5 | 5,24% / 3,07% |
+| Horizon 50K total 75K | 5/5 dan 5/5 | 3,37% / 3,69% |
+| Horizon 50K total 150K | B 5/5; C belum final | B 5,58%; C belum final |
+
+Overlap mean seluruh seed, termasuk gagal; jangan menyebut overlap rendah pada
+rute gagal sebagai keberhasilan. B dinamis75 gagal empat over_distance; C dinamis75
+satu buntu. Semua gagal tidak pernah punya closing action. -5 dibanding -3
+mengurangi overlap tiga konfigurasi B tetapi menurunkan greedy B dinamis75 dari
+5/5 ke 1/5 dan C dinamis75 dari 5/5 ke 4/5. Jangan menaikkan penalti lagi dulu.
+C horizon75 seed3 adalah kandidat: 4.860,94 m, overlap0%, galat139,06m, revisit1;
+belum validasi lapangan. C dinamis150 menggunakan sekitar2,2x Q-state B, overlap
+lebih kecil dan galat hampir sama. Dua epsilon dan state tetap pembanding relevan.
+Tidak mengubah kode/notebook/hasil mentah atau menjalankan training/unduhan.
+Laporan: docs/temp/analisis_BC_revisit5_20261103/ANALISIS.md.
+
+
+## Audit lengkap B/C penalti -5 (3 November 2026)
+
+Kini delapan konfigurasi B/C lengkap: 40 training/4.500.000 episode, 35/40 greedy
+valid (B16/20, C19/20). Seluruh 40 direproduksi; metrik/path cocok dan overlap
+geometri independen cocok. Seed/episode/epsilon/parameter B-C konsisten; 160
+berkas sumber tetap. Audit awal tujuh konfigurasi tetap riwayat.
+
+| Konfigurasi | Loop B/C | Overlap B/C | Galat B/C |
+|---|---:|---:|---:|
+| Dinamis75K | 1/5 dan 4/5 | 6,92% / 4,13% | 473,55 / 287,57 m |
+| Dinamis150K | 5/5 dan 5/5 | 5,24% / 3,07% | 302,74 / 304,64 m |
+| Horizon50K total75K | 5/5 dan 5/5 | 3,37% / 3,69% | 357,69 / 301,80 m |
+| Horizon50K total150K | 5/5 dan 5/5 | 5,58% / 3,16% | 212,43 / 344,99 m |
+
+Mean seluruh lima seed, termasuk gagal. Kegagalan hanya dinamis75: B empat
+over_distance, C satu buntu, semua tidak pernah punya closing action. Dibanding
+-3, -5 menekan overlap tiga konfigurasi B tetapi menurunkan loop dinamis75.
+Jangan menaikkan penalti lagi dulu. Dua epsilon dan perbandingan state masih
+berguna; tidak ada konfigurasi unggul semua ukuran. C dinamis150 Q-state sekitar
+2,2x B; ini bukan pengukuran rasio RAM/waktu. Semua angka deskriptif lima seed.
+Ada lima loop overlap0%; kandidat C horizon75 seed3 4.860,94m/galat139,06m,
+node revisit1. Periksa peta/lapangan sebelum katalog. Tidak ada validasi lapangan.
+Laporan terbaru: docs/temp/analisis_BC_revisit5_lengkap_20261103/ANALISIS.md.
+Tanpa perubahan kode/notebook/hasil mentah, training penelitian atau unduhan.
+
+
+## Pembaruan parameter -10 dan tiga worker (3 November 2026)
+
+Permintaan terbaru pengguna: penalti revisit -10, MAX_WORKERS=3 di notebook A--C,
+grup reward_revisit_10_overlap_count_20261103. Hasil -5/-3 tetap tersimpan dan
+bukan hasil parameter baru. Core default max_workers=1 tetap untuk kompatibilitas;
+uji titik satu seed tetap satu proses. Seluruh konfigurasi episode/epsilon/seed,
+mask, bobot dan komponen reward lain tetap. Perubahan worker hanya eksekusi,
+bukan variasi algoritma Q-Learning. Tidak menjalankan training penelitian baru.
+
+Verifikasi pada kernel bersih: 32 cell lulus. Expected contoh revisit -10 dan
+total -8,40 ditulis literal. Uji Jupyter lima seed, 1 vs 3 worker, menghasilkan
+Q/history/metrik/rute identik serta metadata workers=3/revisit_penalty=-10.
+Bukti uji: docs/temp/verifikasi_revisit10_workers3_20261103/.
+
+
+## Audit lengkap A–C penalti -10 (3 November 2026)
+
+12 konfigurasi/60 training/6.750.000 episode lengkap. Seluruh60 evaluasi Q-table
+cocok metrik/path, overlap geometri independen cocok, metadata -10/3worker,
+seed/episode/epsilon/artefak diperiksa. 240 berkas sumber tetap. Greedy25/60 valid:
+A3/20, B11/20, C11/20. Selesai training berbeda dari keberhasilan evaluasi.
+
+| Konfigurasi | Loop A/B/C | Overlap A/B/C |
+|---|---:|---:|
+| Dinamis75K | 0/5, 0/5, 2/5 | 5,12%, 5,46%, 4,67% |
+| Dinamis150K | 1/5, 4/5, 3/5 | 3,31%, 0,82%, 0,86% |
+| Horizon50K total75K | 0/5, 2/5, 3/5 | 4,17%, 0,71%, 0,74% |
+| Horizon50K total150K | 2/5, 5/5, 3/5 | 1,43%, 2,42%, 1,13% |
+
+Overlap mean seluruh lima seed termasuk gagal. B/C turun35/40 pada -5 ke22/40
+pada -10; menekan overlap dengan biaya keberhasilan. Satu-satunya5/5 adalah B
+horizon150K (galat252,25m, overlap2,42%, skor0,9339). Kegagalan32 over_distance,
+3 buntu, semuanya tidak pernah punya closing action legal. Sebelas gagal punya
+overlap0%, jadi overlap tidak menggantikan syarat loop. Sembilan valid overlap0%.
+C horizon75 seed4 kandidat4.913,09m/galat86,91m/overlap0%; B horizon150 seed1
+5.092,78m/galat92,78m/overlap3,28%. Belum validasi lapangan atau pilihan final.
+Rekomendasi jangan naikkan penalti lagi; simpan -10 untuk sensitivitas. Kode tetap
+-10/3worker, tanpa perubahan otomatis. Parameter reward final A–C harus sama.
+Laporan: docs/temp/analisis_ABC_revisit10_20261103/ANALISIS.md.
+Tanpa perubahan kode/notebook/hasil mentah, training penelitian atau unduhan.
+
+## Audit sinkronisasi uji titik start (3 November 2026)
+
+uji_titik_start.ipynb sudah memakai core bersama: reward -10/mask/Q/epsilon/
+overlap count. Default B150K/horizon50K, satu seed acak dicatat dan satu proses;
+ini sengaja berbeda dari lima seed/tiga worker A--C. Kode notebook/koordinat tidak
+diubah. Hasil uji terakhir yang tersimpan saat audit masih penalti -1, sehingga
+perlu training ulang untuk hasil parameter terbaru; bukan kode yang tertinggal.
+
+Uji cell asli dengan graf sintetis/folder sementara lulus: force download/no-cache
+arguments, preview Highway/Surface/Access, metadata -10/seed/worker/overlap, display,
+retraining tanpa unduh, overwrite training saja, penolakan koordinat lama serta
+invalidasi hasil setelah unduh baru. 2.583 berkas penelitian tetap. Tidak ada
+unduhan nyata atau training penelitian, hanya enam episode per uji singkat.
+Audit: docs/temp/audit_uji_start_sync_20261103/AUDIT.md.
+
+
+## Koneksi Overpass uji titik (3 November 2026)
+
+Atas permintaan pengguna, pengaturan server alternatif di-revert. Notebook
+kembali memanggil core.load_or_download_graph() langsung tanpa OVERPASS_URL,
+perubahan ox.settings.overpass_url atau User-Agent khusus. Server mengikuti
+bawaan OSMnx (https://overpass-api.de/api pada versi terpasang). Muat ulang
+notebook dari disk dan restart kernel sebelum menjalankan ulang dari awal.
+
+Force download/use_cache=False, pembatalan konteks saat gagal, koordinat/radius,
+reward dan konfigurasi training tetap. Core, notebook A--C dan hasil penelitian
+tidak diubah. Sumber cell koneksi kembali sama dengan sebelum percobaan endpoint
+alternatif; sintaks seluruh cell diperiksa. Tidak menguji unduhan jaringan atau
+menjalankan training. Probe/kontrol koneksi sebelumnya tetap riwayat pada
+docs/temp/audit_overpass_connection_20261103/AUDIT.md; bukan bukti layanan pulih.
+
+## Uji titik: tiga seed acak (3 November 2026)
+
+Atas permintaan pengguna untuk memeriksa rute yang selalu sama, notebook uji titik
+kini menjalankan tiga training mandiri per batch. RANDOM_SEEDS=None membuat tiga
+seed acak berbeda melalui SystemRandom.sample(range(2**32), 3), dicetak/disimpan.
+Tuple tiga integer berbeda boleh diisi untuk mengulang. Default B/150.000 episode
+PER SEED/horizon50.000; total450.000 episode. MAX_WORKERS=3 memakai core spawn
+bersama, bisa diisi1 untuk berurutan. A--C tetap lima seed0--4 tanpa perubahan.
+
+Graf/titik/reward/mask/state/Q/epsilon tetap sama antar-seed. Training memakai G
+memori, tidak mengunduh atau memuat ulang graf. Folder training/ dibersihkan SEKALI
+per batch, lalu menampung ketiga Q-table, JSON rute, CSV metrik/grafik gabungan,
+dan peta_scenario_{scenario}_seed_{seed}.html. Metadata titik memuat semua seed dan
+nama peta. Cell hasil membaca hasil tersimpan, menampilkan SEMUA peta per seed;
+peta perwakilan core tetap disimpan tetapi tidak dipakai sebagai satu-satunya
+peta uji. perbandingan_rute_seed.csv memberi kelompok_rute berdasarkan urutan
+tepat (from_node,next_node,key). Kelompok sama berarti urutan identik; jumlah
+unik mencakup rute gagal. Ini bukan metrik persentase kemiripan geografis.
+
+Dua batch sintetis @3seed x6episode diuji memakai cell asli dan3 worker spawn:
+metadata/Q/JSON/peta per seed lengkap, hasil tanpa training, grup sama/berbeda,
+overwrite training saja, konfigurasi/titik lama ditolak, training ulang tanpa
+HTTP. Core dan notebook A--C cocok hash;2.584 file hasil penelitian tetap utuh.
+Belum menjalankan training penuh tiga seed atau unduhan jaringan; kelulusan uji
+ini bukan hasil variasi rute pada titik pengguna atau bukti konvergensi.
+Audit: docs/temp/audit_uji_tiga_seed_20261103/AUDIT.md.
+
+## Diagnosis service dan atribut kosong (3 November 2026)
+
+Pengguna mencoba HIGHWAY_OTHER_SCORE=-2. Metadata uji tiga seed1279940429,
+2839352981,2590398777 mencatat -2; ketiganya loop valid tetapi melewati tiga edge
+way432851197 sepanjang637,15m. Q-table tersimpan pada keputusan masuk service
+seed1279940429: Q(service)=35,1552; residential terbaik25,5148. Ini estimasi hasil
+belajar, bukan bukti optimalitas. Replay memakai pemetaan metadata -2 cocok reward
+akhir seluruh seed. Kontribusi ruas service -6,3715, arah +2,5214, gabungan -3,8501;
+akses/revisit/terminal pada ketiga edge nol. Bonus sukses +100 pada akhir rute.
+
+Detail penting yang perlu dipertahankan dalam pembahasan: add_comfort_scores
+memakai np.clip(gabungan,-1,1). Highway -2 dengan surface/width kosong memberi
+raw -1,10 tetapi skor akhir -1. Memberi skor -1 juga untuk atribut kosong tidak
+menurunkan skor way tersebut lagi; uji counterfactual di memori membuktikannya.
+Jangan menyarankan menurunkan skor lebih jauh tanpa mempertimbangkan clipping.
+Data legal22.058edge: highway kosong0, surface kosong7.460, width tidak valid/
+kosong7.856. Data kosong bukan bukti bahaya jalan; penalti ketidaklengkapan akan
+mempengaruhi banyak alternatif. Tidak menerapkan penalti baru atau mengubah kode.
+
+Saat audit, core di disk memiliki HIGHWAY_OTHER_SCORE=-1 dan hash berbeda dari
+training -2; jangan menganggap file aktif identik konfigurasi hasil tersimpan.
+Seluruh hasil/graf tetap. Tidak menjalankan training/unduhan. Audit rinci:
+docs/temp/diagnosis_service_missing_20261103/audit.json.
+
+## Comfort score tanpa pembatasan (3 November 2026)
+
+Permintaan pengguna diterapkan: add_comfort_scores menyimpan float(gabungan)
+langsung tanpa np.clip. Formula dan bobot H/S/W tetap0,55/0,30/0,15; parameter
+pemetaan termasuk HIGHWAY_OTHER_SCORE tidak diubah oleh agent. Pengguna akan
+mencoba nilai highway sendiri. Tidak menerapkan penalti untuk atribut kosong.
+
+Rentang kini mengikuti nilai komponen, tidak dipaksa -1..1. Skor -1,10/-1,55
+atau +1,55 diteruskan apa adanya ke action/reward dan mean_comfort. Nama API dan
+atribut legacy tetap. Metadata baru reward_scheme=direct_signed_unclipped_20261103,
+comfort_score_range=null (tidak ada batas tetap), comfort_score_clipped=false,
+comfort_score_policy=weighted_sum_without_clipping. Metadata/hasil lama tetap.
+
+analisa.ipynb memeriksa rumus gabungan alih-alih batas tetap; histogram interval
+0,10 mengikuti min/max data termasuk kasus semua skor sama. Peta memakai kategori
+ujung terbuka agar skor di luar rentang lama tidak salah label. Deskripsi dan
+tooltip notebook A--C/uji/verifikasi disinkronkan. Hanya cell kode skor/distribusi/
+peta analisis dan label pratinjau uji berubah; konfigurasi/koordinat/seed/worker/
+reward lain/mask/Q/unduhan tetap. Output pada cell kode yang diedit dibersihkan.
+
+Uji terkontrol: nilai di bawah -1 dan di atas +1, propagasi ke reward, metadata,
+histogram dan kategori peta lulus. Regresi60episode sintetis A--C/dua seed pada
+nilai default menghasilkan Q/history identik sebelum/sesudah. Satu eksperimen
+sintetis tiga episode memeriksa metadata; tidak ada training panjang/unduhan.
+Graf serta semua hasil tersimpan tetap (lihat audit). Hasil training lama tidak
+dihitung ulang otomatis. Untuk uji titik, simpan perubahan core lalu jalankan
+cell training/hasil; reload core dan rescore G sudah otomatis, tanpa unduh ulang.
+Perubahan source notebook/label perlu muat ulang dari disk. Verifikasi manual
+masih memuat expected untuk nilai default; penyesuaian parameter eksperimen
+memerlukan peninjauan angka manual, bukan menganggap contoh lama berlaku.
+Audit: docs/temp/audit_comfort_unclipped_20261103/AUDIT.md.
+
+
+## Checkpoint sebelum penalti data kosong (3 November 2026)
+
+Baseline sebelum perubahan missing: gabungan reward ruas tanpa clipping,
+metadata direct_signed_unclipped_20261103, uji titik tiga seed acak/tiga worker,
+peta/JSON/Q-table per seed dan perbandingan urutan ruas. Core aktif sekarang
+HIGHWAY_OTHER_SCORE=-1; missing highway/surface/width masih0. Pengguna menguji
+nilai highway sendiri, jangan otomatis menetapkan -2 berdasarkan arsip. Hasil
+uji terakhir memakai unclipped/highway-2/missing0 pada seed708740203/773171908/
+1087794112; ketiganya loop valid. Hasil tersimpan/naskah TA tidak diubah.
+
+Pengguna meminta commit baseline DAHULU, baru perubahan missing H/S/W ke-0,5.
+Pada checkpoint ini penalti data kosong BELUM diterapkan. Tujuannya preferensi
+terhadap kelengkapan informasi, bukan menyatakan data kosong berarti jalan
+berbahaya. Catatan ini melengkapi riwayat sebelumnya tanpa menggantikannya.

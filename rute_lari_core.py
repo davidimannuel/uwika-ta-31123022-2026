@@ -11,6 +11,9 @@ import json
 import pickle
 import re
 import uuid
+from contextlib import nullcontext
+from multiprocessing import get_context
+from os import cpu_count
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -23,6 +26,7 @@ import osmnx as ox
 import pandas as pd
 from IPython.display import HTML, Javascript, Image as DisplayImage, display
 from pyproj import Transformer
+from shapely.geometry import LineString
 
 
 # ============================================================
@@ -42,38 +46,25 @@ MIN_DISTANCE_M = TARGET_DISTANCE_M * (1 - DISTANCE_TOLERANCE)
 MAX_DISTANCE_M = TARGET_DISTANCE_M * (1 + DISTANCE_TOLERANCE)
 DOWNLOAD_RADIUS_M = 3_025
 
-# Kategori access yang tidak dibentuk menjadi action oleh build_actions().
-# Kebijakan penelitian ini mengecualikan seluruh kategori berikut,
-# termasuk bila ada foot=yes; bukan penerapan seluruh hierarki izin OSM.
-ACCESS_BLACKLIST = frozenset({
-    "no",
-    "private",
-    "destination",
-    "customers",
-    "delivery",
-    "agricultural",
-    "forestry",
-    "military",
-    "permit",
-    "discouraged",
-})
+# Hanya nilai access terisi berikut yang diizinkan. Tag kosong tetap diterima.
+# Ini kebijakan penelitian; foot=yes tidak mengesampingkan access di luar daftar.
+ACCESS_WHITELIST = frozenset({"yes", "permissive"})
 
 ALLOW_REVISIT = True
 REVISIT_AFTER_RATIO = 0.50
 MAX_NODE_VISITS = 2
 PROGRESS_BINS = 16
 
-NEUTRAL_COMFORT_SCORE = 0.50
 RETURN_PHASE_RATIO = 0.50
-RETURN_REWARD_SCALE = 0.40
+RETURN_REWARD_SCALE = 0.60
 # Penalti ringan apabila, sebelum fase pulang, sebuah action justru membuat
 # posisi geometris agen lebih dekat ke start.
-OUTWARD_PENALTY_SCALE = 0.40
-SUCCESS_BONUS = 80.0
+OUTWARD_PENALTY_SCALE = 0.60
+SUCCESS_BONUS = 100.0
 OVER_DISTANCE_PENALTY = -50.0
-NO_ACTION_PENALTY = -45.0
-STEP_LIMIT_PENALTY = -40.0
-REVISIT_PENALTY = -8.0
+NO_ACTION_PENALTY = -50.0
+STEP_LIMIT_PENALTY = -50.0
+REVISIT_PENALTY = -10.0
 # Preferensi mengurangi panjang ruas permissive, tanpa melarang jalan pulang.
 PERMISSIVE_PENALTY_PER_100M = -0.10
 
@@ -106,6 +97,7 @@ EVALUATION_RESULT_COLUMNS = (
     "absolute_distance_error_m",
     "total_reward",
     "mean_comfort",
+    "overlap_ratio",
     "return_progress_ratio",
     "distance_to_start_at_end_m",
     "closing_action_available",
@@ -126,38 +118,70 @@ def configure_osmnx() -> None:
     ox.settings.useful_tags_way = list(set(ox.settings.useful_tags_way + ["surface"]))
 
 
-def get_start_node(graph: nx.MultiDiGraph) -> int:
-    """Melakukan snapping koordinat input pengguna ke node terdekat pada graf."""
+def get_start_node(
+    graph: nx.MultiDiGraph,
+    center_point: tuple[float, float] | None = None,
+) -> int:
+    """Snapping koordinat (latitude, longitude), atau start penelitian default."""
+    latitude, longitude = (START_LAT, START_LON) if center_point is None else center_point
     to_projected = Transformer.from_crs(
         "EPSG:4326", graph.graph["crs"], always_xy=True
     )
-    start_x, start_y = to_projected.transform(START_LON, START_LAT)
+    start_x, start_y = to_projected.transform(longitude, latitude)
     return int(ox.distance.nearest_nodes(graph, X=start_x, Y=start_y))
 
 
-def load_or_download_graph(force_download: bool = False):
-    """Memuat GraphML yang sama atau mengunduhnya bila belum tersedia.
+def load_or_download_graph(
+    force_download: bool = False,
+    *,
+    center_point: tuple[float, float] | None = None,
+    graph_path: Path | None = None,
+    download_radius_m: float | None = None,
+    use_cache: bool = True,
+):
+    """Memuat/mengunduh graf tanpa mengganti konfigurasi start penelitian.
 
-    Returns:
-        graph, start_node, graph_path, downloaded_now
+    Default tetap snapshot A--C. Pusat khusus wajib memakai path tersendiri.
+    force_download melewati GraphML; use_cache=False juga melewati cache HTTP.
+    Returns: graph, start_node, graph_path, downloaded_now.
     """
+    point = (START_LAT, START_LON) if center_point is None else tuple(center_point)
+    if len(point) != 2:
+        raise ValueError("center_point harus berisi latitude dan longitude.")
+    latitude, longitude = map(float, point)
+    if not (np.isfinite(latitude) and np.isfinite(longitude)
+            and -90 <= latitude <= 90 and -180 <= longitude <= 180):
+        raise ValueError("Latitude/longitude tidak valid.")
+    if center_point is not None and graph_path is None:
+        raise ValueError("Pusat khusus memerlukan graph_path terpisah dari snapshot utama.")
+    target_path = GRAPH_PATH if graph_path is None else Path(graph_path)
+    radius = DOWNLOAD_RADIUS_M if download_radius_m is None else float(download_radius_m)
+    if not np.isfinite(radius) or radius <= 0:
+        raise ValueError("download_radius_m harus positif dan berhingga.")
     configure_osmnx()
-    if GRAPH_PATH.exists() and not force_download:
-        graph = ox.io.load_graphml(GRAPH_PATH)
-        return graph, get_start_node(graph), GRAPH_PATH, False
+    if target_path.exists() and not force_download:
+        graph = ox.io.load_graphml(target_path)
+        return graph, get_start_node(graph, (latitude, longitude)), target_path, False
 
-    graph_wgs84 = ox.graph_from_point(
-        center_point=(START_LAT, START_LON),
-        dist=DOWNLOAD_RADIUS_M,
-        dist_type="bbox",
-        network_type="walk",
-        simplify=True,
-        retain_all=False,
-        truncate_by_edge=True,
-    )
-    graph = ox.project_graph(graph_wgs84)
-    ox.io.save_graphml(graph, filepath=GRAPH_PATH)
-    return graph, get_start_node(graph), GRAPH_PATH, True
+    # Pengaturan cache hanya berubah selama unduhan ini, tidak untuk notebook lain.
+    previous_cache = ox.settings.use_cache
+    try:
+        ox.settings.use_cache = use_cache
+        graph_wgs84 = ox.graph_from_point(
+            center_point=(latitude, longitude),
+            dist=radius,
+            dist_type="bbox",
+            network_type="walk",
+            simplify=True,
+            retain_all=False,
+            truncate_by_edge=True,
+        )
+        graph = ox.project_graph(graph_wgs84)
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        ox.io.save_graphml(graph, filepath=target_path)
+    finally:
+        ox.settings.use_cache = previous_cache
+    return graph, get_start_node(graph, (latitude, longitude)), target_path, True
 
 
 # ============================================================
@@ -165,24 +189,20 @@ def load_or_download_graph(force_download: bool = False):
 # ============================================================
 
 # Kelompok preferensi penelitian, bukan ukuran keselamatan aktual.
-HIGHWAY_PRIORITY_1 = frozenset({
-    "footway", "pedestrian", "living_street", "residential",
+HIGHWAY_PRIORITY = frozenset({
+    "footway", "pedestrian", "living_street", "residential", "tertiary",
 })
-HIGHWAY_PRIORITY_2 = frozenset({
-    "path", "service", "unclassified", "tertiary", "tertiary_link",
-})
-HIGHWAY_PRIORITY_1_SCORE = 1.00
-HIGHWAY_PRIORITY_2_SCORE = 0.60
-HIGHWAY_OTHER_SCORE = 0.20
-HIGHWAY_MISSING_SCORE = 0.50
+HIGHWAY_PRIORITY_SCORE = 1.00
+HIGHWAY_OTHER_SCORE = -1.00
+HIGHWAY_MISSING_SCORE = 0.00
 
 # Satu kelompok preferensi material; bukan pengukuran kondisi aktual ruas.
 SURFACE_PRIORITY = frozenset({
     "asphalt", "concrete", "paving_stones", "paved",
 })
 SURFACE_PRIORITY_SCORE = 1.00
-SURFACE_OTHER_SCORE = 0.20
-SURFACE_MISSING_SCORE = 0.50
+SURFACE_OTHER_SCORE = -1.00
+SURFACE_MISSING_SCORE = 0.00
 WEIGHT_HIGHWAY = 0.55
 WEIGHT_SURFACE = 0.30
 WEIGHT_WIDTH = 0.15
@@ -190,8 +210,8 @@ WEIGHT_WIDTH = 0.15
 # Lebar >= batas tidak mendapat tambahan skor meskipun jalan makin lebar.
 WIDTH_PRIORITY_MIN_M = 3.0
 WIDTH_PRIORITY_SCORE = 1.00
-WIDTH_OTHER_SCORE = 0.20
-WIDTH_MISSING_SCORE = 0.50
+WIDTH_OTHER_SCORE = -1.00
+WIDTH_MISSING_SCORE = 0.00
 
 
 def is_missing(value: Any) -> bool:
@@ -240,7 +260,7 @@ def conservative_score(value: Any, score_map: dict[str, float], neutral: float) 
 
 
 def calculate_highway_score(value: Any) -> float:
-    """Memetakan dua prioritas, jenis lain, dan tag kosong ke skor highway."""
+    """Reward dasar highway: prioritas +1, lainnya -1, kosong 0."""
     values = [
         part.strip()
         for item in osm_values(value)
@@ -253,8 +273,7 @@ def calculate_highway_score(value: Any) -> float:
     # Nilai yang terisi tetapi tidak dikenal mendapat skor jenis lain.
     # Ambil minimum agar edge gabungan tidak dinilai dari bagian terbaik saja.
     return min(
-        HIGHWAY_PRIORITY_1_SCORE if item in HIGHWAY_PRIORITY_1
-        else HIGHWAY_PRIORITY_2_SCORE if item in HIGHWAY_PRIORITY_2
+        HIGHWAY_PRIORITY_SCORE if item in HIGHWAY_PRIORITY
         else HIGHWAY_OTHER_SCORE
         for item in values
     )
@@ -289,7 +308,7 @@ def width_score(value: Any) -> float:
 
 
 def add_comfort_scores(graph: nx.MultiDiGraph) -> None:
-    """Menambahkan komponen dan comfort score ke semua edge."""
+    """Menambahkan reward dasar H/S/W dan gabungan bertanda pada setiap edge."""
     for _, _, _, data in graph.edges(keys=True, data=True):
         highway_score = calculate_highway_score(data.get("highway"))
         surface_score = calculate_surface_score(data.get("surface"))
@@ -302,7 +321,8 @@ def add_comfort_scores(graph: nx.MultiDiGraph) -> None:
         data["highway_score"] = float(highway_score)
         data["surface_score"] = float(surface_score)
         data["width_score"] = float(edge_width_score)
-        data["comfort_score"] = float(np.clip(comfort, 0.0, 1.0))
+        # Simpan gabungan apa adanya agar perubahan skor atribut tidak terpotong.
+        data["comfort_score"] = float(comfort)
 
 
 # ============================================================
@@ -325,36 +345,54 @@ class EdgeAction:
         self.length_m = length_m
         self.comfort_score = comfort_score
         self.data = data
+        # Identitas untuk pengamatan overlap saja, tidak memengaruhi action/Q.
+        self.physical_road_id = None
 
     def get_action_id(self) -> tuple[int, Any]:
         return (self.next_node, self.key)
 
 
+def _physical_road_identity(current_node, action, node_xy):
+    """Menyatukan geometri ruas yang sama pada kedua arah perjalanan."""
+    geometry = action.data.get("geometry")
+    if geometry is None:
+        coordinates = [node_xy.get(current_node), node_xy.get(action.next_node)]
+        if all(point is not None for point in coordinates):
+            geometry = LineString(coordinates)
+    if geometry is not None and not geometry.is_empty and geometry.length > 0:
+        return geometry.normalize().wkb
+    # Mendukung graf uji tanpa koordinat/geometri; paralel berbeda key dipisah.
+    return (min(current_node, action.next_node),
+            max(current_node, action.next_node), str(action.key))
+
+
 def build_actions(graph: nx.MultiDiGraph) -> dict[int, list[EdgeAction]]:
-    """Membentuk action edge yang lolos blacklist tanpa mengubah graf asli."""
+    """Membentuk action edge yang lolos whitelist tanpa mengubah graf asli."""
     actions_by_node: dict[int, list[EdgeAction]] = defaultdict(list)
+    node_xy = {
+        int(node): (float(data["x"]), float(data["y"]))
+        for node, data in graph.nodes(data=True) if "x" in data and "y" in data
+    }
     for u, v, key, data in graph.edges(keys=True, data=True):
-        # Satu kategori terlarang cukup untuk menolak seluruh edge gabungan.
-        # Penyaringan berlaku sama untuk eksplorasi, greedy, dan edge ke start.
+        # Semua nilai terisi harus masuk whitelist; satu nilai lain menolak edge.
+        # Himpunan kosong lolos agar ruas tanpa tag access tetap dapat dipilih.
+        # Aturan sama untuk eksplorasi, greedy, revisit, dan edge ke start.
         access_values = {
             part.strip()
             for value in osm_values(data.get("access"))
             for part in value.split(";")
             if part.strip()
         }
-        if access_values & ACCESS_BLACKLIST:
+        if not access_values.issubset(ACCESS_WHITELIST):
             continue
         length_m = float(data.get("length", 0.0))
         if length_m > 0:
-            actions_by_node[int(u)].append(
-                EdgeAction(
-                    int(v),
-                    key,
-                    length_m,
-                    float(data["comfort_score"]),
-                    data,
-                )
+            action = EdgeAction(
+                int(v), key, length_m, float(data["comfort_score"]), data,
             )
+            # Geometri dinormalisasi sekali, bukan pada setiap episode training.
+            action.physical_road_id = _physical_road_identity(int(u), action, node_xy)
+            actions_by_node[int(u)].append(action)
     for node in actions_by_node:
         actions_by_node[node].sort(key=lambda action: (action.next_node, str(action.key)))
     return actions_by_node
@@ -547,9 +585,9 @@ class RunningRouteEnvironment:
             if distance_after < distance_before:
                 self.return_progress_steps += 1
 
-        reward = (action.comfort_score - NEUTRAL_COMFORT_SCORE) * (
-            action.length_m / 100.0
-        )
+        # comfort_score menyimpan gabungan reward dasar tanpa pembatasan rentang.
+        # Nilai netral sudah 0; tidak ada pengurangan 0,50 lagi.
+        reward = action.comfort_score * (action.length_m / 100.0)
 
         # Tag gabungan hasil simplify diperiksa tanpa mengubah comfort score.
         # Jika mengandung permissive, seluruh panjang edge mendapat penalti;
@@ -675,6 +713,15 @@ def epsilon_for_episode(
 
 def route_metrics(environment: RunningRouteEnvironment, total_reward: float) -> dict:
     edge_length = sum(action.length_m for _, action in environment.path_actions)
+    seen_roads = set()
+    for current_node, action in environment.path_actions:
+        if action.physical_road_id is None:
+            # EdgeAction yang dibuat manual pada verifikasi tetap didukung.
+            action.physical_road_id = _physical_road_identity(
+                current_node, action, environment.node_xy
+            )
+        seen_roads.add(action.physical_road_id)
+    traversal_count = len(environment.path_actions)
     mean_comfort = (
         sum(
             action.comfort_score * action.length_m
@@ -711,6 +758,12 @@ def route_metrics(environment: RunningRouteEnvironment, total_reward: float) -> 
         "steps": environment.step_count,
         "total_reward": total_reward,
         "mean_comfort": mean_comfort,
+        # Pengulangan legal setelah 2,5 km tetap diukur; bukan penalti baru.
+        # Setiap lintasan ulang berbobot sama, tanpa memakai panjang ruas.
+        "overlap_ratio": (
+            (traversal_count - len(seen_roads)) / traversal_count
+            if traversal_count else np.nan
+        ),
         "revisit_count": environment.revisit_count,
         "repeated_intermediate_nodes": len(intermediate_nodes) - len(
             set(intermediate_nodes)
@@ -820,7 +873,7 @@ def train_step(
                 print(f"C = {WEIGHT_HIGHWAY} * {road['highway_score']} + "
                       f"{WEIGHT_SURFACE} * {road['surface_score']} + "
                       f"{WEIGHT_WIDTH} * {road['width_score']} = {action.comfort_score}")
-            print(f"R ruas = ({action.comfort_score} - {NEUTRAL_COMFORT_SCORE}) * "
+            print(f"R ruas = {action.comfort_score} * "
                   f"({action.length_m} / 100) = {reward_components['edge']}")
             if reward_components["access"] != 0.0:
                 print(f"R akses = {PERMISSIVE_PENALTY_PER_100M} * "
@@ -1246,6 +1299,42 @@ def plot_diagnosis_charts(
     return chart_path
 
 
+def plot_overlap_chart(
+    history_df: pd.DataFrame,
+    scenario: str,
+    output_dir: Path = RESULT_DIR,
+    show: bool = True,
+) -> Path:
+    """Satu grafik overlap seluruh episode, tanpa pemisahan berhasil/gagal."""
+    # Jumlah dan cacah digulir bersama agar setiap observasi berbobot sama.
+    # Episode tanpa lintasan tetap ada pada sumbu X; rasio kosong tidak menjadi 0.
+    totals = history_df.groupby("episode").agg(
+        all_sum=("overlap_ratio", "sum"),
+        all_count=("overlap_ratio", "count"),
+    ).rolling(ROLLING_WINDOW, min_periods=1).sum()
+    figure, axis = plt.subplots(figsize=(12, 4.5))
+    figure.suptitle(
+        f"Overlap Training Scenario {scenario} — jendela {ROLLING_WINDOW} episode",
+        fontsize=14, fontweight="bold",
+    )
+    ratios = totals["all_sum"] / totals["all_count"].replace(0, np.nan)
+    axis.plot(totals.index, ratios * 100, color="#2563EB")
+    if not ratios.notna().any():
+        axis.text(.5, .5, "Belum ada episode dengan data overlap",
+                  ha="center", va="center", transform=axis.transAxes)
+    axis.set(title="Seluruh Episode — Berdasarkan Jumlah Lintasan Ruas",
+             xlabel="Episode", ylabel="Lintasan ulang (%)", ylim=(-1, 101))
+    axis.grid(alpha=.25)
+    figure.tight_layout()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    chart_path = output_dir / f"grafik_overlap_{scenario}.png"
+    figure.savefig(chart_path, dpi=160, bbox_inches="tight")
+    if show:
+        plt.show()
+    plt.close(figure)
+    return chart_path
+
+
 def edge_latlon(
     current_node: int,
     action: EdgeAction,
@@ -1375,6 +1464,7 @@ def experiment_artifact_paths(scenario: str, result_subdir: str | None = None) -
         "evaluation_termination": output_dir / f"termination_rates_evaluation_{scenario}.csv",
         "training_chart": output_dir / f"grafik_training_{scenario}.png",
         "diagnosis_chart": output_dir / f"grafik_diagnosis_{scenario}.png",
+        "overlap_chart": output_dir / f"grafik_overlap_{scenario}.png",
         "route_map": output_dir / f"peta_interaktif_scenario_{scenario}.html",
         "metadata": output_dir / f"metadata_eksperimen_{scenario}.json",
     }
@@ -1405,6 +1495,9 @@ def load_saved_experiment_results(
     metadata: dict[str, Any] = {}
     if paths["metadata"].exists():
         metadata = json.loads(paths["metadata"].read_text(encoding="utf-8"))
+    if ("overlap_chart" in metadata.get("artifact_files", {})
+            and not paths["overlap_chart"].exists()):
+        raise FileNotFoundError(f"Grafik overlap belum tersedia: {paths['overlap_chart']}")
 
     return {
         "paths": paths,
@@ -1493,15 +1586,21 @@ def display_saved_experiment_results(
     display(
         saved["metrics"].sort_values("seed")
         .set_index("seed")
-        .loc[:, list(EVALUATION_DISPLAY_COLUMNS)]
+        .loc[:, [column for column in EVALUATION_DISPLAY_COLUMNS
+                 if column in saved["metrics"].columns]]
         .T
     )
 
-    print("=== RINGKASAN DIAGNOSIS EVALUASI: AGREGAT LIMA SEED ===")
-    print(
-        "Satu baris ini adalah rata-rata/proporsi dari lima evaluasi greedy, "
-        "bukan record satu seed. Detail setiap seed ada pada tabel sebelumnya."
-    )
+    seed_count = len(saved["metrics"])
+    if seed_count == 1:
+        print("=== DIAGNOSIS EVALUASI: SATU TRAINING ===")
+        print("Satu baris ini merangkum satu evaluasi greedy dari training tersebut.")
+    else:
+        print(f"=== RINGKASAN DIAGNOSIS EVALUASI: AGREGAT {seed_count} SEED ===")
+        print(
+            f"Satu baris ini adalah rata-rata/proporsi dari {seed_count} evaluasi greedy, "
+            "bukan record satu seed. Detail setiap seed ada pada tabel sebelumnya."
+        )
     display(saved["diagnosis"])
     print("=== TERMINATION RATE: TRAINING ===")
     display(saved["training_termination_rates"])
@@ -1512,6 +1611,19 @@ def display_saved_experiment_results(
     display(DisplayImage(filename=str(paths["training_chart"])))
     print("=== GRAFIK DIAGNOSIS ===")
     display(DisplayImage(filename=str(paths["diagnosis_chart"])))
+    print("=== OVERLAP RUTE ===")
+    if "overlap_ratio" in saved["metrics"].columns:
+        definition = metadata.get("overlap_metric", {}).get("definition", "")
+        if definition == "repeated_physical_road_length / total_distance_m":
+            print("Arsip ini memakai overlap berbasis meter; nilainya tidak diubah.")
+        else:
+            print("overlap_ratio adalah proporsi lintasan ulang, disimpan 0–1; grafik dalam persen.")
+        if paths["overlap_chart"].exists():
+            display(DisplayImage(filename=str(paths["overlap_chart"])))
+        else:
+            print("Grafik overlap belum tersedia pada hasil ini.")
+    else:
+        print("Overlap belum dicatat pada hasil lama; tren training tidak tersedia.")
 
     if show_map:
         selected_row, calculated_reason = select_representative_from_evaluation_metrics(
@@ -1574,6 +1686,10 @@ def summarize_saved_experiments(
             "mean_comfort": metrics["mean_comfort"].mean(),
             "mean_return_progress_ratio": metrics["return_progress_ratio"].mean(),
             "closing_action_available_rate": metrics["closing_action_available"].mean(),
+            "mean_overlap_ratio": (
+                metrics["overlap_ratio"].mean()
+                if "overlap_ratio" in metrics.columns else np.nan
+            ),
         })
     return pd.DataFrame(rows).sort_values("episodes").reset_index(drop=True)
 
@@ -1628,6 +1744,33 @@ def select_representative_trial(trials: list[dict]) -> tuple[dict, str]:
     return selected, reason
 
 
+def _initialize_seed_worker(settings: dict) -> None:
+    """Samakan parameter training proses spawn dengan proses pemanggil."""
+    globals().update(settings)
+
+
+def _train_seed_trial(arguments: tuple) -> dict:
+    """Satu seed mandiri; worker tidak menulis artefak atau membuat grafik."""
+    scenario, seed, start_node, actions_by_node, node_xy, episodes, decay = arguments
+    q_table, history = train_q_learning(
+        scenario, seed, start_node, actions_by_node, node_xy,
+        episodes=episodes, epsilon_decay_episodes=decay,
+    )
+    environment, metrics = evaluate_greedy(
+        scenario, q_table, seed, start_node, actions_by_node, node_xy
+    )
+    metrics.update({
+        "scenario": scenario,
+        "seed": seed,
+        "q_state_count": len(q_table),
+        "closing_action_available": metrics["closing_action_was_available"],
+    })
+    return {
+        "history": history, "environment": environment,
+        "metrics": metrics, "q_table": q_table,
+    }
+
+
 def run_scenario_experiment(
     graph,
     start_node: int,
@@ -1636,6 +1779,8 @@ def run_scenario_experiment(
     epsilon_decay_episodes: int | None = None,
     result_subdir: str | None = None,
     display_results: bool = True,
+    seeds: tuple[int, ...] | None = None,
+    max_workers: int = 1,
 ) -> dict:
     """Menjalankan satu scenario A-C dengan core yang sama.
 
@@ -1645,7 +1790,11 @@ def run_scenario_experiment(
     lama. Jika diisi, epsilon turun hanya selama nilai tersebut lalu tetap di
     EPSILON_END. ``result_subdir`` menyimpan artefak tiap eksperimen pada
     folder terpisah agar CSV, grafik, dan peta tidak menimpa hasil konfigurasi
-    lain.
+    lain. seeds=None mempertahankan lima seed penelitian; tuple khusus dapat
+    dipakai untuk satu uji coba tanpa mengubah SEEDS global. max_workers=1
+    menjalankan seed berurutan; >1 memakai proses spawn terpisah. Worker hanya
+    training/evaluasi, artefak dan grafik ditulis proses induk. Urutan hasil
+    mengikuti urutan seeds, bukan urutan selesai worker.
     """
     if scenario not in {"A", "B", "C"}:
         raise ValueError("Scenario harus A, B, atau C.")
@@ -1654,6 +1803,21 @@ def run_scenario_experiment(
         raise ValueError("episodes harus lebih dari 0.")
     if epsilon_decay_episodes is not None and epsilon_decay_episodes <= 0:
         raise ValueError("epsilon_decay_episodes harus lebih dari 0.")
+
+    experiment_seeds = tuple(SEEDS if seeds is None else seeds)
+    if not experiment_seeds or any(
+        isinstance(seed, (bool, np.bool_)) or not isinstance(seed, (int, np.integer)) or seed < 0
+        for seed in experiment_seeds
+    ):
+        raise ValueError("seeds harus berisi minimal satu bilangan bulat nonnegatif.")
+    experiment_seeds = tuple(int(seed) for seed in experiment_seeds)
+    if len(set(experiment_seeds)) != len(experiment_seeds):
+        raise ValueError("seeds tidak boleh berulang dalam satu eksperimen.")
+
+    if (isinstance(max_workers, (bool, np.bool_))
+            or not isinstance(max_workers, (int, np.integer)) or max_workers < 1):
+        raise ValueError("max_workers harus bilangan bulat positif.")
+    worker_count = min(int(max_workers), len(experiment_seeds), cpu_count() or 1)
 
     artifact_paths = experiment_artifact_paths(scenario, result_subdir)
     output_dir = artifact_paths["output_dir"]
@@ -1667,7 +1831,7 @@ def run_scenario_experiment(
 
     histories, evaluation_rows, trials = [], [], []
     print(
-        f"Menjalankan Scenario {scenario}: {len(SEEDS)} seed x "
+        f"Menjalankan Scenario {scenario}: {len(experiment_seeds)} seed x "
         f"{total_episodes:,} episode"
     )
     if epsilon_decay_episodes is None:
@@ -1679,69 +1843,99 @@ def run_scenario_experiment(
         )
 
     print(f"Penalti access permissive: {PERMISSIVE_PENALTY_PER_100M} per 100 m")
-    print(f"Blacklist access aktif: {sorted(ACCESS_BLACKLIST)}")
+    print(f"Whitelist access aktif: {sorted(ACCESS_WHITELIST)}; tag kosong diizinkan")
 
-    for seed in SEEDS:
-        q_table, history = train_q_learning(
-            scenario, seed, start_node, actions_by_node, node_xy,
-            episodes=total_episodes,
-            epsilon_decay_episodes=epsilon_decay_episodes,
+    print(f"Penalti revisit: {REVISIT_PENALTY}")
+    print(f"Eksekusi seed: {'paralel (spawn)' if worker_count > 1 else 'berurutan'}; {worker_count} proses")
+    # Snapshot parameter diperlukan karena spawn mengimpor modul baru, bukan
+    # menyalin perubahan konstanta pada kernel pemanggil.
+    settings = {name: globals()[name] for name in (
+        "TARGET_DISTANCE_M", "MIN_DISTANCE_M", "MAX_DISTANCE_M",
+        "DISTANCE_TOLERANCE", "ALLOW_REVISIT", "REVISIT_AFTER_RATIO",
+        "MAX_NODE_VISITS", "PROGRESS_BINS", "RETURN_PHASE_RATIO",
+        "RETURN_REWARD_SCALE", "OUTWARD_PENALTY_SCALE", "SUCCESS_BONUS",
+        "OVER_DISTANCE_PENALTY", "NO_ACTION_PENALTY", "STEP_LIMIT_PENALTY",
+        "REVISIT_PENALTY", "PERMISSIVE_PENALTY_PER_100M", "ALPHA",
+        "GAMMA", "EPSILON_START", "EPSILON_END",
+        "MAX_STEPS_PER_EPISODE",
+    )}
+    tasks = [
+        (scenario, seed, start_node, actions_by_node, node_xy,
+         total_episodes, epsilon_decay_episodes)
+        for seed in experiment_seeds
+    ]
+    context = (
+        get_context("spawn").Pool(
+            processes=worker_count,
+            initializer=_initialize_seed_worker, initargs=(settings,),
         )
-        environment, metrics = evaluate_greedy(
-            scenario, q_table, seed, start_node, actions_by_node, node_xy
-        )
-        metrics.update({
-            "scenario": scenario,
-            "seed": seed,
-            "q_state_count": len(q_table),
-            # Nama kolom ringkas untuk tabel evaluasi utama. Nilainya berasal
-            # dari evaluasi greedy yang sudah dijalankan di atas.
-            "closing_action_available": metrics["closing_action_was_available"],
-        })
-        # Q-table dan jejak rute evaluasi disimpan per seed. Dengan demikian,
-        # training tidak perlu diulang hanya untuk melihat artefak lama atau
-        # mengevaluasi kembali Q-table tertentu pada penelitian lanjutan.
-        qtable_path = output_dir / f"qtable_scenario_{scenario}_seed_{seed}.pkl"
-        with qtable_path.open("wb") as qtable_file:
-            pickle.dump(dict(q_table), qtable_file)
-        route_path = output_dir / f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json"
-        route_payload = {
-            "scenario": scenario,
-            "seed": seed,
-            "metrics": {
-                key: (None if pd.isna(value) else value)
-                for key, value in metrics.items()
-            },
-            "path_nodes": [int(node) for node in environment.path_nodes],
-            # path_actions disimpan environment sebagai pasangan
-            # (node_asal, EdgeAction), agar action dapat dipetakan kembali ke
-            # edge MultiDiGraph yang tepat ketika hasil dibuka ulang.
-            "path_actions": [
-                {
-                    "from_node": int(current_node),
-                    "next_node": int(action.next_node),
-                    "key": int(action.key),
-                }
-                for current_node, action in environment.path_actions
-            ],
-        }
-        route_path.write_text(
-            json.dumps(route_payload, ensure_ascii=False, indent=2, default=str),
-            encoding="utf-8",
-        )
+        if worker_count > 1 else nullcontext(None)
+    )
+    # Pool context menghentikan worker jika cell diinterupsi/worker gagal.
+    with context as pool:
+        completed = (pool.imap_unordered(_train_seed_trial, tasks, chunksize=1)
+                     if pool is not None else map(_train_seed_trial, tasks))
+        for trial in completed:
+            history = trial["history"]
+            environment, metrics, q_table = (
+                trial["environment"], trial["metrics"], trial["q_table"]
+            )
+            seed = metrics["seed"]
+            # Gunakan kembali data induk setelah hasil worker diterima, agar
+            # trials tidak menahan salinan seluruh graf untuk setiap seed.
+            environment.actions_by_node = actions_by_node
+            environment.node_xy = node_xy
+            # Q-table dan jejak rute evaluasi disimpan per seed. Dengan demikian,
+            # training tidak perlu diulang hanya untuk melihat artefak lama atau
+            # mengevaluasi kembali Q-table tertentu pada penelitian lanjutan.
+            qtable_path = output_dir / f"qtable_scenario_{scenario}_seed_{seed}.pkl"
+            with qtable_path.open("wb") as qtable_file:
+                pickle.dump(dict(q_table), qtable_file)
+            route_path = output_dir / f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json"
+            route_payload = {
+                "scenario": scenario,
+                "seed": seed,
+                "metrics": {
+                    key: (None if pd.isna(value) else value)
+                    for key, value in metrics.items()
+                },
+                "path_nodes": [int(node) for node in environment.path_nodes],
+                # path_actions disimpan environment sebagai pasangan
+                # (node_asal, EdgeAction), agar action dapat dipetakan kembali ke
+                # edge MultiDiGraph yang tepat ketika hasil dibuka ulang.
+                "path_actions": [
+                    {
+                        "from_node": int(current_node),
+                        "next_node": int(action.next_node),
+                        "key": int(action.key),
+                    }
+                    for current_node, action in environment.path_actions
+                ],
+            }
+            route_path.write_text(
+                json.dumps(route_payload, ensure_ascii=False, indent=2, default=str),
+                encoding="utf-8",
+            )
 
-        histories.append(history)
-        evaluation_rows.append(metrics)
-        trials.append({
-            "environment": environment,
-            "metrics": metrics,
-            "q_table": q_table,
-        })
-        print(
-            f"seed={seed}: {metrics['termination_reason']}, "
-            f"{metrics['distance_km']:.2f} km, "
-            f"is_loop={metrics['is_loop']}"
-        )
+            histories.append(history)
+            evaluation_rows.append(metrics)
+            trials.append({
+                "environment": environment,
+                "metrics": metrics,
+                "q_table": q_table,
+            })
+            print(
+                f"[{len(trials)}/{len(experiment_seeds)}] seed={seed}: {metrics['termination_reason']}, "
+                f"{metrics['distance_km']:.2f} km, "
+                f"is_loop={metrics['is_loop']}"
+            )
+
+    # Selesai lebih awal tidak mengubah urutan CSV, trials, atau pemilihan peta.
+    history_by_seed = {int(history["seed"].iat[0]): history for history in histories}
+    histories = [history_by_seed[seed] for seed in experiment_seeds]
+    trial_by_seed = {trial["metrics"]["seed"]: trial for trial in trials}
+    trials = [trial_by_seed[seed] for seed in experiment_seeds]
+    evaluation_rows = [trial["metrics"] for trial in trials]
 
     history_df = pd.concat(histories, ignore_index=True)
     # metrics_df menyimpan detail internal untuk diagnosis dan pemilihan peta.
@@ -1774,10 +1968,19 @@ def run_scenario_experiment(
             .T
         )
 
+    if display_results:
+        print("=== GRAFIK TRAINING ===")
     chart_path = plot_training_charts(
         history_df, scenario, output_dir, show=display_results
     )
+    if display_results:
+        print("=== GRAFIK DIAGNOSIS ===")
     diagnosis_chart_path = plot_diagnosis_charts(
+        history_df, scenario, output_dir, show=display_results
+    )
+    if display_results:
+        print("=== OVERLAP RUTE ===")
+    overlap_chart_path = plot_overlap_chart(
         history_df, scenario, output_dir, show=display_results
     )
 
@@ -1804,12 +2007,36 @@ def run_scenario_experiment(
         "scenario": scenario,
         "episodes": total_episodes,
         "epsilon_decay_episodes": epsilon_decay_episodes,
-        "seeds": list(SEEDS),
+        "seeds": list(experiment_seeds),
+        "execution": {
+            "mode": "multiprocessing" if worker_count > 1 else "sequential",
+            "max_workers_requested": int(max_workers),
+            "workers": worker_count,
+            "start_method": "spawn" if worker_count > 1 else None,
+            "result_order": "input_seed_order",
+        },
+        "reward_scheme": "direct_signed_unclipped_20261103",
+        "overlap_metric": {
+            "column": "overlap_ratio",
+            "range": [0.0, 1.0],
+            "definition": "(total_traversals - unique_physical_roads) / total_traversals",
+            "basis": "physical_road_traversal_count",
+            "road_identity": "exact_normalized_geometry_ignoring_direction",
+            "missing_geometry": "straight_line_between_nodes",
+            "zero_traversals": "undefined",
+            "training_recording": "every_episode",
+        },
+        "road_reward_formula": "(0.55*rH+0.30*rS+0.15*rW)*length_m/100",
+        "road_reward_weights": {
+            "highway": WEIGHT_HIGHWAY, "surface": WEIGHT_SURFACE, "width": WEIGHT_WIDTH,
+        },
+        # Tidak ada batas tetap; rentang mengikuti nilai komponen dan bobot.
+        "comfort_score_range": None,
+        "comfort_score_clipped": False,
+        "comfort_score_policy": "weighted_sum_without_clipping",
         "highway_scoring": {
-            "priority_1": sorted(HIGHWAY_PRIORITY_1),
-            "priority_2": sorted(HIGHWAY_PRIORITY_2),
-            "priority_1_score": HIGHWAY_PRIORITY_1_SCORE,
-            "priority_2_score": HIGHWAY_PRIORITY_2_SCORE,
+            "priority": sorted(HIGHWAY_PRIORITY),
+            "priority_score": HIGHWAY_PRIORITY_SCORE,
             "other_score": HIGHWAY_OTHER_SCORE,
             "missing_score": HIGHWAY_MISSING_SCORE,
             "mixed_policy": "minimum",
@@ -1828,11 +2055,24 @@ def run_scenario_experiment(
             "below_threshold_score": WIDTH_OTHER_SCORE,
             "missing_invalid_multiple_score": WIDTH_MISSING_SCORE,
         },
+        "direction_reward": {
+            "return_scale": RETURN_REWARD_SCALE,
+            "outward_penalty_scale": OUTWARD_PENALTY_SCALE,
+            "return_phase_ratio": RETURN_PHASE_RATIO,
+        },
+        "terminal_rewards": {
+            "success": SUCCESS_BONUS,
+            "over_distance": OVER_DISTANCE_PENALTY,
+            "no_available_action": NO_ACTION_PENALTY,
+            "step_limit": STEP_LIMIT_PENALTY,
+        },
+        "revisit_penalty": REVISIT_PENALTY,
         "permissive_penalty_per_100m": PERMISSIVE_PENALTY_PER_100M,
         "permissive_mixed_edge_policy": "any_permissive_full_edge_length",
-        "access_blacklist_applied": True,
-        "access_blacklist_values": sorted(ACCESS_BLACKLIST),
-        "access_blacklist_policy": "any_blacklisted_access_no_foot_override",
+        "access_whitelist_applied": True,
+        "access_whitelist_values": sorted(ACCESS_WHITELIST),
+        "access_missing_allowed": True,
+        "access_whitelist_policy": "all_values_whitelisted_no_foot_override",
         "representative_seed": int(selected_metrics["seed"]),
         "representative_reason": representative_reason,
         "artifact_files": {
@@ -1843,12 +2083,13 @@ def run_scenario_experiment(
             "evaluation_termination": evaluation_termination_path.name,
             "training_chart": chart_path.name,
             "diagnosis_chart": diagnosis_chart_path.name,
+            "overlap_chart": overlap_chart_path.name,
             "route_map": map_path.name,
             "qtables": [
-                f"qtable_scenario_{scenario}_seed_{seed}.pkl" for seed in SEEDS
+                f"qtable_scenario_{scenario}_seed_{seed}.pkl" for seed in experiment_seeds
             ],
             "evaluation_routes": [
-                f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json" for seed in SEEDS
+                f"rute_evaluasi_scenario_{scenario}_seed_{seed}.json" for seed in experiment_seeds
             ],
         },
     }
@@ -1865,6 +2106,7 @@ def run_scenario_experiment(
     print(f"Termination rate evaluasi: {evaluation_termination_path}")
     print(f"Grafik training utama: {chart_path}")
     print(f"Grafik diagnosis: {diagnosis_chart_path}")
+    print(f"Grafik overlap: {overlap_chart_path}")
     print(f"Peta: {map_path}")
 
     return {
