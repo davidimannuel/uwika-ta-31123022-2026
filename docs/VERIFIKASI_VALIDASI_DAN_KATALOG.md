@@ -225,3 +225,23 @@ Ini audit kode/hasil eksperimen, bukan validasi lapangan. B/C35/40 pada -5 turun
 ke22/40 pada -10. Sembilan loop valid overlap0%, tetapi sebelas rute gagal juga
 overlap0%; tetap gunakan syarat kembali ke start pada4.500--5.500m. Laporan
 lengkap: docs/temp/analisis_ABC_revisit10_20261103/ANALISIS.md.
+
+
+## Audit missing -0,5 lengkap (4 November 2026)
+
+Semua12konfigurasi kini berada pada reward_missing_05_20261103 termasuk B yang
+sudah dilatih ulang.60training/6.750.000history; seluruh60greedy direproduksi,
+metrik/path dan overlap geometri cocok. Metadata sama: missing-0,5/highwayother-1,
+tanpa clipping/revisit-10/lima seed/tiga worker.240file sumber dan graf tetap.
+Loop A/B/C: dinamis75K0/0/1; dinamis150K0/3/1; horizon50K total75K0/2/5;
+horizon50K total150K2/4/5. Total23/60: A2,B9,C12.37gagal=29overdistance+8buntu,
+semua tidak pernah memiliki closing action legal. C horizon75K kandidat:5/5,
+galat141,57m/overlap1,15%; C horizon150K5/5 tetapi galat276,57m/overlap1,22%.
+B dinamis150K3/5 melampaui C1/5; jangan mengklaim C selalu unggul/optimal.
+Seluruh23loop utama tanpa service tetapi masih permissive/data kosong. Uji titik
+lain terpisah3/3loop,2rute masih memakai637,15m service. Bukti lapangan/UI belum
+ditinjau.32cell verifikasi tersimpan tanpa error. Bahan eksperimen cukup untuk
+mulai BabIV; lanjutkan pembahasan state/epsilon/seed/kegagalan, sinkronisasi naskah,
+validasi lapangan dan katalog. Naskah lama masih skor0-1/netral0,50/hasil30-75K;
+Word tidak diubah. Tanpa training/unduhan baru atau perubahan raw data.
+Laporan/CSV/grafik: docs/temp/analisis_missing_05_20261104/ANALISIS.md.

@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #333333
+  FontColor #000000
+}
+start
+:Memeriksa satu edge keluar
+dari node saat ini;
+if (Access kosong atau seluruh nilainya
+yes atau permissive?) then (ya)
+  if (Node tujuan adalah start?) then (ya)
+    if (Dari node lain dan jarak setelah langkah
+berada pada 4500 sampai 5500 meter?) then (ya)
+      :Memasukkan sebagai closing action;
+    else (tidak)
+      :Menolak edge menuju start;
+    endif
+  else (tidak)
+    if (Node tujuan belum pernah dikunjungi?) then (ya)
+      :Memasukkan sebagai fresh action;
+    else (tidak)
+      if (Jarak sebelum langkah minimal 2500 meter
+dan kunjungan node tujuan kurang dari dua?) then (ya)
+        :Memasukkan sebagai revisit action;
+      else (tidak)
+        :Menolak kunjungan ulang;
+      endif
+    endif
+  endif
+else (tidak)
+  :Tidak membentuk kandidat action;
+endif
+:Menggabungkan seluruh fresh revisit
+dan closing action yang lolos;
+stop
+@enduml

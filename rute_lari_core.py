@@ -189,12 +189,13 @@ def load_or_download_graph(
 # ============================================================
 
 # Kelompok preferensi penelitian, bukan ukuran keselamatan aktual.
+# Data kosong dikenai penalti ketidaklengkapan; bukan bukti bahwa jalan berbahaya.
 HIGHWAY_PRIORITY = frozenset({
     "footway", "pedestrian", "living_street", "residential", "tertiary",
 })
 HIGHWAY_PRIORITY_SCORE = 1.00
 HIGHWAY_OTHER_SCORE = -1.00
-HIGHWAY_MISSING_SCORE = 0.00
+HIGHWAY_MISSING_SCORE = -0.50
 
 # Satu kelompok preferensi material; bukan pengukuran kondisi aktual ruas.
 SURFACE_PRIORITY = frozenset({
@@ -202,7 +203,7 @@ SURFACE_PRIORITY = frozenset({
 })
 SURFACE_PRIORITY_SCORE = 1.00
 SURFACE_OTHER_SCORE = -1.00
-SURFACE_MISSING_SCORE = 0.00
+SURFACE_MISSING_SCORE = -0.50
 WEIGHT_HIGHWAY = 0.55
 WEIGHT_SURFACE = 0.30
 WEIGHT_WIDTH = 0.15
@@ -211,7 +212,7 @@ WEIGHT_WIDTH = 0.15
 WIDTH_PRIORITY_MIN_M = 3.0
 WIDTH_PRIORITY_SCORE = 1.00
 WIDTH_OTHER_SCORE = -1.00
-WIDTH_MISSING_SCORE = 0.00
+WIDTH_MISSING_SCORE = -0.50
 
 
 def is_missing(value: Any) -> bool:
@@ -260,7 +261,7 @@ def conservative_score(value: Any, score_map: dict[str, float], neutral: float) 
 
 
 def calculate_highway_score(value: Any) -> float:
-    """Reward dasar highway: prioritas +1, lainnya -1, kosong 0."""
+    """Reward dasar highway: prioritas +1, lainnya mengikuti konfigurasi, kosong -0,5."""
     values = [
         part.strip()
         for item in osm_values(value)
@@ -2015,7 +2016,7 @@ def run_scenario_experiment(
             "start_method": "spawn" if worker_count > 1 else None,
             "result_order": "input_seed_order",
         },
-        "reward_scheme": "direct_signed_unclipped_20261103",
+        "reward_scheme": "direct_signed_unclipped_missing_05_20261103",
         "overlap_metric": {
             "column": "overlap_ratio",
             "range": [0.0, 1.0],

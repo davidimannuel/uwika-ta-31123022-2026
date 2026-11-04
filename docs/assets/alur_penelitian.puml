@@ -1,0 +1,34 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #333333
+  FontColor #000000
+}
+start
+:Menetapkan masalah dan target
+loop 5 km dengan toleransi 10%;
+:Mengunduh data jalan OpenStreetMap
+dengan OSMnx dan menyimpan snapshot graf;
+:Memproyeksikan graf ke EPSG 32749
+dan menyiapkan atribut ruas;
+:Menyaring kandidat berdasarkan access
+dan menghitung skor highway surface width;
+:Merancang environment
+action legal reward dan state A B C;
+:Menetapkan empat konfigurasi
+75 ribu dan 150 ribu episode
+dengan epsilon dinamis atau tetap 50 ribu;
+:Melatih Q-table baru untuk setiap
+skenario konfigurasi dan seed 0 sampai 4;
+:Mengevaluasi setiap Q-table
+dengan kebijakan greedy epsilon nol;
+:Menganalisis loop jarak skor ruas
+overlap arah pulang dan terminasi;
+:Membandingkan state pada konfigurasi sama
+dan menyusun pembahasan;
+stop
+@enduml

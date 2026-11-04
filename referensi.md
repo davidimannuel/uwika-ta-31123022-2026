@@ -255,3 +255,20 @@ melaporkan performa tidak otomatis melakukan unit test atau manual Bellman.
   diskusi akses; whitelist penelitian (yes/permissive/kosong) tidak menerapkan
   seluruh hierarki izin OSM.
   Permissive tidak sama dengan keberadaan pagar tertutup.
+
+
+### Penyelarasan sitasi OSM untuk revisi Bab I sampai III pada 4 November 2026
+
+Sumber access https://wiki.openstreetmap.org/wiki/Key:access diperiksa untuk
+uraian izin akses: yes diizinkan, permissive berdasarkan izin yang dapat dicabut,
+serta perbedaan dengan no/private/destination. Tidak menyimpulkan pagar tertutup
+dari permissive atau akses publik dari tag kosong. Whitelist penelitian tetap
+aturan desain sederhana, bukan seluruh hierarki izin OSM.
+
+Untuk empat entri penulis OpenStreetMap Wiki contributors tanpa tanggal,
+panduan sementara mengusulkan urutan judul: n.d.-a Key access, n.d.-b Key highway,
+n.d.-c Key surface, n.d.-d Key width. Sitasi dalam teks harus diperbarui bersama
+entri referensi jika pengguna menyalin usulan ini. Entri copyright penulis
+OpenStreetMap contributors tetap n.d. tanpa akhiran. Sumber dan format lengkap
+ada pada docs/temp/revisi_bab_1_3_20261104/REVISI_BAB_1_3_TERBARU.docx.
+Tidak mengubah sitasi atau daftar pustaka pada dokumen TA utama secara langsung.

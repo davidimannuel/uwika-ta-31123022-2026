@@ -1,0 +1,46 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #333333
+  FontColor #000000
+}
+start
+:Membaca state saat ini
+dan daftar action legal;
+if (Ada action legal?) then (ya)
+  :Memilih action dengan epsilon greedy;
+  :Environment memperbarui posisi
+jarak dan riwayat kunjungan;
+  :Menghitung reward ruas akses
+kunjungan ulang dan kondisi terminal;
+  if (Terminal langsung?) then (ya)
+    :Menambahkan bonus atau penalti terminal
+tanpa reward arah;
+    :Menetapkan nilai masa depan nol;
+  else (tidak)
+    :Menghitung reward arah sesuai fase;
+    :Membaca state berikutnya
+dan action legal berikutnya;
+    if (Ada action legal berikutnya?) then (ya)
+      :Mengambil Q maksimum
+dari action legal berikutnya;
+    else (tidak)
+      :Menambahkan penalti buntu sekali
+dan mengakhiri episode;
+      :Menetapkan nilai masa depan nol;
+    endif
+  endif
+  :Memperbarui Q untuk pasangan
+state dan action yang dijalankan;
+  :Mencatat reward kondisi berikutnya
+dan status episode;
+else (tidak)
+  :Mengakhiri episode dengan penalti buntu
+tanpa pembaruan pasangan state action;
+endif
+stop
+@enduml

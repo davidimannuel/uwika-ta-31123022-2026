@@ -1178,3 +1178,158 @@ Pengguna meminta commit baseline DAHULU, baru perubahan missing H/S/W ke-0,5.
 Pada checkpoint ini penalti data kosong BELUM diterapkan. Tujuannya preferensi
 terhadap kelengkapan informasi, bukan menyatakan data kosong berarti jalan
 berbahaya. Catatan ini melengkapi riwayat sebelumnya tanpa menggantikannya.
+
+
+## Penalti data kosong -0,5 setelah checkpoint (3 November 2026)
+
+Baseline telah di-commit sebagai70b1a08 SEBELUM perubahan missing. Sesudahnya,
+HIGHWAY_MISSING_SCORE, SURFACE_MISSING_SCORE dan WIDTH_MISSING_SCORE menjadi-0,5.
+HIGHWAY_OTHER_SCORE tetap sesuai file sebelum perubahan (saat itu-1); pengguna
+mengujinya sendiri. Kategori terisi yang tidak dikenal tetap OTHER; width kosong,
+invalid, tidak positif atau gabungan memakai missing-0,5. Tidak ada blacklist
+service/TPU atau perubahan access. Ini preferensi kelengkapan informasi, bukan
+kesimpulan bahwa tag kosong berarti jalan berbahaya. Tujuannya percobaan;
+belum membuktikan penurunan penggunaan service pada hasil training pengguna.
+
+Formula/bobot tetap0,55/0,30/0,15 dan tanpa clipping. Contoh semua atribut kosong
+memberi B=-0,5; service default-1 dengan surface/width kosong B=-0,775; highway-2
+pada kondisi sama memberi B=-1,325. Reward ruas tetap B*panjang/100. Metadata baru
+reward_scheme=direct_signed_unclipped_missing_05_20261103; pemetaan H/S/W merekam
+missing-0,5. Reward akses/arah/revisit/terminal, state, mask, Q, episode/epsilon,
+seed/worker dan koordinat tidak diubah. Core bersama menerapkan aturan ke semua
+notebook. A--C memakai grup baru reward_missing_05_20261103 untuk melindungi arsip;
+uji titik tetap menimpa batch training terbaru tanpa mengunduh ulang G.
+
+Notebook verifikasi:32cell kode lulus pada kernel bersih, expected literal untuk
+kasus kosong/invalid/gabungan disesuaikan, termasuk empat contoh atribut parsial.
+Pemeriksaan tambahan: missing semua memberi reward ruas-0,5 per100m dan Q pertama
+-0,075 (alpha0,15, bootstrap0); highway-2 memberi-1,325 tanpa clipping. Semua
+parameter modul selain tiga konstanta missing identik sebelum/sesudah.2.599file
+hasil/graf tetap utuh. Tidak menjalankan training panjang/unduhan. Output analisis
+skor lama dibersihkan agar tidak menjadi bukti aturan baru; jalankan ulang analisis
+untuk tampilan terbaru. Notebook verifikasi menyimpan output kernel yang lulus.
+
+Perubahan missing ini BELUM di-commit (terpisah dari baseline sesuai urutan
+permintaan). Untuk mencoba, muat ulang notebook dari disk dan jalankan konfigurasi
+agar grup baru terbaca. Uji titik dengan G yang sudah dimuat cukup konfigurasi,
+training dan hasil. Gunakan tuple tiga seed yang sama untuk membandingkan reward.
+Audit: docs/temp/audit_missing_reward_20261103/AUDIT.md.
+
+
+## Koreksi grup hasil B agar sama dengan A/C (3 November 2026)
+
+Pengguna meminta menyamakan folder lalu akan training ulang. RESULT_GROUP pada
+cell muat graf scenario_B.ipynb dikoreksi dari reward_revisit_10_overlap_count_20261103
+ke reward_missing_05_20261103, sama dengan A/C. Empat cell training, empat cell
+hasil dan ringkasan memakai variabel yang sama. Output/nomor eksekusi B dibersihkan
+agar hasil dari folder lama tidak tampak sebagai hasil grup baru. Deskripsi aktif
+A/B/C juga diperjelas karena sebelumnya masih menyebut grup -10 di beberapa bagian.
+Core/reward/parameter/seed/worker/koordinat tetap; tidak memindah, menghapus atau
+menyalin artefak training. Hasil B missing-0,5 yang terlanjur tersimpan di folder
+lama tetap di sana. Pengguna akan menjalankan ulang B ke folder baru; agent tidak
+melatih ulang. Sebelum training, muat ulang notebook dari disk dan WAJIB jalankan
+cell muat graf/config agar variabel RESULT_GROUP pada kernel diperbarui; pastikan
+output Grup hasil: reward_missing_05_20261103. A/C tidak perlu training ulang hanya
+karena koreksi nama grup B. Penilaian Bab IV menyeluruh dilanjutkan setelah hasil
+training yang hendak dipakai pengguna tersedia pada grup yang konsisten.
+
+
+## Audit missing -0,5 lengkap (4 November 2026)
+
+Semua12konfigurasi kini berada pada reward_missing_05_20261103 termasuk B yang
+sudah dilatih ulang.60training/6.750.000history; seluruh60greedy direproduksi,
+metrik/path dan overlap geometri cocok. Metadata sama: missing-0,5/highwayother-1,
+tanpa clipping/revisit-10/lima seed/tiga worker.240file sumber dan graf tetap.
+Loop A/B/C: dinamis75K0/0/1; dinamis150K0/3/1; horizon50K total75K0/2/5;
+horizon50K total150K2/4/5. Total23/60: A2,B9,C12.37gagal=29overdistance+8buntu,
+semua tidak pernah memiliki closing action legal. C horizon75K kandidat:5/5,
+galat141,57m/overlap1,15%; C horizon150K5/5 tetapi galat276,57m/overlap1,22%.
+B dinamis150K3/5 melampaui C1/5; jangan mengklaim C selalu unggul/optimal.
+Seluruh23loop utama tanpa service tetapi masih permissive/data kosong. Uji titik
+lain terpisah3/3loop,2rute masih memakai637,15m service. Bukti lapangan/UI belum
+ditinjau.32cell verifikasi tersimpan tanpa error. Bahan eksperimen cukup untuk
+mulai BabIV; lanjutkan pembahasan state/epsilon/seed/kegagalan, sinkronisasi naskah,
+validasi lapangan dan katalog. Naskah lama masih skor0-1/netral0,50/hasil30-75K;
+Word tidak diubah. Tanpa training/unduhan baru atau perubahan raw data.
+Laporan/CSV/grafik: docs/temp/analisis_missing_05_20261104/ANALISIS.md.
+
+
+## Bahan revisi naskah Bab I sampai III pada 4 November 2026
+
+Pemeriksaan naskah utama terhadap core aktif dan panduan kampus menghasilkan
+docs/temp/revisi_bab_1_3_20261104/REVISI_BAB_1_3_TERBARU.docx; lampiran kode
+PlantUML, sumber rumus, dan ZIP disimpan permanen di docs/assets/. Panduan berisi lokasi penggantian, alasan, teks siap
+salin, tabel skor/akses/reward/konfigurasi/metrik, dan koreksi alat yang berulang.
+Rumusan masalah dan tujuan tetap. Empat konfigurasi 75K/150K dinamis dan horizon
+50K tetap menjadi acuan, dengan lima seed per konfigurasi pada A–C.
+
+Dokumen mengikuti implementasi yang telah dilatih: missing -0,5, revisit -10,
+skor langsung tanpa clipping, akses whitelist yes/permissive/kosong, arah 0,60,
+sukses +100 dan kegagalan -50. Diskusi pelonggaran missing/revisit belum menjadi
+keputusan perubahan; panduan memberi catatan untuk ditinjau sebelum disalin.
+Bagian verifikasi dan penulisan ulang Bab IV belum disusun dalam paket ini.
+Naskah TA utama, core, notebook, graf dan hasil training tidak diubah.
+
+
+### Lokasi permanen lampiran naskah pada 4 November 2026
+
+Atas permintaan pengguna, sumber diagram PlantUML, rumus, petunjuk dan ZIP
+dipindahkan dari folder revisi sementara ke docs/assets/. Salinan hasil
+ekstraksi ZIP yang identik digabung setelah pemeriksaan byte. Word panduan revisi
+tetap di docs/temp/revisi_bab_1_3_20261104/. Word panduan dan naskah utama tidak
+diubah; rujukan Word memakai nama berkas lampiran sehingga tetap sesuai.
+Lampiran naskah berikutnya juga harus disimpan di docs/ di luar folder temp.
+
+
+### Perapian aset bersama pada 4 November 2026
+
+Aset lama di root docs/ dan lampiran terbaru kini disatukan di docs/assets/.
+Folder docs/aset_naskah/ tidak digunakan lagi. Seluruh sumber PlantUML, SVG dan
+rumus dipertahankan byte-nya; tidak menghapus diagram terdahulu. README folder
+assets membedakan aset revisi terkini dan diagram terdahulu. Panduan visual
+Bab II/III menunjuk lokasi baru. PDF panduan kampus, dokumen Word, notebook,
+core, graf dan hasil eksperimen tetap. ZIP lampiran diperbarui agar petunjuknya
+menunjuk folder baru. Word sementara tetap di docs/temp/.
+
+
+## Bahan penyusunan Bab IV pada 4 November 2026
+
+Atas permintaan pengguna, fokus penulisan beralih ke hasil dan pembahasan,
+tanpa menyusun bagian verifikasi atau validasi. Naskah utama dibaca ulang;
+struktur dipertahankan sejauh memungkinkan. Judul Rancangan Eksperimen kedua
+diusulkan menjadi Hasil Pelatihan dan Evaluasi. Isi lama yang memakai hasil
+dan konfigurasi terdahulu diganti melalui bahan Word sementara, bukan diedit
+langsung pada TA.
+
+Word: docs/temp/revisi_bab_4_20261104/REVISI_BAB_4_HASIL_DAN_PEMBAHASAN.docx.
+Aset permanen: docs/assets/hasil_pembahasan/ (README, PNG/SVG, CSV/JSON,
+buat_aset_hasil.py, dan ZIP). Draf memuat karakteristik graf, kelengkapan
+atribut, aturan skor, empat konfigurasi, tabel seluruh lima seed A–C,
+perbandingan state dan epsilon, pengulangan ruas, alasan berhenti, dua contoh
+rute, pemanfaatan hasil, serta batas kesimpulan. Bahasa ditujukan kepada
+pembaca laporan, bukan riwayat perubahan implementasi. Seluruh 32 halaman
+Word dirender dan ditinjau; 60 baris tabel per seed dicocokkan ke CSV.
+
+Sumber tunggal hasil utama: reward_missing_05_20261103, lengkap 60 training,
+6.750.000 episode, dan 60 evaluasi tersimpan. Loop A/B/C: dinamis75K 0/0/1;
+dinamis150K 0/3/1; tetap50K-total75K 0/2/5; tetap50K-total150K 2/4/5.
+37 evaluasi gagal terdiri dari 29 melebihi jarak dan 8 tanpa pilihan ruas.
+Seluruh rute gagal tidak pernah memiliki pilihan penutup loop legal pada
+langkah yang dikunjungi; ini tidak berarti graf tidak mempunyai loop valid.
+C tetap75K menghasilkan 5/5 loop, galat rata-rata 141,57 m dan pengulangan
+1,15%, tetapi tidak dinyatakan optimal secara umum. B dinamis150K 3/5 lebih
+tinggi daripada C 1/5. Tidak mengklaim C selalu unggul atau 50K optimal.
+
+Grafik pelatihan merata-ratakan lima seed per episode lalu menggunakan
+rata-rata bergerak 50 episode, ditampilkan tiap 500 episode. Tabel 10.000
+episode terakhir memakai seluruh baris pada rentang itu. Pengulangan tetap
+berbasis jumlah lintasan, mencakup seluruh episode. Sampel rute berhasil:
+C tetap75K seed0, panjang 5.052,51 m, pengulangan 0%. Sampel gagal: A dinamis75K
+seed1, panjang 4.985,77 m tetapi posisi akhir masih 2.886,66 m dari start.
+
+Dokumen revisi sebelumnya belum tentu seluruhnya diterapkan pengguna;
+pemeriksaan konsistensi antarbab ditunda sampai penyalinan selesai. Naskah TA
+utama, core, notebook, graf, metadata dan hasil training tidak diubah.
+Tidak menjalankan training, mengunduh peta, atau mengubah dependency proyek.
+Kode aset dapat dijalankan ulang dengan uv melalui lingkungan proyek;
+runtime plot sementara untuk penyusunan berada di /private/tmp saja.

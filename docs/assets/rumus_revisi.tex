@@ -1,0 +1,54 @@
+% Sumber rumus pendamping untuk Word, bukan dokumen TA lengkap.
+% Gunakan mode LaTeX pada Equation jika tersedia, lalu Convert to Professional.
+% Jangan salin komentar atau label berkas sebagai nomor persamaan TA.
+% Semua persamaan yang perlu diganti juga tersedia sebagai OMML di DOCX.
+
+% Skor gabungan dan contoh
+C_e = 0{,}55H_e + 0{,}30S_e + 0{,}15W_e
+C_e = 0{,}55(1)+0{,}30(1)+0{,}15(1)=1{,}00
+C_e = 0{,}55(-1)+0{,}30(-0{,}5)+0{,}15(-0{,}5)=-0{,}775
+
+% Reward ruas dan akses
+R_{mathrm{ruas},t}=C_erac{L_e}{100}
+R_{mathrm{akses},t}=
+\begin{cases}
+-0{,}10\frac{L_e}{100}, & \text{jika access memuat permissive},\\
+0, & \text{lainnya yang lolos penyaringan}.
+\end{cases}
+
+% D_t = akumulasi panjang sebelum langkah; d_t = jarak lurus sebelum langkah.
+% Terminal langsung = success, over_distance, atau step_limit dari step.
+\Delta d_t=d_t-d_{t+1}
+R_{\mathrm{arah},t}=
+\begin{cases}
+0, & \text{terminal langsung},\\
+-0{,}60\frac{\Delta d_t}{100}, & D_t<2500\ \text{dan}\ \Delta d_t>0,\\
++0{,}60\frac{\Delta d_t}{100}, & D_{t+1}\ge2500\ \text{dan kondisi sebelumnya tidak berlaku},\\
+0, & \text{lainnya}.
+\end{cases}
+
+R_t=R_{\mathrm{ruas},t}+R_{\mathrm{akses},t}+R_{\mathrm{arah},t}
+    +R_{\mathrm{kunjungan},t}+R_{\mathrm{terminal},t}
+% R_terminal mencakup penalti no_available_action satu kali bila terjadi.
+
+% Metrik, penjumlahan atas setiap perpindahan i=1,...,n
+D=\sum_{i=1}^{n}L_{e_i}
+\mathrm{absolute\_distance\_error\_m}=|D-5000|
+\mathrm{return\_progress\_ratio}=\frac{N_{\mathrm{mendekat}}}{N_{\mathrm{pulang}}}
+% Fase metrik: akumulasi setelah langkah >=2500 m; kosong bila tidak ada langkah fase ini.
+\mathrm{mean\_comfort}=\frac{\sum_{i=1}^{n}C_{e_i}L_{e_i}}{\sum_{i=1}^{n}L_{e_i}}
+\mathrm{overlap\_ratio}=\frac{N_{\mathrm{lintasan}}-N_{\mathrm{ruas\ unik}}}{N_{\mathrm{lintasan}}}
+\mathrm{success\ rate}=\frac{\mathrm{jumlah\ seed\ dengan\ is\_loop=True}}{5}\times100\%
+\mathrm{termination\ rate}_j=\frac{\mathrm{jumlah\ seed\ dengan\ terminasi}\ j}{5}\times100\%
+
+% Contoh revisi
+\mathrm{total\_reward}=-12{,}5+100=87{,}5
+\mathrm{mean\_comfort}=\frac{1(1000)+0{,}55(3000)-0{,}775(1000)}{5000}=0{,}375
+\mathrm{overlap\_ratio}=\frac{5-4}{5}=0{,}20=20\%
+
+% Acuan yang tidak perlu diganti bila persamaan lama sudah benar
+Q(s,a)\leftarrow Q(s,a)+\alpha\left[R+\gamma\max_{a'\in A_{\mathrm{legal}}(s')}Q(s',a')-Q(s,a)\right]
+% Bootstrap nol pada terminal; penalti buntu sudah dimasukkan dalam R.
+b=\min\left(15,\max\left(0,\left\lfloor\frac{D}{5500}\times16\right\rfloor\right)\right)
+\epsilon_k=0{,}05+0{,}95\left(1-\min\left(\frac{k}{D_\epsilon-1},1\right)\right)
+% k mulai 0; D_epsilon adalah total episode atau 50000 sesuai konfigurasi.

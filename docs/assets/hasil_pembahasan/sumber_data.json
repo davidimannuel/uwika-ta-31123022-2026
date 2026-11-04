@@ -1,0 +1,402 @@
+{
+  "result_group": "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103",
+  "graph_sha256": "cd68c47d59919d86fefe32ccc40d6212a2a5ac4a8fcc0f195fad70cf6a8942e3",
+  "sources": {
+    "rute_lari_core.py": {
+      "size": 86605,
+      "mtime_ns": 1793716513665270819
+    },
+    "data_osm_5km/graf_jalan_kaki_5km.graphml": {
+      "size": 11714706,
+      "mtime_ns": 1791552468577908752
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/metadata_eksperimen_A.json": {
+      "size": 3547,
+      "mtime_ns": 1793755006949126607
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/evaluation_metrics_A.csv": {
+      "size": 1004,
+      "mtime_ns": 1793755005651468076
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/rute_evaluasi_scenario_A_seed_0.json": {
+      "size": 8930,
+      "mtime_ns": 1793754956180308532
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/rute_evaluasi_scenario_A_seed_1.json": {
+      "size": 10971,
+      "mtime_ns": 1793754957522988618
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/rute_evaluasi_scenario_A_seed_2.json": {
+      "size": 10507,
+      "mtime_ns": 1793754955790382397
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/rute_evaluasi_scenario_A_seed_3.json": {
+      "size": 11812,
+      "mtime_ns": 1793755002685621511
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/rute_evaluasi_scenario_A_seed_4.json": {
+      "size": 8625,
+      "mtime_ns": 1793755001825664141
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_A/training_history_A.csv": {
+      "size": 86348512,
+      "mtime_ns": 1793755005650228169
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/metadata_eksperimen_B.json": {
+      "size": 3547,
+      "mtime_ns": 1793755034381018627
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/evaluation_metrics_B.csv": {
+      "size": 982,
+      "mtime_ns": 1793755032888871058
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/rute_evaluasi_scenario_B_seed_0.json": {
+      "size": 8208,
+      "mtime_ns": 1793754981865825319
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/rute_evaluasi_scenario_B_seed_1.json": {
+      "size": 7553,
+      "mtime_ns": 1793754981742007795
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/rute_evaluasi_scenario_B_seed_2.json": {
+      "size": 8077,
+      "mtime_ns": 1793754981350965201
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/rute_evaluasi_scenario_B_seed_3.json": {
+      "size": 7534,
+      "mtime_ns": 1793755029348531101
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/rute_evaluasi_scenario_B_seed_4.json": {
+      "size": 8402,
+      "mtime_ns": 1793755029606470094
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_B/training_history_B.csv": {
+      "size": 88057396,
+      "mtime_ns": 1793755032888073980
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/metadata_eksperimen_C.json": {
+      "size": 3480,
+      "mtime_ns": 1793755053538985410
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/evaluation_metrics_C.csv": {
+      "size": 981,
+      "mtime_ns": 1793755051834863333
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/rute_evaluasi_scenario_C_seed_0.json": {
+      "size": 7974,
+      "mtime_ns": 1793754998552349555
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/rute_evaluasi_scenario_C_seed_1.json": {
+      "size": 7001,
+      "mtime_ns": 1793755000047964713
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/rute_evaluasi_scenario_C_seed_2.json": {
+      "size": 8095,
+      "mtime_ns": 1793754999037045289
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/rute_evaluasi_scenario_C_seed_3.json": {
+      "size": 7332,
+      "mtime_ns": 1793755047584647347
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/rute_evaluasi_scenario_C_seed_4.json": {
+      "size": 8484,
+      "mtime_ns": 1793755048479083519
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_75000_C/training_history_C.csv": {
+      "size": 87792645,
+      "mtime_ns": 1793755051830095909
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/metadata_eksperimen_A.json": {
+      "size": 3548,
+      "mtime_ns": 1793755206072867352
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/evaluation_metrics_A.csv": {
+      "size": 991,
+      "mtime_ns": 1793755203704867868
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/rute_evaluasi_scenario_A_seed_0.json": {
+      "size": 10095,
+      "mtime_ns": 1793755105553928839
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/rute_evaluasi_scenario_A_seed_1.json": {
+      "size": 6823,
+      "mtime_ns": 1793755105373854079
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/rute_evaluasi_scenario_A_seed_2.json": {
+      "size": 10112,
+      "mtime_ns": 1793755106654364218
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/rute_evaluasi_scenario_A_seed_3.json": {
+      "size": 10755,
+      "mtime_ns": 1793755191934639869
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/rute_evaluasi_scenario_A_seed_4.json": {
+      "size": 11938,
+      "mtime_ns": 1793755197784432578
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_A/training_history_A.csv": {
+      "size": 172839949,
+      "mtime_ns": 1793755203702526343
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/metadata_eksperimen_B.json": {
+      "size": 3481,
+      "mtime_ns": 1793755246996033998
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/evaluation_metrics_B.csv": {
+      "size": 894,
+      "mtime_ns": 1793755245288247567
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/rute_evaluasi_scenario_B_seed_0.json": {
+      "size": 6772,
+      "mtime_ns": 1793755144253358602
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/rute_evaluasi_scenario_B_seed_1.json": {
+      "size": 7372,
+      "mtime_ns": 1793755146811358484
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/rute_evaluasi_scenario_B_seed_2.json": {
+      "size": 5820,
+      "mtime_ns": 1793755143475177056
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/rute_evaluasi_scenario_B_seed_3.json": {
+      "size": 8308,
+      "mtime_ns": 1793755237373482176
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/rute_evaluasi_scenario_B_seed_4.json": {
+      "size": 10180,
+      "mtime_ns": 1793755239092174446
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_B/training_history_B.csv": {
+      "size": 176215393,
+      "mtime_ns": 1793755245286668120
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/metadata_eksperimen_C.json": {
+      "size": 3481,
+      "mtime_ns": 1793755268398549584
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/evaluation_metrics_C.csv": {
+      "size": 958,
+      "mtime_ns": 1793755266259915510
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/rute_evaluasi_scenario_C_seed_0.json": {
+      "size": 6554,
+      "mtime_ns": 1793755164673122765
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/rute_evaluasi_scenario_C_seed_1.json": {
+      "size": 10202,
+      "mtime_ns": 1793755166230128561
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/rute_evaluasi_scenario_C_seed_2.json": {
+      "size": 10000,
+      "mtime_ns": 1793755165339375857
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/rute_evaluasi_scenario_C_seed_3.json": {
+      "size": 9042,
+      "mtime_ns": 1793755258592958106
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/rute_evaluasi_scenario_C_seed_4.json": {
+      "size": 9757,
+      "mtime_ns": 1793755259875433355
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/dinamis_150000_C/training_history_C.csv": {
+      "size": 176418682,
+      "mtime_ns": 1793755266256742116
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/metadata_eksperimen_A.json": {
+      "size": 3548,
+      "mtime_ns": 1793755362511305433
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/evaluation_metrics_A.csv": {
+      "size": 1020,
+      "mtime_ns": 1793755360872434816
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/rute_evaluasi_scenario_A_seed_0.json": {
+      "size": 10627,
+      "mtime_ns": 1793755282103521317
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/rute_evaluasi_scenario_A_seed_1.json": {
+      "size": 9802,
+      "mtime_ns": 1793755281982916509
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/rute_evaluasi_scenario_A_seed_2.json": {
+      "size": 9486,
+      "mtime_ns": 1793755283619108462
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/rute_evaluasi_scenario_A_seed_3.json": {
+      "size": 10433,
+      "mtime_ns": 1793755356522518865
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/rute_evaluasi_scenario_A_seed_4.json": {
+      "size": 10326,
+      "mtime_ns": 1793755357807275993
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_A/training_history_A.csv": {
+      "size": 88239422,
+      "mtime_ns": 1793755360867302434
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/metadata_eksperimen_B.json": {
+      "size": 3481,
+      "mtime_ns": 1793755408359875057
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/evaluation_metrics_B.csv": {
+      "size": 914,
+      "mtime_ns": 1793755407166547189
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/rute_evaluasi_scenario_B_seed_0.json": {
+      "size": 6873,
+      "mtime_ns": 1793755323496379897
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/rute_evaluasi_scenario_B_seed_1.json": {
+      "size": 10390,
+      "mtime_ns": 1793755330665212431
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/rute_evaluasi_scenario_B_seed_2.json": {
+      "size": 10821,
+      "mtime_ns": 1793755332242992058
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/rute_evaluasi_scenario_B_seed_3.json": {
+      "size": 11586,
+      "mtime_ns": 1793755398665784517
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/rute_evaluasi_scenario_B_seed_4.json": {
+      "size": 6550,
+      "mtime_ns": 1793755404188880222
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_B/training_history_B.csv": {
+      "size": 89611294,
+      "mtime_ns": 1793755407165791028
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/metadata_eksperimen_C.json": {
+      "size": 3481,
+      "mtime_ns": 1793755421235113450
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/evaluation_metrics_C.csv": {
+      "size": 809,
+      "mtime_ns": 1793755419707868886
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/rute_evaluasi_scenario_C_seed_0.json": {
+      "size": 7291,
+      "mtime_ns": 1793755346021850944
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/rute_evaluasi_scenario_C_seed_1.json": {
+      "size": 6853,
+      "mtime_ns": 1793755347036199093
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/rute_evaluasi_scenario_C_seed_2.json": {
+      "size": 6446,
+      "mtime_ns": 1793755344969527196
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/rute_evaluasi_scenario_C_seed_3.json": {
+      "size": 6455,
+      "mtime_ns": 1793755415683122480
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/rute_evaluasi_scenario_C_seed_4.json": {
+      "size": 6111,
+      "mtime_ns": 1793755416639644560
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_75000_C/training_history_C.csv": {
+      "size": 86920198,
+      "mtime_ns": 1793755419703649541
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/metadata_eksperimen_A.json": {
+      "size": 3482,
+      "mtime_ns": 1793755815827668517
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/evaluation_metrics_A.csv": {
+      "size": 940,
+      "mtime_ns": 1793755813712077887
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/rute_evaluasi_scenario_A_seed_0.json": {
+      "size": 10414,
+      "mtime_ns": 1793755592610374072
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/rute_evaluasi_scenario_A_seed_1.json": {
+      "size": 9106,
+      "mtime_ns": 1793755593124914745
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/rute_evaluasi_scenario_A_seed_2.json": {
+      "size": 11713,
+      "mtime_ns": 1793755600149645219
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/rute_evaluasi_scenario_A_seed_3.json": {
+      "size": 9711,
+      "mtime_ns": 1793755807259482366
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/rute_evaluasi_scenario_A_seed_4.json": {
+      "size": 8789,
+      "mtime_ns": 1793755807608722709
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_A/training_history_A.csv": {
+      "size": 179588693,
+      "mtime_ns": 1793755813709777891
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/metadata_eksperimen_B.json": {
+      "size": 3482,
+      "mtime_ns": 1793755847386198333
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/evaluation_metrics_B.csv": {
+      "size": 867,
+      "mtime_ns": 1793755845737681902
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/rute_evaluasi_scenario_B_seed_0.json": {
+      "size": 6766,
+      "mtime_ns": 1793755621969604796
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/rute_evaluasi_scenario_B_seed_1.json": {
+      "size": 6128,
+      "mtime_ns": 1793755627591903666
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/rute_evaluasi_scenario_B_seed_2.json": {
+      "size": 6769,
+      "mtime_ns": 1793755644779420413
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/rute_evaluasi_scenario_B_seed_3.json": {
+      "size": 9865,
+      "mtime_ns": 1793755840116096351
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/rute_evaluasi_scenario_B_seed_4.json": {
+      "size": 6541,
+      "mtime_ns": 1793755817721895152
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_B/training_history_B.csv": {
+      "size": 176774861,
+      "mtime_ns": 1793755845737058703
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/metadata_eksperimen_C.json": {
+      "size": 3482,
+      "mtime_ns": 1793755822581466194
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/evaluation_metrics_C.csv": {
+      "size": 827,
+      "mtime_ns": 1793755820651033167
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/rute_evaluasi_scenario_C_seed_0.json": {
+      "size": 6973,
+      "mtime_ns": 1793755634193876608
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/rute_evaluasi_scenario_C_seed_1.json": {
+      "size": 6258,
+      "mtime_ns": 1793755634530343130
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/rute_evaluasi_scenario_C_seed_2.json": {
+      "size": 6126,
+      "mtime_ns": 1793755622624669010
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/rute_evaluasi_scenario_C_seed_3.json": {
+      "size": 6533,
+      "mtime_ns": 1793755809662493134
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/rute_evaluasi_scenario_C_seed_4.json": {
+      "size": 5821,
+      "mtime_ns": 1793755814880602779
+    },
+    "hasil_bab_4/training_qlearning_5km/reward_missing_05_20261103/tetap_50000_episode_150000_C/training_history_C.csv": {
+      "size": 168931763,
+      "mtime_ns": 1793755820650166275
+    }
+  },
+  "training_smoothing_window": 50,
+  "training_display_stride": 500,
+  "training_total_rows": 6750000,
+  "evaluation_total_rows": 60
+}

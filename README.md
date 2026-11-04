@@ -163,7 +163,8 @@ percepatan linear. Menjalankan ulang cell bukan melanjutkan training sebelumnya.
 
 - Highway satu prioritas: footway/pedestrian/living_street/residential/tertiary.
 - Surface prioritas: asphalt/concrete/paving_stones/paved. Width prioritas >=3 m.
-- H/S/W: prioritas +1, lainnya -1, kosong 0; width invalid/gabungan 0.
+- H/S/W: prioritas +1, lainnya mengikuti core (default-1), kosong-0,5;
+  width invalid/gabungan-0,5.
   Gabungan highway/surface minimum. Service tetap legal jika lolos access/mask.
 - Reward ruas = (0,55*rH+0,30*rS+0,15*rW)*panjang/100. Tidak ada pengurangan 0,50.
 - Permissive -0,10/100 m; access yes/kosong boleh dan tidak memberi penalti.
@@ -332,3 +333,77 @@ Pengguna meminta commit baseline DAHULU, baru perubahan missing H/S/W ke-0,5.
 Pada checkpoint ini penalti data kosong BELUM diterapkan. Tujuannya preferensi
 terhadap kelengkapan informasi, bukan menyatakan data kosong berarti jalan
 berbahaya. Catatan ini melengkapi riwayat sebelumnya tanpa menggantikannya.
+
+
+## Penalti data kosong -0,5 setelah checkpoint (3 November 2026)
+
+Baseline telah di-commit sebagai70b1a08 SEBELUM perubahan missing. Sesudahnya,
+HIGHWAY_MISSING_SCORE, SURFACE_MISSING_SCORE dan WIDTH_MISSING_SCORE menjadi-0,5.
+HIGHWAY_OTHER_SCORE tetap sesuai file sebelum perubahan (saat itu-1); pengguna
+mengujinya sendiri. Kategori terisi yang tidak dikenal tetap OTHER; width kosong,
+invalid, tidak positif atau gabungan memakai missing-0,5. Tidak ada blacklist
+service/TPU atau perubahan access. Ini preferensi kelengkapan informasi, bukan
+kesimpulan bahwa tag kosong berarti jalan berbahaya. Tujuannya percobaan;
+belum membuktikan penurunan penggunaan service pada hasil training pengguna.
+
+Formula/bobot tetap0,55/0,30/0,15 dan tanpa clipping. Contoh semua atribut kosong
+memberi B=-0,5; service default-1 dengan surface/width kosong B=-0,775; highway-2
+pada kondisi sama memberi B=-1,325. Reward ruas tetap B*panjang/100. Metadata baru
+reward_scheme=direct_signed_unclipped_missing_05_20261103; pemetaan H/S/W merekam
+missing-0,5. Reward akses/arah/revisit/terminal, state, mask, Q, episode/epsilon,
+seed/worker dan koordinat tidak diubah. Core bersama menerapkan aturan ke semua
+notebook. A--C memakai grup baru reward_missing_05_20261103 untuk melindungi arsip;
+uji titik tetap menimpa batch training terbaru tanpa mengunduh ulang G.
+
+Notebook verifikasi:32cell kode lulus pada kernel bersih, expected literal untuk
+kasus kosong/invalid/gabungan disesuaikan, termasuk empat contoh atribut parsial.
+Pemeriksaan tambahan: missing semua memberi reward ruas-0,5 per100m dan Q pertama
+-0,075 (alpha0,15, bootstrap0); highway-2 memberi-1,325 tanpa clipping. Semua
+parameter modul selain tiga konstanta missing identik sebelum/sesudah.2.599file
+hasil/graf tetap utuh. Tidak menjalankan training panjang/unduhan. Output analisis
+skor lama dibersihkan agar tidak menjadi bukti aturan baru; jalankan ulang analisis
+untuk tampilan terbaru. Notebook verifikasi menyimpan output kernel yang lulus.
+
+Perubahan missing ini BELUM di-commit (terpisah dari baseline sesuai urutan
+permintaan). Untuk mencoba, muat ulang notebook dari disk dan jalankan konfigurasi
+agar grup baru terbaca. Uji titik dengan G yang sudah dimuat cukup konfigurasi,
+training dan hasil. Gunakan tuple tiga seed yang sama untuk membandingkan reward.
+Audit: docs/temp/audit_missing_reward_20261103/AUDIT.md.
+
+
+## Koreksi grup hasil B agar sama dengan A/C (3 November 2026)
+
+Pengguna meminta menyamakan folder lalu akan training ulang. RESULT_GROUP pada
+cell muat graf scenario_B.ipynb dikoreksi dari reward_revisit_10_overlap_count_20261103
+ke reward_missing_05_20261103, sama dengan A/C. Empat cell training, empat cell
+hasil dan ringkasan memakai variabel yang sama. Output/nomor eksekusi B dibersihkan
+agar hasil dari folder lama tidak tampak sebagai hasil grup baru. Deskripsi aktif
+A/B/C juga diperjelas karena sebelumnya masih menyebut grup -10 di beberapa bagian.
+Core/reward/parameter/seed/worker/koordinat tetap; tidak memindah, menghapus atau
+menyalin artefak training. Hasil B missing-0,5 yang terlanjur tersimpan di folder
+lama tetap di sana. Pengguna akan menjalankan ulang B ke folder baru; agent tidak
+melatih ulang. Sebelum training, muat ulang notebook dari disk dan WAJIB jalankan
+cell muat graf/config agar variabel RESULT_GROUP pada kernel diperbarui; pastikan
+output Grup hasil: reward_missing_05_20261103. A/C tidak perlu training ulang hanya
+karena koreksi nama grup B. Penilaian Bab IV menyeluruh dilanjutkan setelah hasil
+training yang hendak dipakai pengguna tersedia pada grup yang konsisten.
+
+
+## Audit missing -0,5 lengkap (4 November 2026)
+
+Semua12konfigurasi kini berada pada reward_missing_05_20261103 termasuk B yang
+sudah dilatih ulang.60training/6.750.000history; seluruh60greedy direproduksi,
+metrik/path dan overlap geometri cocok. Metadata sama: missing-0,5/highwayother-1,
+tanpa clipping/revisit-10/lima seed/tiga worker.240file sumber dan graf tetap.
+Loop A/B/C: dinamis75K0/0/1; dinamis150K0/3/1; horizon50K total75K0/2/5;
+horizon50K total150K2/4/5. Total23/60: A2,B9,C12.37gagal=29overdistance+8buntu,
+semua tidak pernah memiliki closing action legal. C horizon75K kandidat:5/5,
+galat141,57m/overlap1,15%; C horizon150K5/5 tetapi galat276,57m/overlap1,22%.
+B dinamis150K3/5 melampaui C1/5; jangan mengklaim C selalu unggul/optimal.
+Seluruh23loop utama tanpa service tetapi masih permissive/data kosong. Uji titik
+lain terpisah3/3loop,2rute masih memakai637,15m service. Bukti lapangan/UI belum
+ditinjau.32cell verifikasi tersimpan tanpa error. Bahan eksperimen cukup untuk
+mulai BabIV; lanjutkan pembahasan state/epsilon/seed/kegagalan, sinkronisasi naskah,
+validasi lapangan dan katalog. Naskah lama masih skor0-1/netral0,50/hasil30-75K;
+Word tidak diubah. Tanpa training/unduhan baru atau perubahan raw data.
+Laporan/CSV/grafik: docs/temp/analisis_missing_05_20261104/ANALISIS.md.
