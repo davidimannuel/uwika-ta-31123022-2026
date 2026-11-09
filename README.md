@@ -1,6 +1,45 @@
 # Development TA Rute Lari
 
-Proyek menggunakan Python 3.13, uv, dan JupyterLab. Gunakan notebook untuk kode dan eksperimen, serta terminal terintegrasi JupyterLab untuk mengelola dependensi.
+## Acuan aktif: implementasi Go
+
+Kode dan hasil penelitian terbaru berada di
+[go-running-route-q-learning](/Users/david/development/go-running-route-q-learning/README.md).
+Repositori ini menyimpan naskah, aset dan dokumentasi; Python/Jupyter di sini
+merupakan riwayat. Notebook analisis Go berada di proyek Go dan membaca CSV hasilnya.
+
+Status 9 November 2026: target 5.000 m dengan toleransi 20% (4.000–6.000 m), graf
+mentah/Haversine, 25 bin, 500 langkah, akses way dan endpoint, serta penalti galat
+jarak akhir −5/100 m. Penalti dihitung sekali saat terminasi; nilai 0 menonaktifkan.
+Batch 22.18 WIB menghasilkan 22/60 loop valid (A 2 B 15 C 5). Konfigurasi masih dalam
+evaluasi pengguna; hasil 7 November 31/60 dan parameter Python bukan hasil terbaru.
+
+Baca [IMPLEMENTASI.md](IMPLEMENTASI.md) untuk metode dan tabel perbandingan,
+[LOG_KEMAJUAN.md](LOG_KEMAJUAN.md) untuk handover, serta
+[config training Go](/Users/david/development/go-running-route-q-learning/workdirs/training/config.yaml)
+untuk parameter aktif. Metadata per profil menentukan parameter hasil tersimpan.
+
+Command dari proyek Go:
+
+```bash
+cd /Users/david/development/go-running-route-q-learning
+# Perbarui CSV/peta dari snapshot lokal, tanpa download atau training.
+go run ./cmd/cli analyze --workdir workdirs/training
+# Baca hasil tersimpan di notebook; periksa cell sebelum Run All.
+uv run --locked jupyter lab
+# Sajikan peta dan Recorded settings.
+go run ./cmd/cli serve --dir workdirs --port 8080
+```
+
+Analisis turunan belum mengikuti batch terbaru: analysis.json masih 16.58 WIB,
+ringkasan training 21.03 hanya B/C, audit final 7 November. Sinkronisasi Markdown
+ini belum meregenerasinya. Training tetap dijalankan hanya ketika pengguna
+meminta, dan hasil pada output yang sama dapat ditimpa.
+
+## Lingkungan Python historis
+
+Bagian berikut adalah panduan environment untuk kode Python arsip repositori ini.
+Python 3.13, uv dan JupyterLab tetap dapat digunakan untuk membaca riwayat;
+parameter/hasilnya tidak menggantikan implementasi Go.
 
 ## Berkas environment
 

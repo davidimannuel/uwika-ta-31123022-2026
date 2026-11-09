@@ -1,8 +1,202 @@
 # Wiki Implementasi Rute Lari Loop 5 KM
 
-Dokumen ini adalah sumber konteks teknis utama proyek. Bacalah sebelum mengubah **analisa.ipynb**, **rute_lari_core.py**, atau notebook scenario A–C. Isinya menjelaskan keputusan implementasi Python, data, environment, reward, training, evaluasi, dan status eksperimen yang sudah disepakati.
+Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acuan aktif untuk pengembangan kode dan hasil TA adalah proyek Go pada bagian berikut. Rincian Python di bagian sesudahnya dipertahankan sebagai riwayat; jangan memakainya untuk menggantikan konfigurasi Go terbaru.
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
+
+## Acuan implementasi Go — sinkronisasi 9 November 2026
+
+### Lokasi, sumber dan status
+
+Kode aktif: `/Users/david/development/go-running-route-q-learning`.
+Repositori TA ini menyimpan naskah, aset dan Markdown progres; kode/notebook
+Python tetap riwayat. Naskah utama hanya diedit pengguna. Sinkronisasi ini
+membaca chat **“Jawab pertanyaan umum”**, lalu mencocokkan sumber Go, YAML,
+metadata dan CSV evaluasi terbaru. Tidak mengubah kode, config, notebook,
+snapshot, hasil training atau DOCX; tidak menjalankan training/unduhan.
+
+Sumber parameter: `workdirs/training/config.yaml` dan `workdirs/testing/config.yaml`
+di proyek Go. Sumber hasil adalah `output/training-run.json` dan
+`output/training/<profil>/{metadata.json, history.csv, evaluation.csv}`;
+Q-table/trace berada pada `seed-<seed>/{qtable.csv, evaluation-steps.csv}`.
+Gunakan metadata saat training, karena YAML dapat berubah setelahnya.
+Pengguna masih mencoba parameter; batch terbaru belum otomatis menjadi pilihan
+final naskah. Ringkasan berikut menggantikan acuan 31/60 tanggal 7 November.
+
+### Konfigurasi aktif dan aturan yang dipakai
+
+| Komponen | Implementasi Go terbaru |
+|---|---|
+| Target dan validitas | Kembali ke start dan panjang 4.000–6.000 m; target 5.000 m, toleransi 20% |
+| Graf | Segmen OSM mentah dua arah, parallel edge dipertahankan; tanpa simplifikasi, seleksi komponen atau truncation setara OSMnx |
+| Jarak | Haversine per segmen dan ke start, radius bumi 6.371.009 m; tidak memakai proyeksi UTM |
+| State | A=current; B=current+progress bin; C=current+previous+progress bin |
+| Progres | 25 bin pada 0–6.000 m, lebar 240 m; reset previous=−1 |
+| Training | A/B/C × dinamis 150k/300k dan horizon 100k-total 150k/300k;12 profil/60 run/13.500.000 episode |
+| Epsilon | Linear 1→0,05 sepanjang total episode atau mencapai 0,05 pada 100k lalu tetap; evaluasi greedy 0 |
+| Parameter | alpha 0,15; gamma 0,95; max_steps 500; seed 0–4; max_workers 5; Q/RNG mandiri tiap seed, mulai dari kosong |
+| Revisit | Diizinkan setelah 2.500 m, maksimum 2 kunjungan node; penalti −10 selain closing ke start |
+| Highway | footway/pedestrian/living_street/residential/tertiary:+1; secondary:+0,5; other termasuk service:−10; kosong:−2 |
+| Surface/width | Surface asphalt/concrete/paving_stones/paved:+1; width valid>=3 m:+1; lainnya −1, kosong/width invalid −0,5 |
+| Reward ruas | Bobot H/S/W 0,55/0,30/0,15; gabungan tanpa clipping dikali panjang/100; bukan ukuran keamanan/kenyamanan lapangan |
+| Arah | Outward 0; return 1,20 setelah 50% target; Haversine dan prioritas terminal tetap; bukan bonus langsung menjauh |
+| Reward lain | Permissive way −0,10/100 m; sukses +100; over_distance/buntu/batas langkah −50; galat jarak akhir −5/100 m |
+| Akses | Kosong/yes/permissive pada way, source dan destination; scalar ternormalisasi, tanpa split/list/override foot; barrier saja tidak melarang |
+| Action | `(next_node, key)`; terurut numerik, key paralel tetap berbeda; mask legal bersama untuk eksplorasi/greedy/bootstrap |
+| Overlap | `(jumlah lintasan−jumlah ruas fisik unik)/jumlah lintasan`; identitas endpoint tanpa arah; bukan persentase panjang |
+
+Start training aktif `311432306`, input `-7.281518, 112.710178`.
+Snapshot 26.345 node/58.020 edge, SHA-256:
+`f0a5885db46c2f9cd962674aaeaa82f7d5c69579d5ba5d80641f727b6e20f964`.
+Node mentah mencakup pembentuk geometri, bukan seluruhnya persimpangan.
+Service tetap dapat dipilih bila lolos akses; skor negatif tidak menghapus action.
+Filter akses endpoint sudah diterapkan; temuan gerbang/no pada 31 loop 7 November
+adalah riwayat sebelum filter, bukan deskripsi semua hasil terbaru.
+
+### Penalti galat jarak akhir yang sudah diimplementasikan
+
+Pengguna memilih mempertahankan terminasi over_distance dan mask closing.
+Penalti tambahan mengikuti:
+
+```text
+reward_distance_error = distance_error_penalty_per_100m
+                        * abs(total_distance_m - target_distance_m) / 100
+```
+
+Koefisien aktif −5. Panjang 4.800 m maupun 5.200 m mendapat −10;5.050 m mendapat −2,5;
+tepat 5.000 m mendapat 0. Kekurangan maupun kelebihan dihitung proporsional,
+tanpa pembulatan per blok 100 m. Komponen diterapkan **sekali di akhir episode**,
+pada sukses, over_distance, batas langkah atau buntu, termasuk buntu awal.
+Langkah nonterminal 0; tidak menghukum kekurangan jarak pada setiap langkah.
+Pada buntu setelah bergerak, komponen masuk StopPenalty sekali sebelum Bellman.
+Terminal tidak bootstrap; bonus sukses dan penalti gagal lama tetap berlaku.
+Episode buntu pada 1.000 m, misalnya, mendapat tambahan −200 dari komponen ini.
+
+Nilai `0` atau field yang dihilangkan menonaktifkannya, tanpa mengubah hasil
+tersimpan. RewardConfig default 0 menjaga metadata lama. Untuk kebijakan hasil
+belajar dengan nilai berbeda, training harus dimulai lagi dari Q-table kosong;
+perubahan YAML saja tidak menulis ulang Q atau evaluasi lama.
+
+Sumber: `internal/qlearning/{reward.go, environment.go, agent.go}`,
+`internal/analysis/training_csv.go`, dan `cmd/cli/train.go`. Trace mencatat
+`reward_distance_error`; popup rute menampilkan Distance error penalty.
+Metadata merekam rumus, aplikasi, zero_disables dan
+`reward_scheme=configurable_signed_unclipped_distance_error_v2` saat aktif.
+
+### Hasil terbaru: batch 9 November 22.18 WIB
+
+Seluruh 12 profil konsisten pada snapshot/start/reward/environment/seed/akses.
+Evaluasi akhir 22/60 valid, terdiri dari A 2/20, B 15/20, C 5/20:
+
+| Konfigurasi | A, dari 5 | B, dari 5 | C, dari 5 |
+|---|---:|---:|---:|
+| Dinamis 150k | 0 | 0 | 0 |
+| Dinamis 300k | 1 | 5 | 1 |
+| Horizon 100k, total 150k | 0 | 5 | 2 |
+| Horizon 100k, total 300k | 1 | 5 | 2 |
+
+Gagal 31 over_distance dan 7 buntu. Dari 22 loop, 18 berada dalam 4.500–5.500 m;
+ini pengelompokan jarak hasil toleransi 20%, bukan eksperimen toleransi 10%.
+B horizon 300k 5/5, galat rata-rata 161,29 m, mean_comfort 0,9093 dan overlap 0,71%
+pada 5 loop; lima seed tersebut menghasilkan 4 urutan edge unik. Lima keberhasilan
+belum membuktikan optimalitas, stabilitas umum atau kelayakan lapangan.
+
+Checkpoint 21.50 tanpa penalti jarak tercatat 23/60 (A 3/B 16/C 4),13 loop dalam
+rentang 4.500–5.500 m. Setelah −5:22/60 dan 18 loop pada rentang tersebut. B horizon 300k
+naik 4/5→5/5, tetapi B dinamis 150k turun 4/5→0/5. Efeknya campuran; rerata galat
+subset berhasil perlu menyebut n dan tidak membuktikan perbaikan menyeluruh.
+Angka pembanding berasal dari audit checkpoint sesi sumber dan README Go;
+sinkronisasi ini tidak melatih ulang atau mengulang seluruh audit history/Q.
+
+Testing terakhir 22.21 WIB memakai titik `-7.281885, 112.711476`, start 311431485,
+snapshot/seed acak berbeda. Dua profil B 300k menghasilkan 6/10 valid: dinamis 1/5,
+horizon 5/5; total 3.000.000 episode. Jangan menggabungkannya dengan 60 run training
+atau mengaitkan selisih dari checkpoint testing lama hanya pada penalti jarak.
+
+### Kesiapan artefak dan pembahasan naskah
+
+- `analysis.json` training masih 9 November 16.58 WIB, highway.other −1/missing −0,5;
+  config terbaru −10/−2. CSV/peta analisis tersebut belum mencerminkan scoring baru.
+- `analysis/training/last_window_summary.csv` masih 21.03 WIB dan hanya B/C;
+  bukan ringkasan batch 22.18 yang memuat A/B/C.
+- `analysis/final-experiment-audit.json` masih 7 November. Audit lama tidak boleh
+  digunakan sebagai bukti batch baru atau diklaim mencakup penalti jarak.
+- Perbarui analyze dan notebook analisis **dari snapshot/hasil tersimpan** sebelum
+  mengutip tabel/grafik; tidak memerlukan training ulang. Sinkronisasi Markdown
+  ini tidak menjalankan keduanya atau mengubah artefak penelitian.
+- Draf TA masih memerlukan penyelarasan terhadap Go/Haversine/graf mentah,
+  25 bin, 20%, 500 langkah dan reward baru, seperti hasil tinjauan pada sesi sumber.
+  Naskah Word tidak diedit. Fokus Bab IV hasil/pembahasan; verifikasi/validasi
+  tetap ditunda sampai pengguna meminta.
+- Bandingkan A/B/C pada konfigurasi yang sama, bedakan history eksploratif dan
+  evaluasi greedy, serta nyatakan n untuk rerata rute berhasil. Episode sama
+  belum berarti jumlah langkah/pengalaman sama. Tidak ada keputusan menambah
+  episode khusus C, mengganti reward otomatis atau memasukkan Dijkstra.
+
+Rincian berikut menyimpan checkpoint historis; tidak menggantikan config dan
+hasil terbaru di atas.
+
+### Riwayat checkpoint 7 November dan audit awal 9 November
+
+Checkpoint historis7 November:12 profil/60 training/13.500.000 episode. Greedy31/60 valid.
+
+| Konfigurasi | A, dari5 | B, dari5 | C, dari5 |
+|---|---:|---:|---:|
+| Dinamis150k | 0 | 5 | 0 |
+| Dinamis300k | 1 | 5 | 3 |
+| Horizon100k, total150k | 0 | 3 | 4 |
+| Horizon100k, total300k | 0 | 5 | 5 |
+
+B dinamis150k kandidat awal katalog berdasarkan eksperimen ini:5/5 loop,
+galat rata-rata208,41m dan overlap2,23%. Kelayakan lapangan belum dibuktikan.
+Seluruh29 evaluasi gagal tanpa closing action legal:25 over_distance dan4 buntu.
+Tidak ada step_limit; maksimum langkah training pada audit tersimpan353.
+
+Episode sama membandingkan hasil pada jumlah percobaan yang ditetapkan, bukan
+kemampuan maksimum atau jumlah pengalaman yang pasti sama. Panjang episode
+berbeda; total langkah history dapat menjadi pelengkap analisis tanpa training
+baru. State lebih kaya dapat membutuhkan lebih banyak pengalaman, tetapi tidak
+ada keputusan menambah episode khusus C. Pengaruh horizon tidak seragam antarstate.
+Pisahkan keberhasilan episode training yang masih bereksplorasi dari evaluasi
+akhir greedy. Lima seed/satu start tidak membuktikan optimalitas atau generalisasi.
+Skor ruas adalah preferensi penelitian, bukan ukuran keamanan aktual.
+
+### Riwayat temuan akses node sebelum filter endpoint
+
+Pada versi ketika audit awal dilakukan, `internal/qlearning/action.go` hanya
+menyaring `edge.Access`; tag node belum diperiksa.
+`internal/osm/graph.go` menyalin atribut way ke edge dan mempertahankan tag node
+pada graf. Artinya ruas yang diizinkan dapat tetap melewati node gerbang dengan
+akses terlarang dalam snapshot.
+
+Pemeriksaan silang31 rute valid dengan `osm.json` pada9 November menemukan:
+semua31 rute melewati setidaknya satu node `access=no`; total19 node berbeda,
+berupa gate/sliding_gate/swing_gate, tanpa tag foot eksplisit pada node tersebut.
+Contoh B dinamis150k seed0, step3 menuju node9645488764: ruas residential,
+access=permissive, tetapi node tujuan barrier=gate/access=no. Koordinat node
+−7,2815751/112,708849. Node ini muncul pada20 rute valid.
+
+Ini bukti keterbatasan pemodelan akses saat ini, bukan bukti gerbang pasti tertutup
+sekarang atau penetapan status hukum lokasi. Jangan menyamakan keberhasilan loop
+pada graf dengan kelayakan lapangan. Usulan: bahas pembatasan eksplisit akses node
+terlebih dahulu; jangan melarang semua barrier tanpa membedakan jenis dan akses.
+Saat audit pagi tersebut belum ada perubahan mask/reward atau training ulang.
+Filter way dan kedua endpoint kemudian diterapkan pada9 November; hasil terbaru
+di atas sudah memakai `edge_and_endpoint_whitelist_v1`.
+Jika kebijakan diubah nanti, pertahankan hasil lama sebagai baseline dan hasil
+baru sebagai eksperimen terpisah, jangan mengedit metadata hasil lama.
+Rujukan tag: https://wiki.openstreetmap.org/wiki/Key:access dan
+https://wiki.openstreetmap.org/wiki/Key:barrier.
+
+Pengujian9 November: `go test -count=1 ./...` seluruh paket lulus setelah dijalankan
+dengan izin server HTTP localhost; percobaan sandbox awal terhambat bind port,
+bukan kegagalan logika. `go vet ./...` dan `go build -buildvcs=false ./...` lulus.
+Tidak mengubah kode Go, konfigurasi, snapshot, hasil training, atau naskah TA.
+
+## Riwayat implementasi Python — hingga 4 November 2026
+
+Bagian berikut dipertahankan sebagai arsip. Parameter dan hasilnya tidak menjadi
+acuan implementasi Go atau angka naskah terbaru.
 
 ## 1. Tujuan dan Status Implementasi
 
@@ -1899,3 +2093,26 @@ utama, core, notebook, graf, metadata dan hasil training tidak diubah.
 Tidak menjalankan training, mengunduh peta, atau mengubah dependency proyek.
 Kode aset dapat dijalankan ulang dengan uv melalui lingkungan proyek;
 runtime plot sementara untuk penyusunan berada di /private/tmp saja.
+
+
+## Notebook percobaan tanpa simplifikasi pada 4 November 2026
+
+Pengguna meminta salinan sementara analisa.ipynb untuk inspeksi graf dengan
+koordinat dan wilayah yang sama, tetapi simplify=False. Notebook tersedia di
+docs/temp/analisa_tanpa_simplify.ipynb. Graf dan semua HTML/PNG percobaan memakai
+docs/temp/analisa_tanpa_simplify_data/, terpisah dari snapshot utama. Core dan
+analisa.ipynb tidak diubah. Aturan analisis atribut/skor tetap memakai core.
+Notebook dapat mencari root proyek dari cwd kernel di dalam proyek; seluruh
+output lama dibersihkan. Peta ringkas menambahkan overlay maks.1.000 node sekitar
+start; cell akhir membaca graf utama hanya untuk perbandingan ringkas. Koordinat
+input tetap, tetapi node terdekat dapat berbeda karena graf lebih rapat. Cache
+HTTP OSM boleh digunakan; jika belum tersedia, OSMnx mengunduh. Data smoothness
+dari cache snapshot tetap diberi penanda cakupan. Percobaan bukan eksperimen
+training A–C dan tidak mengubah pilihan simplifikasi penelitian utama.
+
+Pemeriksaan notebook percobaan: seluruh 22 cell kode dijalankan dari cache OSM
+lokal dengan akses HTTP diblokir dan output diarahkan ke /private/tmp. Hasil
+tanpa simplifikasi: 24.150 node, 53.538 edge, EPSG:32749, node start9620836306.
+Seluruh peta/tabel/diagram berhasil dibuat. Hash core, analisa.ipynb, dan GraphML
+utama cocok sebelum/sesudah. Notebook yang diserahkan tetap tanpa output lama;
+pengguna menjalankannya sendiri. Tidak ada training atau unduhan jaringan baru.

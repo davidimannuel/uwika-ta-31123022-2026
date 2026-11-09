@@ -2,7 +2,45 @@
 
 Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detail teknis lengkap berada pada `IMPLEMENTASI.md`.
 
-## Status terakhir
+## Status terakhir — sinkronisasi chat “Jawab pertanyaan umum”, 9 November 2026
+
+- Pengembangan aktif di `/Users/david/development/go-running-route-q-learning`.
+  Repositori ini untuk naskah/aset/Markdown. DOCX utama tetap diedit pengguna.
+- Keputusan terbaru sudah dicocokkan dengan sumber Go, YAML, metadata dan CSV:
+  toleransi 20% (4.000–6.000 m),25 bin/240 m, 500 langkah, outward 0, return 1,20,
+  revisit −10, highway.other −10/missing −2/secondary +0,5. Graf mentah dua arah,
+  Haversine; access way dan kedua endpoint wajib kosong/yes/permissive.
+- Penalti `distance_error_penalty_per_100m=-5` **sudah diimplementasikan dan dilatih**.
+  Rumus −5×abs(jarak_akhir −5.000)/100, sekali pada semua terminasi; nonterminal 0,
+  termasuk buntu awal/setelah bergerak. Over_distance/mask closing tetap.
+  Nol/omitted menonaktifkan komponen; trace/popup/metadata mencatatnya terpisah.
+- Batch training 9 November 22.18 WIB:12 profil/60 run/13.500.000 episode,
+  **22/60 valid (A 2/20 B 15/20 C 5/20)**. Urutan dinamis 150k/300k dan
+  horizon 100k-total 150k/300k: A 0/1/0/1, B 0/5/5/5, C 0/1/2/2.
+  Gagal 31 over_distance/7 buntu. Parameter bersama konsisten antar 12 profil.
+- Start 311432306, input −7.281518/112.710178, seed 0–4, snapshot 26.345 node/
+  58.020 edge dengan hash `f0a5885db46c2f9cd962674aaeaa82f7d5c69579d5ba5d80641f727b6e20f964`.
+  alpha 0,15/gamma 0,95/5 worker tetap. Tiap profil/seed mulai dari Q kosong.
+- Dari 22 loop, 18 berada dalam 4.500–5.500 m. B horizon 300k 5/5, galat 161,29 m,
+  overlap 0,71% pada 5 loop dan 4 urutan edge unik. Checkpoint 21.50 sebelum penalti:
+  23/60 valid dan 13 loop pada rentang tersebut; B dinamis 150k turun 4/5→0/5.
+  Manfaat belum merata; jangan menyamakan keberhasilan toleransi 20% dengan 10%.
+- Testing 22.21 WIB: dua profil B 300k/10 run/3 juta episode, 6/10 valid
+  (dinamis 1/5, horizon 5/5). Snapshot/start/seed berbeda, bukan pembanding satu faktor.
+- Artefak turunan tertinggal: analysis.json 16.58 memakai scoring lama;
+  last_window_summary.csv 21.03 hanya B/C; final-experiment-audit.json 7 November.
+  Perbarui dari hasil tersimpan sebelum gambar/tabel Bab IV, tanpa training baru.
+- Rincian teknis/formula/perbandingan ada di bagian Go `IMPLEMENTASI.md`.
+  Hasil 31/60 pada 7 November sebelum filter node dan semua angka Python di bawah
+  adalah riwayat. Jangan membawa klaim akses/no pada checkpoint lama ke batch baru.
+- Sesi sumber melaporkan audit 16,5 juta history/70 evaluasi dan uji implementasi;
+  sinkronisasi ini mencocokkan kode/config/metadata/CSV dan keunikan rute B,
+  tidak mengulang seluruh audit history/Q atau menjalankan tes/training baru.
+- Pengguna masih mengevaluasi konfigurasi; batch terbaru belum otomatis final.
+  Prioritas berikutnya konsistensi Bab I–IV dan artefak; verifikasi/validasi
+  tetap ditunda. Tidak mengubah Python/Go/config/notebook/output/DOCX.
+
+## Riwayat status implementasi Python
 
 - Penalti aktif -10; MAX_WORKERS=3. A–C seluruh12 konfigurasi lengkap (60
   training/6.750.000 episode). Evaluasi greedy25/60 valid: A3, B11, C11.
@@ -1333,3 +1371,26 @@ utama, core, notebook, graf, metadata dan hasil training tidak diubah.
 Tidak menjalankan training, mengunduh peta, atau mengubah dependency proyek.
 Kode aset dapat dijalankan ulang dengan uv melalui lingkungan proyek;
 runtime plot sementara untuk penyusunan berada di /private/tmp saja.
+
+
+## Notebook percobaan tanpa simplifikasi pada 4 November 2026
+
+Pengguna meminta salinan sementara analisa.ipynb untuk inspeksi graf dengan
+koordinat dan wilayah yang sama, tetapi simplify=False. Notebook tersedia di
+docs/temp/analisa_tanpa_simplify.ipynb. Graf dan semua HTML/PNG percobaan memakai
+docs/temp/analisa_tanpa_simplify_data/, terpisah dari snapshot utama. Core dan
+analisa.ipynb tidak diubah. Aturan analisis atribut/skor tetap memakai core.
+Notebook dapat mencari root proyek dari cwd kernel di dalam proyek; seluruh
+output lama dibersihkan. Peta ringkas menambahkan overlay maks.1.000 node sekitar
+start; cell akhir membaca graf utama hanya untuk perbandingan ringkas. Koordinat
+input tetap, tetapi node terdekat dapat berbeda karena graf lebih rapat. Cache
+HTTP OSM boleh digunakan; jika belum tersedia, OSMnx mengunduh. Data smoothness
+dari cache snapshot tetap diberi penanda cakupan. Percobaan bukan eksperimen
+training A–C dan tidak mengubah pilihan simplifikasi penelitian utama.
+
+Pemeriksaan notebook percobaan: seluruh 22 cell kode dijalankan dari cache OSM
+lokal dengan akses HTTP diblokir dan output diarahkan ke /private/tmp. Hasil
+tanpa simplifikasi: 24.150 node, 53.538 edge, EPSG:32749, node start9620836306.
+Seluruh peta/tabel/diagram berhasil dibuat. Hash core, analisa.ipynb, dan GraphML
+utama cocok sebelum/sesudah. Notebook yang diserahkan tetap tanpa output lama;
+pengguna menjalankannya sendiri. Tidak ada training atau unduhan jaringan baru.

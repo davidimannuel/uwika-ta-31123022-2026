@@ -1,6 +1,36 @@
 # Konteks Agent Proyek TA Rute Lari
 
-Dokumen ini adalah orientasi singkat untuk agent yang bekerja di proyek ini. Sebelum mengubah kode, notebook, atau naskah, baca juga `IMPLEMENTASI.md` sebagai sumber teknis utama dan `LOG_KEMAJUAN.md` untuk status eksperimen terakhir.
+## Acuan aktif: Go — sinkronisasi 9 November 2026, batch 22.18 WIB
+
+Kode aktif berada di `/Users/david/development/go-running-route-q-learning`.
+Repositori ini untuk naskah, aset dan dokumentasi; Python di bawah adalah riwayat.
+Baca AGENTS/README Go sebelum perubahan. Sinkronkan Markdown yang sudah ada,
+tanpa dokumen tambahan. Naskah Word utama hanya diedit pengguna.
+
+Config terkini: loop 5.000 m dengan toleransi 20% (4.000–6.000 m), graf mentah dua
+arah/Haversine, 25 bin pada 0–6.000 m, 500 langkah, alpha 0,15/gamma 0,95, seed 0–4,
+150k/300k episode dan epsilon dinamis/horizon 100k. Outward 0, return 1,20,
+revisit −10; highway priority +1/secondary +0,5/other −10/missing −2, bobot H/S/W
+0,55/0,30/0,15. Access kosong/yes/permissive diperiksa pada way dan kedua
+endpoint; barrier saja tidak melarang. Start training 311432306, input
+−7.281518/112.710178. Jangan mengubah pilihan start/parameter pengguna otomatis.
+
+Penalti baru `distance_error_penalty_per_100m=-5`: koefisien dikali
+`abs(jarak_akhir - 5000)/100`, sekali pada seluruh terminasi; nonterminal 0.
+Over_distance dan mask closing tetap. Nol/omitted menonaktifkan komponen.
+Batch 22.18 WIB sudah memakai penalti ini: **22/60 valid (A 2 B 15 C 5)**,
+18 loop berada di 4.500–5.500 m. B horizon 300k 5/5, galat 161,29 m pada 5 loop.
+Checkpoint 21.50 tanpa penalti:23/60 dan 13 loop pada rentang tersebut. Hasil
+campuran, belum bukti perbaikan menyeluruh atau konfigurasi final disepakati.
+Hasil 31/60 tanggal 7 November dan aturan Python 10% adalah checkpoint historis.
+
+Rincian, batas interpretasi dan sumber ada pada bagian Go `IMPLEMENTASI.md`
+dan status atas `LOG_KEMAJUAN.md`. Artefak analisis masih lama: analysis.json
+9 November 16.58, ringkasan notebook 21.03 (B/C saja), audit 7 November. Perbarui
+dari hasil tersimpan sebelum dipakai untuk Bab IV; jangan otomatis training ulang.
+Fokus berikutnya penyelarasan Bab I–IV; verifikasi/validasi ditunda sesuai permintaan.
+Skor preferensi dan keberhasilan graf tidak membuktikan kelayakan lapangan.
+Aturan praktik kerja/naskah di bawah tetap berlaku; desain/hasil Python adalah arsip.
 
 ## Tujuan penelitian
 
@@ -9,15 +39,15 @@ Membangun dan mengevaluasi Q-Learning tabular untuk membentuk **rute lari loop 5
 Rute hanya valid bila:
 
 1. kembali ke node start; dan
-2. total jarak berada pada 4.500--5.500 meter.
+2. total jarak berada pada 4.000–6.000 meter untuk konfigurasi Go aktif (toleransi 20%; arsip sebelumnya 10%).
 
 Keberhasilan tersebut direpresentasikan oleh `is_loop=True`. Nama legacy comfort_score kini menyimpan gabungan reward dasar highway/surface/width tanpa pembatasan rentang. Ini preferensi penelitian, bukan persepsi pelari, keamanan aktual atau hasil survei.
 
-## Berkas utama
+## Berkas repositori naskah dan riwayat Python
 
 | Berkas | Peran |
 |---|---|
-| `rute_lari_core.py` | Satu-satunya core: data OSM, graf, comfort, environment, Q-Learning, metrik, grafik, dan peta. |
+| `rute_lari_core.py` | Core Python historis; core aktif berada di proyek Go. |
 | `analisa.ipynb` | Analisis snapshot OSM dan graf. |
 | `scenario_A.ipynb` | Eksperimen state A. |
 | `scenario_B.ipynb` | Eksperimen state B. |
@@ -33,7 +63,7 @@ Keberhasilan tersebut direpresentasikan oleh `is_loop=True`. Nama legacy comfort
 
 `training.ipynb` adalah versi lama; jangan dipakai untuk eksperimen baru.
 
-## Desain yang sudah disepakati
+## Riwayat desain Python (hingga 4 November 2026)
 
 - Graf: OSMnx `MultiDiGraph` terarah, terproyeksi meter (`EPSG:32749`).
 - Target: 5.000 m, toleransi 10%, area unduh bbox 3.025 m.
@@ -118,7 +148,7 @@ Keberhasilan tersebut direpresentasikan oleh `is_loop=True`. Nama legacy comfort
 
 ## Aturan eksperimen
 
-1. Jangan menduplikasi environment atau Q-Learning di notebook. Ubah aturan bersama hanya di `rute_lari_core.py`.
+1. Pada arsip Python, environment dan Q-Learning bersama berada di `rute_lari_core.py`. Pengembangan aktif memakai package Go; jangan mengubah Python untuk menyesuaikan eksperimen Go.
 2. Jangan mengubah reward, action mask, state, dan hyperparameter sekaligus bila hasil akan dibandingkan. Ubah satu faktor per eksperimen.
 3. Perbandingan A--C yang final wajib memakai jumlah episode, seed, graf, reward, dan action mask yang sama.
 4. Default `EPISODES=10_000` hanya untuk uji cepat. Notebook A--C memakai empat konfigurasi: dinamis 75k/150k serta horizon epsilon 50k pada training 75k/150k. Tidak ada training total 50k atau 100k pada notebook aktif. Notebook aktif kini memakai `RESULT_GROUP="reward_missing_05_20261103"`;
