@@ -1,5 +1,14 @@
 # Konteks Agent Proyek TA Rute Lari
 
+Pembaruan presentasi Go 11 November: `export.map_mode` standard untuk testing,
+advanced untuk training (default advanced). Command `cli export --workdir ...`
+meregenerasi `output/site/` dari HTML/metadata tersimpan; tidak training atau
+mengubah hasil sumber. Standard menyertakan fitur/graf lengkap tanpa inspeksi
+Q-values; advanced Q memakai hasil asli dan server lokal. Navigasi seed memiliki
+tombol kiri/kanan, nilai uint64 utuh dan sumber seed dari metadata. Pengguna akan
+generate sendiri; belum ada ekspor ulang hasil nyata atau deployment. Detail
+dan command ada pada README Go/IMPLEMENTASI; angka penelitian tetap.
+
 ## Acuan aktif: Go — sinkronisasi 9 November 2026, batch 22.18 WIB
 
 Kode aktif berada di `/Users/david/development/go-running-route-q-learning`.

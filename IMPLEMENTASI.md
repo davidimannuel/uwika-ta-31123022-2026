@@ -4,6 +4,33 @@ Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acua
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
+## Ekspor katalog HTML Go — 11 November 2026
+
+`export.map_mode` mengatur presentasi: testing memakai `standard`, training
+`advanced`; bila dihilangkan, default advanced. Standard mempertahankan graf,
+seluruh seed/metrik, layer comfort/access/node, popup atribut/reward, per-KM,
+arah dan overlap; hanya inspeksi Q-values yang tidak disertakan. Advanced memakai
+endpoint Q lokal. Leaflet/CDN dan tile OSM tetap eksternal; seluruh graf tertanam
+sehingga mode standard belum mengurangi ukuran HTML secara berarti.
+
+Command baru `go run ./cmd/cli export --workdir workdirs/testing` (atau training)
+membentuk `<output_dir>/site/` dari payload HTML serta metadata tersimpan, tanpa
+training, unduhan, atau perubahan artefak sumber. Parameter training YAML saat
+ekspor tidak dipakai menghitung ulang skor/rute. Indeks, pencarian/filter,
+halaman metadata lengkap dan tautan berbagi memakai berkas statis/tautan relatif.
+`export.json` merekam mode, tanggal ekspor/hasil dan hash HTML sumber. Analisis
+lama tetap memakai skor/tanggal lamanya. `--profile <nama>` membatasi paket ke
+satu profil; setiap ekspor mengganti seluruh site secara bertahap dan kegagalan
+mempertahankan paket sebelumnya. CSV/Q-table/YAML/snapshot tidak disalin.
+
+Navigasi seed memakai tombol kiri/kanan, nomor run, seed uint64 lengkap sebagai
+teks dan penjelasan sumber tetap/acak dari metadata. Tautan profil/seed tersimpan
+di URL; representative tetap memakai pemeringkatan semula. Advanced site membaca
+Q dari hasil asli melalui CLI server, bukan Q-table yang dipublikasikan.
+Pengujian memakai fixture sintetis dan browser; tes Go, vet, build lulus. Hasil
+pengguna belum diekspor ulang, diunggah atau dilatih ulang. Ini fasilitas
+publikasi/inspeksi, belum keputusan seleksi katalog atau validasi lapangan.
+
 ## Acuan implementasi Go — sinkronisasi 9 November 2026
 
 ### Lokasi, sumber dan status

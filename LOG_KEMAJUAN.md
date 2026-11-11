@@ -2,6 +2,24 @@
 
 Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detail teknis lengkap berada pada `IMPLEMENTASI.md`.
 
+## Pembaruan presentasi Go — 11 November 2026
+
+- Config ekspor baru: `export.map_mode`, testing standard/training advanced,
+  default advanced. Standard mempertahankan seluruh data/fitur peta tertanam
+  tanpa kode inspeksi Q-values; advanced tetap memakai server Q lokal.
+- `cli export --workdir ... [--profile ...]` membuat `output/site/` dari HTML
+  dan metadata hasil tersimpan. Indeks/filter/detail/tautan seed statis; manifest
+  `export.json` mencatat hash dan asal hasil. Tidak menyalin Q/CSV atau memakai
+  parameter training terbaru untuk mengubah hasil lama. Site diganti sebagai
+  satu paket; hasil sumber dipertahankan. Root server advanced harus mencakup
+  site dan hasil asli. Command/cara membuka katalog ada di README proyek Go.
+- Seed memiliki tombol kiri/kanan, nomor run, nilai utuh, sumber tetap/acak,
+  penjelasan representative dan tautan spesifik. Uji Go/vet/build dan browser
+  pada fixture lulus. Pengguna akan generate sendiri; belum mengubah output
+  penelitian, training, notebook, DOCX, atau melakukan deployment/commit.
+- Hasil ilmiah tetap 22/60; katalog terpublikasi dan validasi lapangan belum
+  dilaksanakan. Leaflet/tile tetap perlu internet; graf penuh tetap disertakan.
+
 ## Status terakhir — sinkronisasi chat “Jawab pertanyaan umum”, 9 November 2026
 
 - Pengembangan aktif di `/Users/david/development/go-running-route-q-learning`.
