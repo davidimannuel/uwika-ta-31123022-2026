@@ -4,6 +4,103 @@ Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acua
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
+## Checkpoint katalog dan CLI Go — 12 November 2026
+
+Cakupan checkpoint: workflow run (download → analyze → train), katalog
+add/rm/clear, situs statis/Pages, panel rute/analisis Minimize/Show details, serta
+README/AGENTS/bantuan CLI. Go test/race CLI/vet/build lulus pada kode checkpoint.
+Tidak mengubah core RL atau menjalankan unduhan/training penelitian.
+
+Status lokal terbaru: setelah clear, pengguna menambahkan kembali rute
+`depan-gang-sebelah-toko9`, profil b-horizon-100000-total-300000,
+seed12226258565145578727, jarak5337,56m dari metadata tersimpan. web-catalog berisi
+satu rute standard lengkap; bukan katalog kosong lagi. field_validation masih
+not_recorded. Rute pilihan adalah contoh pemanfaatan terpisah dari60evaluasi
+penelitian; tidak mengganti angka Bab IV. Situs/workflow disertakan pada checkpoint
+Go, tanpa push/deployment. Perubahan koordinat testing, output notebook dan revisi
+naskah/aset sesi lain tetap dipisahkan dari commit pekerjaan CLI/katalog ini.
+
+## Command gabungan download, analyze, train — 12 November 2026
+
+Pada repo Go, jalankan `go run ./cmd/cli run --workdir workdirs/testing` atau
+`--workdir workdirs/training` dari root repo Go. Untuk satu profil tambahkan
+`--profile b-horizon-100000-total-300000`. Download selalu dijalankan untuk
+menyiapkan osm.json berdasarkan koordinat/radius config sekarang; cache memakai
+query yang sesuai. `--force` meminta data baru ke Overpass, `--debug` menambah log.
+Tidak ada opsi snapshot pada command gabungan. Config dan profil divalidasi dahulu.
+
+Urutan download → analyze → train berhenti pada kegagalan/pembatalan pertama.
+Hasil tahap sebelumnya tetap tersimpan; bukan transaksi seluruh output. Profil
+lain yang tidak dipilih tetap ada sesuai aturan train. Gunakan output_dir berbeda
+untuk mempertahankan percobaan sebelumnya, periksa metadata ketika lokasi berubah,
+dan jangan mengedit config saat proses berjalan. Notebook, export dan catalog
+tetap command/alur terpisah. Tidak ada parameter RL atau data penelitian diubah
+untuk fitur ini; pengujian memakai snapshot sintetis dan fetcher lokal.
+
+## Penambahan rute pilihan ke web-catalog — 12 November 2026
+
+Penghapusan SATU rute: `go run ./cmd/cli catalog rm <id>`. Folder lain memakai
+`catalog rm --dir <folder> <id>`; flag mendahului ID. Tanpa workdir/seed/prompt
+tambahan. Folder rute pilihan dibuang di staging, entri manifest dihapus dan
+indeks diperbarui bersama. Rute lain serta hasil sumber tetap utuh; rute terakhir
+menyisakan katalog kosong. ID tidak ditemukan tidak mengubah katalog. Memakai
+validasi folder dan lock yang sama dengan add/clear. Clear tetap untuk reset
+SELURUH katalog atau memulihkan struktur yang terhapus sebagian. Tes lokal
+memakai fixture; tidak menghapus rute nyata pada penambahan command rm ini.
+
+Untuk mengosongkan seluruh katalog: `go run ./cmd/cli catalog clear` dari root
+repo Go, opsional `--dir <folder>`/`--debug`. Tidak memerlukan workdir atau seed.
+Command langsung menghapus seluruh pilihan, membuat ulang index.html, manifest
+routes=[] standard, .nojekyll dan routes/ kosong. Memulihkan katalog yang manifest
+atau map-nya terhapus sebagian. Folder di luar struktur katalog/symlink ditolak;
+lock sama dengan add, indeks kosong dibuat di staging sebelum publikasi lokal.
+Hasil download/analisis/training tetap. User meminta reset dan sudah dijalankan
+12November; katalog lokal kini kosong, belum push/deployment. Setelah itu add
+dapat dipakai lagi. Hindari menghapus folder rute/manifest secara manual.
+
+Command Go `catalog add --workdir <folder> --profile <nama> --seed <seed>`
+meminta **Route ID** dan **Route description**, tanpa nama/koordinat/config
+katalog khusus. Workdir sekarang hanya menentukan output_dir; graf, lokasi,
+reward, rute dan konfigurasi training dibaca dari HTML/metadata hasil tersimpan.
+Seed harus ada dan berhasil membentuk loop sesuai batas jarak metadata. Identitas
+skenario/seed/graf/start, metrik evaluasi dan kontinuitas/jarak loop diperiksa
+sebelum publikasi lokal; ini bukan pengujian kelayakan lapangan.
+
+Alur pemakaian: ubah koordinat config → jalankan cli run → periksa peta/metrik
+dan pilih seed → catalog add → periksa katalog → commit/push untuk publikasi.
+Catalog add hanya membuat ulang presentasi seed pilihan dari hasil tersimpan;
+tidak menjalankan download, analyze atau train, dan tidak membutuhkan cli export
+terlebih dahulu. Tambahkan rute pilihan sebelum hasil sumber ditimpa percobaan
+lokasi berikutnya. Command add sendiri tidak melakukan commit/push/deployment.
+
+Pembaruan tampilan12November: panel rute/analisis mempunyai Minimize/Show details.
+Layar kecil/landscape pendek mulai ringkas, saat terbuka maksimal55%tinggi
+viewport dan dapat digulir. Kontrol tetap terpasang sehingga seed/KM/layer tidak
+reset; padding fit/popup mengikuti ukuran panel. Menu layer rute ringkas pada HP,
+zoom di kiri bawah, tinggi map mengikuti viewport dinamis. Browser diuji pada
+320/390portrait,844landscape dan1280desktop tanpa overflow horizontal atau error
+console. Go test/vet/build lulus. HTML hasil nyata belum diregenerasi; pratinjau
+menggunakan salinan rute katalog di /tmp, tanpa perubahan hasil/metadata/training.
+
+Keluaran `web-catalog/`: index.html, catalog.json, .nojekyll dan
+routes/<id>/{index.html,details.html,metadata.json}. Selalu mode standard,
+walaupun sumber advanced. Satu seed pilihan, graf/layer/atribut/reward lengkap,
+tanpa Q-values/request backend. Metadata sumber tetap dan ditambah identitas
+katalog, mode, tanggal, status field_validation=not_recorded serta hash HTML.
+Tabel detail hanya menampilkan seed pilihan; batch asal tetap dalam JSON lengkap.
+ID lama meminta input lain. Penambahan menyalin katalog lama ke staging,
+memperbarui indeks dan menerbitkan seluruh paket; lock mencegah penulisan ganda.
+Tidak menyalin snapshot/CSV/Q atau mengubah hasil asli.
+
+Workflow .github/workflows/catalog-pages.yml pada repo Go mengunggah hanya
+web-catalog ke GitHub Pages setelah push main/perubahan folder terkait atau
+dispatch manual. Pengguna perlu memilih Pages source=GitHub Actions. Tautan
+relatif mendukung subfolder repositori; Leaflet dan tile OSM dimuat HTTPS di
+browser, attribution/referrer dipertahankan. Katalog awal kosong dan belum
+di-commit/push/deploy. Uji sintetis Go/race/vet/build lulus; preview browser
+berhasil pada subfolder tanpa backend Go. Tidak menjalankan training/unduhan
+atau menambahkan hasil nyata ke katalog secara otomatis. Dokumen TA tetap.
+
 ## Ekspor katalog HTML Go — 11 November 2026
 
 `export.map_mode` mengatur presentasi: testing memakai `standard`, training

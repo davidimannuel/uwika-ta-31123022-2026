@@ -2,6 +2,76 @@
 
 Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detail teknis lengkap berada pada `IMPLEMENTASI.md`.
 
+## Checkpoint CLI/katalog — 12 November 2026
+
+- Sinkronisasi command run, catalog add/rm/clear, Pages dan panel responsif selesai.
+  Go test/race CLI/vet/build lulus; tidak ada training/unduhan penelitian baru.
+- Katalog kini satu rute setelah pengguna menambah kembali hasil: ID
+  depan-gang-sebelah-toko9, seed12226258565145578727, B horizon100k-total300k,
+  5337,56m; field_validation=not_recorded. Status kosong di bawah adalah riwayat.
+- Checkpoint Go mencakup kode, dokumentasi, workflow dan situs katalog. Perubahan
+  testing config/output notebook dipisahkan. Checkpoint naskah hanya catatan
+  CLI/katalog sesi ini; revisi bab/aset/DOCX sesi lain tetap tidak distage.
+- Belum push/deployment; pilihan katalog tidak mengganti sampel eksperimen60run.
+
+## Reset katalog Go — 12 November 2026
+
+- Ditambahkan `catalog rm [--dir ...] [--debug] <id>` untuk satu rute. Indeks
+  dan manifest diperbarui; rute lain/hasil sumber tetap. Clear untuk seluruhnya.
+  ID tidak ada gagal tanpa perubahan, menghapus rute terakhir menghasilkan situs
+  kosong. Tes fixture juga memeriksa pembatalan dan lock; tidak menjalankan rm
+  pada rute pengguna. README/AGENTS/bantuan CLI/Markdown disinkronkan.
+- Ditambahkan `catalog clear [--dir web-catalog] [--debug]`, tanpa workdir/seed.
+  Menghapus seluruh rute pilihan dan membuat ulang katalog kosong; menerima
+  manifest hilang/rusak atau file map terhapus sebagian. Tolak data di luar
+  struktur katalog dan symlink; lock bersama add, publikasi melalui staging.
+- Sudah dijalankan atas permintaan pengguna: web-catalog kini kosong kembali,
+  index/catalog.json/.nojekyll/routes siap untuk catalog add berikutnya.
+- Download, analisis, hasil training, config dan DOCX tetap. Tidak commit/push.
+  README/AGENTS Go dan Markdown naskah disinkronkan.
+
+## Command gabungan Go — 12 November 2026
+
+- Ditambahkan `cli run --workdir ...`: download → analyze → train, berurutan;
+  opsi profile/force/debug. Menggunakan command lama, tanpa perubahan core RL.
+- Config/profil diperiksa sebelum download; snapshot disiapkan untuk query
+  sekarang melalui cache atau Overpass. Gagal/batal menghentikan tahap lanjutan;
+  output tahap yang selesai tetap ada, profil lain tidak dihapus.
+- README/AGENTS/bantuan CLI disinkronkan. Tes lokal mencakup perubahan koordinat,
+  hash snapshot konsisten, cache/force, profil, kegagalan dan pembatalan.
+- Tidak menjalankan unduhan/training penelitian, mengubah config pengguna,
+  meregenerasi hasil, mengubah DOCX, commit atau push.
+
+## Panel peta responsif Go — 12 November 2026
+
+- Template peta rute/analisis: Minimize/Show details; HP/landscape pendek mulai
+  ringkas. Panel terbuka dapat digulir maksimal55dvh; seed/KM/layer tetap.
+- Menu layer rute ringkas pada layar kecil, zoom kiri bawah; padding fit/popup
+  mengikuti panel. Tampilan diuji320/390portrait,844landscape,1280desktop.
+- Go test/vet/build lulus. Hasil asli, config, metadata, notebook dan DOCX tetap;
+  belum generate ulang HTML pengguna. Preview salinan rute katalog hanya di/tmp.
+- Pengguna kini sudah menambahkan satu rute katalog lokal; belum memeriksa
+  deployment. Tidak commit/push.
+
+## Katalog rute Go — 12 November 2026
+
+- `catalog add --workdir ... --profile ... --seed ...`: prompt ID/deskripsi,
+  satu seed loop valid dari hasil dan metadata tersimpan. Tidak memakai config
+  training terbaru untuk membentuk ulang rute dan tidak perlu input lat/long.
+- Workflow diperjelas: ubah koordinat → run → periksa/pilih seed → catalog add
+  → periksa katalog → commit/push. Add membuat presentasi dari hasil tersimpan,
+  tanpa download/analyze/train ulang atau prasyarat export. Simpan pilihan ke
+  katalog sebelum hasil sumber ditimpa percobaan lokasi berikutnya.
+- Folder publik web-catalog selalu standard, lengkap dengan graf/fitur peta,
+  tanpa Q-values. Index/pencarian/detail/share statis; metadata katalog terpisah
+  dari konfigurasi sumber. ID unik, rute lama dipertahankan, publikasi lokal
+  bertahap dan lock untuk command paralel. Ctrl+C membatalkan prompt.
+- Workflow GitHub Pages siap pada repo Go; belum commit/push/deploy. Situs
+  proyek masih kosong. User memilih seed dan menjalankan add sendiri; browser
+  diuji dengan dua entri sintetis terpisah di /tmp, termasuk subfolder URL.
+- Go test/race/vet/build lulus. Tidak mengubah kode RL, config training, hasil
+  penelitian, notebook, aset bab atau DOCX. README/AGENTS Go sudah diperbarui.
+
 ## Pembaruan presentasi Go — 11 November 2026
 
 - Config ekspor baru: `export.map_mode`, testing standard/training advanced,

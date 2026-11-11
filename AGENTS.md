@@ -1,5 +1,63 @@
 # Konteks Agent Proyek TA Rute Lari
 
+## Checkpoint CLI dan katalog Go — 12 November 2026
+
+Command run, catalog add/rm/clear dan panel peta responsif sudah diimplementasikan.
+Setelah reset, pengguna menambahkan kembali satu rute lokal:
+`depan-gang-sebelah-toko9`, seed12226258565145578727, profil
+b-horizon-100000-total-300000, jarak tersimpan5337,56m. Angka ini contoh katalog,
+bukan pengganti hasil eksperimen60run. field_validation=not_recorded.
+Katalog saat checkpoint sudah berisi satu rute, menggantikan status kosong di
+catatan reset. Situs dan workflow siap dicatat Git; belum push/deployment.
+Go test/race CLI/vet/build lulus. Perubahan parameter testing dan output notebook
+pengguna dipisahkan; revisi bab/aset/DOCX sesi lain tidak masuk checkpoint ini.
+
+## Command gabungan Go — 12 November 2026
+
+`cli run --workdir ... [--profile ...] [--force] [--debug]` menyiapkan snapshot
+sesuai query config, lalu analyze dan train berurutan. Cache tetap dipakai kecuali
+force; config/profil diperiksa sebelum download. Gagal/batal menghentikan tahap
+berikutnya, hasil tahap sebelumnya tetap tersimpan. Tidak menjalankan notebook,
+export atau catalog. Implementasi diuji dengan fixture, tanpa unduh/training
+penelitian atau perubahan parameter/hasil/DOCX. Command lengkap di README Go.
+
+Panel HTML rute/analisis sudah mendukung Minimize/Show details; HP/landscape
+pendek mulai ringkas, isi dapat digulir maksimal55dvh. Pilihan seed/KM/layer
+tetap tersimpan. Menu layer rute ringkas dan zoom di kiri bawah pada layar kecil.
+Diuji browser320/390portrait,844landscape,1280desktop; Go test/vet/build lulus.
+Hanya template diperbarui; HTML hasil lama belum diregenerasi, tanpa training.
+Pratinjau terpisah di /tmp. Pengguna sudah menambahkan satu rute katalog lokal;
+status deployment belum diperiksa.
+
+## Katalog Go — 12 November 2026
+
+`cli catalog rm [--dir web-catalog] [--debug] <id>` menghapus SATU rute pilihan
+dan memperbarui indeks/manifest; flag sebelum ID. Rute lain/hasil training tetap.
+Tanpa prompt tambahan; ID tidak ditemukan gagal tanpa perubahan. Lock/staging
+sama dengan add/clear. Tes fixture meliputi rute lain tetap, sumber utuh, rute
+terakhir, input invalid, pembatalan dan lock. Tidak menjalankan rm pada rute nyata.
+
+`cli catalog clear [--dir web-catalog] [--debug]` sudah tersedia dan dijalankan
+atas permintaan pengguna; katalog lokal kini kosong kembali. Membuat ulang
+index/catalog.json/.nojekyll/routes walau berkas terhapus sebagian. Semua pilihan
+katalog dihapus tanpa prompt tambahan; download/analisis/training tetap. Lock
+bersama add, staging sebelum penggantian, tolak symlink/file di luar struktur
+katalog. Jangan hapus isi katalog manual. Reset lokal belum commit/push/deploy.
+
+`cli catalog add --workdir ... --profile ... --seed ...` sudah diimplementasikan;
+prompt hanya ID dan deskripsi. Memakai hasil/metadata tersimpan, satu seed loop
+valid, tanpa training/unduhan/config katalog khusus. `web-catalog/` selalu mode
+standard lengkap tanpa Q-values, menambah rute tanpa menimpa ID lama. Workflow
+GitHub Pages disiapkan tetapi belum dipublikasikan. Saat implementasi awal katalog kosong;
+pengguna kemudian menambahkan satu rute lokal. Contoh awal memakai fixture
+sintetis di /tmp. Pengguna memilih seed sendiri.
+Alur katalog: ubah koordinat config → cli run → periksa hasil/pilih seed →
+catalog add → periksa katalog → commit/push untuk publikasi. Catalog add hanya
+membuat HTML/detail/metadata dari hasil tersimpan, tanpa download/analyze/train
+ulang dan tanpa perlu cli export dahulu. Tambahkan seed sebelum hasil sumber
+ditimpa percobaan berikutnya. Config/hasil ilmiah/DOCX tidak berubah; rincian
+command ada pada README Go.
+
 Pembaruan presentasi Go 11 November: `export.map_mode` standard untuk testing,
 advanced untuk training (default advanced). Command `cli export --workdir ...`
 meregenerasi `output/site/` dari HTML/metadata tersimpan; tidak training atau
