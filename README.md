@@ -2,12 +2,17 @@
 
 ## Acuan aktif: implementasi Go
 
+**Katalog publik:** [Katalog rute lari](https://davidimannuel.github.io/go-running-route-q-learning/).
+GitHub Pages sudah aktif, menampilkan rute hasil training Go yang dipilih dan
+disimpan sebelumnya. Tidak ada training saat pengunjung membuka situs.
+Publikasi katalog tidak membuktikan rute telah diperiksa di lapangan.
+
 Kode dan hasil penelitian terbaru berada di
 [go-running-route-q-learning](/Users/david/development/go-running-route-q-learning/README.md).
 Repositori ini menyimpan naskah, aset dan dokumentasi; Python/Jupyter di sini
 merupakan riwayat. Notebook analisis Go berada di proyek Go dan membaca CSV hasilnya.
 
-Status 9 November 2026: target 5.000 m dengan toleransi 20% (4.000–6.000 m), graf
+Acuan hasil draf memakai metadata 11 November dengan parameter 9 November 2026: target 5.000 m dengan toleransi 20% (4.000–6.000 m), graf
 mentah/Haversine, 25 bin, 500 langkah, akses way dan endpoint, serta penalti galat
 jarak akhir −5/100 m. Penalti dihitung sekali saat terminasi; nilai 0 menonaktifkan.
 Batch 22.18 WIB menghasilkan 22/60 loop valid (A 2 B 15 C 5). Konfigurasi masih dalam
@@ -30,10 +35,11 @@ uv run --locked jupyter lab
 go run ./cmd/cli serve --dir workdirs --port 8080
 ```
 
-Analisis turunan belum mengikuti batch terbaru: analysis.json masih 16.58 WIB,
-ringkasan training 21.03 hanya B/C, audit final 7 November. Sinkronisasi Markdown
-ini belum meregenerasinya. Training tetap dijalankan hanya ketika pengguna
-meminta, dan hasil pada output yang sama dapat ditimpa.
+Sebelum memakai grafik/tabel untuk naskah, cocokkan tanggal dan parameter artefak
+analisis dengan metadata batch yang dipilih. Peringatan analysis.json16.58,
+ringkasan21.03 B/C dan audit7November pada catatan lama adalah hasil pemeriksaan
+saat itu; bukan jaminan status file sekarang. Pembaruan tautan ini tidak
+meregenerasi analisis/training. Hasil pada output yang sama dapat ditimpa.
 
 ## Lingkungan Python historis
 
@@ -171,7 +177,8 @@ tersimpan pada reward_revisit_5_overlap_count_20261103 sebagai pembanding.
 Muat ulang notebook dari disk, restart kernel, lalu jalankan cell muat graf
 agar core, RESULT_GROUP dan MAX_WORKERS diperbarui.
 Hasil lengkap sebelumnya reward_direct_20261103 (60 training) tetap arsip.
-Lihat [analisis terbaru](docs/temp/analisis_reward_direct_20261103/ANALISIS.md).
+Path laporan historis: `docs/temp/analisis_reward_direct_20261103/ANALISIS.md`
+(berkas tidak tersedia pada checkout12November; bukan laporan Go aktif).
 Hasil selesai sebelumnya tetap pada surface_width_3m_20261102;
 ubah RESULT_GROUP ke arsip hanya untuk membaca hasilnya, bukan menimpa dengan training baru.
 Agent hanya memeriksa artefak dan mengulang evaluasi greedy dari Q-table;
@@ -223,9 +230,10 @@ percepatan linear. Menjalankan ulang cell bukan melanjutkan training sebelumnya.
   reward_direct_20261103 memakai penalti revisit -1 dan belum mencatat overlap
   per episode. Arsip surface_width_3m_20261102 memakai reward/skala sebelumnya.
   Keduanya tetap dapat dibaca tanpa training.
-- [Analisis terbaru](docs/temp/analisis_reward_direct_20261103/ANALISIS.md),
-  [analisis arsip](docs/temp/analisis_surface_width_3m_20261102/ANALISIS.md),
-  [rencana validasi/katalog](docs/VERIFIKASI_VALIDASI_DAN_KATALOG.md).
+- Catatan laporan Python historis: `docs/temp/analisis_reward_direct_20261103/ANALISIS.md`
+  dan `docs/temp/analisis_surface_width_3m_20261102/ANALISIS.md`. Kedua berkas
+  tidak tersedia pada checkout saat pemeriksaan12November; bukan tautan hasil Go
+  terbaru. [Kesepakatan verifikasi/validasi dan status katalog](docs/VERIFIKASI_VALIDASI_DAN_KATALOG.md).
 
 ## Menguji titik start lain
 

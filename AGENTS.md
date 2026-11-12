@@ -1,6 +1,41 @@
 # Konteks Agent Proyek TA Rute Lari
 
-## Checkpoint CLI dan katalog Go — 12 November 2026
+## Kandidat validasi lapangan — 12 November 2026
+
+Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
+B horizon100k-total300k. Katalog Go lokal: depan-gang-sebelah-toko9
+(seed13916397716709765191,5151,87m), depan-indomaret-dkb
+(seed16261264761017114444,5298,84m), depan-uwika
+(seed9988407548480542851,5527,50m). Ketiganya masih field_validation=not_recorded;
+ini kandidat untuk diperiksa, bukan hasil validasi atau pengganti60run eksperimen.
+Catat rekaman lintasan/loop, jarak GPS vs graf, akses/hambatan dan penyimpangan;
+temuan gagal tetap dilaporkan. Hasil terbatas pada tiga rute/kondisi pemeriksaan.
+Config testing kini hanya B horizon100k-total300k dengan lima seed acak. Katalog
+menyimpan config/metadata sumber sehingga tidak berubah saat testing titik lain.
+Katalog lokal tiga rute belum berarti versi publik sudah diperbarui; perlu push
+serta deployment. Checkpoint Go:3af6b27; tes/vet/build dan integritas tiga rute
+lulus. Naskah/DOCX utama dan revisi bab sesi lain tidak diubah.
+
+## Ekspor HTML langsung — 12 November 2026
+
+`cli export --workdir ... [--profile ...]` kini memperbarui HTML asli, bukan
+membuat output/site. Tanpa profile: analisis dan seluruh profil tersimpan;
+dengan profile: hanya peta/report profil terpilih. CSV/Q/metadata/config tetap,
+tanpa training/unduhan. Navigasi memakai indeks CLI serve; advanced Q di lokasi
+hasil yang sama. Manifest pembaruan output/export.json schema2. Site lama
+terverifikasi dibersihkan; file tambahan/symlink/manifest tidak cocok ditolak.
+web-catalog dan deployment terpisah. Rincian command pada README Go.
+
+## Katalog publik aktif — 12 November 2026
+
+[Katalog rute lari](https://davidimannuel.github.io/go-running-route-q-learning/) sudah dapat dibuka; indeks publik
+menampilkan satu rute, depan-gang-sebelah-toko9, dari hasil training tersimpan.
+Source Pages=GitHub Actions; push perubahan web-catalog pada main memicu deploy.
+Command add/rm/clear hanya lokal sampai perubahan di-commit/push. field_validation
+tetap not_recorded; bukan bukti validasi lapangan atau hasil eksperimen baru.
+Catatan belum deploy/katalog kosong di bawah adalah riwayat sebelum publikasi.
+
+## Riwayat checkpoint CLI dan katalog Go — 12 November 2026
 
 Command run, catalog add/rm/clear dan panel peta responsif sudah diimplementasikan.
 Setelah reset, pengguna menambahkan kembali satu rute lokal:
@@ -8,7 +43,8 @@ Setelah reset, pengguna menambahkan kembali satu rute lokal:
 b-horizon-100000-total-300000, jarak tersimpan5337,56m. Angka ini contoh katalog,
 bukan pengganti hasil eksperimen60run. field_validation=not_recorded.
 Katalog saat checkpoint sudah berisi satu rute, menggantikan status kosong di
-catatan reset. Situs dan workflow siap dicatat Git; belum push/deployment.
+catatan reset. Checkpoint tercatat pada Go ee2ddb9 dan dokumentasi6768c16;
+pengguna kemudian push dan berhasil deployment pada URL publik di atas.
 Go test/race CLI/vet/build lulus. Perubahan parameter testing dan output notebook
 pengguna dipisahkan; revisi bab/aset/DOCX sesi lain tidak masuk checkpoint ini.
 
@@ -26,8 +62,8 @@ pendek mulai ringkas, isi dapat digulir maksimal55dvh. Pilihan seed/KM/layer
 tetap tersimpan. Menu layer rute ringkas dan zoom di kiri bawah pada layar kecil.
 Diuji browser320/390portrait,844landscape,1280desktop; Go test/vet/build lulus.
 Hanya template diperbarui; HTML hasil lama belum diregenerasi, tanpa training.
-Pratinjau terpisah di /tmp. Pengguna sudah menambahkan satu rute katalog lokal;
-status deployment belum diperiksa.
+Pratinjau awal terpisah di /tmp. Pengguna kemudian menambahkan satu rute
+katalog dan memublikasikannya; indeks publik telah diperiksa12November.
 
 ## Katalog Go — 12 November 2026
 
@@ -38,17 +74,19 @@ sama dengan add/clear. Tes fixture meliputi rute lain tetap, sumber utuh, rute
 terakhir, input invalid, pembatalan dan lock. Tidak menjalankan rm pada rute nyata.
 
 `cli catalog clear [--dir web-catalog] [--debug]` sudah tersedia dan dijalankan
-atas permintaan pengguna; katalog lokal kini kosong kembali. Membuat ulang
+atas permintaan pengguna; saat reset katalog dikosongkan sebelum diisi kembali.
+Membuat ulang
 index/catalog.json/.nojekyll/routes walau berkas terhapus sebagian. Semua pilihan
 katalog dihapus tanpa prompt tambahan; download/analisis/training tetap. Lock
 bersama add, staging sebelum penggantian, tolak symlink/file di luar struktur
-katalog. Jangan hapus isi katalog manual. Reset lokal belum commit/push/deploy.
+katalog. Jangan hapus isi katalog manual. Reset bersifat lokal; status publik
+terbaru ada di bagian atas, bukan status kosong pada riwayat reset.
 
 `cli catalog add --workdir ... --profile ... --seed ...` sudah diimplementasikan;
 prompt hanya ID dan deskripsi. Memakai hasil/metadata tersimpan, satu seed loop
 valid, tanpa training/unduhan/config katalog khusus. `web-catalog/` selalu mode
 standard lengkap tanpa Q-values, menambah rute tanpa menimpa ID lama. Workflow
-GitHub Pages disiapkan tetapi belum dipublikasikan. Saat implementasi awal katalog kosong;
+GitHub Pages sudah dipublikasikan pada URL di atas. Saat implementasi awal katalog kosong;
 pengguna kemudian menambahkan satu rute lokal. Contoh awal memakai fixture
 sintetis di /tmp. Pengguna memilih seed sendiri.
 Alur katalog: ubah koordinat config → cli run → periksa hasil/pilih seed →
@@ -60,11 +98,12 @@ command ada pada README Go.
 
 Pembaruan presentasi Go 11 November: `export.map_mode` standard untuk testing,
 advanced untuk training (default advanced). Command `cli export --workdir ...`
-meregenerasi `output/site/` dari HTML/metadata tersimpan; tidak training atau
-mengubah hasil sumber. Standard menyertakan fitur/graf lengkap tanpa inspeksi
+awalnya membuat `output/site/`; sejak 12 November memperbarui HTML asli dari
+HTML/metadata tersimpan, tanpa training atau perubahan data penelitian. Standard menyertakan fitur/graf lengkap tanpa inspeksi
 Q-values; advanced Q memakai hasil asli dan server lokal. Navigasi seed memiliki
 tombol kiri/kanan, nilai uint64 utuh dan sumber seed dari metadata. Pengguna akan
-generate sendiri; belum ada ekspor ulang hasil nyata atau deployment. Detail
+generate sendiri saat pembaruan11November. Status deployment kini aktif,
+sedangkan alur output/site lama diganti oleh pembaruan HTML langsung. Detail
 dan command ada pada README Go/IMPLEMENTASI; angka penelitian tetap.
 
 ## Acuan aktif: Go — sinkronisasi 9 November 2026, batch 22.18 WIB

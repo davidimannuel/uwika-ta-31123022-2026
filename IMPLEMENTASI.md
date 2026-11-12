@@ -4,7 +4,35 @@ Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acua
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
-## Checkpoint katalog dan CLI Go — 12 November 2026
+## Kandidat validasi lapangan — 12 November 2026
+
+Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
+B horizon100k-total300k. Katalog Go lokal: depan-gang-sebelah-toko9
+(seed13916397716709765191,5151,87m), depan-indomaret-dkb
+(seed16261264761017114444,5298,84m), depan-uwika
+(seed9988407548480542851,5527,50m). Ketiganya masih field_validation=not_recorded;
+ini kandidat untuk diperiksa, bukan hasil validasi atau pengganti60run eksperimen.
+Catat rekaman lintasan/loop, jarak GPS vs graf, akses/hambatan dan penyimpangan;
+temuan gagal tetap dilaporkan. Hasil terbatas pada tiga rute/kondisi pemeriksaan.
+Config testing kini hanya B horizon100k-total300k dengan lima seed acak. Katalog
+menyimpan config/metadata sumber sehingga tidak berubah saat testing titik lain.
+Katalog lokal tiga rute belum berarti versi publik sudah diperbarui; perlu push
+serta deployment. Checkpoint Go:3af6b27; tes/vet/build dan integritas tiga rute
+lulus. Naskah/DOCX utama dan revisi bab sesi lain tidak diubah.
+
+## Katalog publik aktif — 12 November 2026
+
+[Katalog rute lari](https://davidimannuel.github.io/go-running-route-q-learning/) sudah dipublikasikan melalui GitHub
+Pages. Pemeriksaan browser12November menemukan indeks dengan satu rute pilihan,
+depan-gang-sebelah-toko9. Source memakai GitHub Actions dan workflow
+.github/workflows/catalog-pages.yml, mengunggah hanya web-catalog. Perubahan lokal
+add/rm/clear baru terlihat publik setelah commit/push dan deployment berhasil.
+Run awal gagal Get Pages site failed/404 ketika Pages belum aktif; setelah Source
+GitHub Actions dipilih dan workflow dijalankan ulang, pengguna menyatakan berhasil
+dan indeks publik dapat dibuka. field_validation=not_recorded tetap berlaku.
+Tidak menjalankan training/analisis baru, mengubah hasil ilmiah, atau DOCX.
+
+## Riwayat checkpoint katalog dan CLI Go — 12 November 2026
 
 Cakupan checkpoint: workflow run (download → analyze → train), katalog
 add/rm/clear, situs statis/Pages, panel rute/analisis Minimize/Show details, serta
@@ -17,7 +45,8 @@ seed12226258565145578727, jarak5337,56m dari metadata tersimpan. web-catalog ber
 satu rute standard lengkap; bukan katalog kosong lagi. field_validation masih
 not_recorded. Rute pilihan adalah contoh pemanfaatan terpisah dari60evaluasi
 penelitian; tidak mengganti angka Bab IV. Situs/workflow disertakan pada checkpoint
-Go, tanpa push/deployment. Perubahan koordinat testing, output notebook dan revisi
+Go pada ee2ddb9 dan dokumentasi6768c16. Pengguna kemudian push/deploy.
+Perubahan koordinat testing, output notebook dan revisi
 naskah/aset sesi lain tetap dipisahkan dari commit pekerjaan CLI/katalog ini.
 
 ## Command gabungan download, analyze, train — 12 November 2026
@@ -55,8 +84,9 @@ routes=[] standard, .nojekyll dan routes/ kosong. Memulihkan katalog yang manife
 atau map-nya terhapus sebagian. Folder di luar struktur katalog/symlink ditolak;
 lock sama dengan add, indeks kosong dibuat di staging sebelum publikasi lokal.
 Hasil download/analisis/training tetap. User meminta reset dan sudah dijalankan
-12November; katalog lokal kini kosong, belum push/deployment. Setelah itu add
-dapat dipakai lagi. Hindari menghapus folder rute/manifest secara manual.
+12November; katalog sempat kosong, kemudian pengguna menambahkan satu rute
+dan melakukan publikasi. Clear berikutnya tetap hanya lokal sampai push/deploy.
+Hindari menghapus folder rute/manifest secara manual.
 
 Command Go `catalog add --workdir <folder> --profile <nama> --seed <seed>`
 meminta **Route ID** dan **Route description**, tanpa nama/koordinat/config
@@ -96,12 +126,13 @@ Workflow .github/workflows/catalog-pages.yml pada repo Go mengunggah hanya
 web-catalog ke GitHub Pages setelah push main/perubahan folder terkait atau
 dispatch manual. Pengguna perlu memilih Pages source=GitHub Actions. Tautan
 relatif mendukung subfolder repositori; Leaflet dan tile OSM dimuat HTTPS di
-browser, attribution/referrer dipertahankan. Katalog awal kosong dan belum
-di-commit/push/deploy. Uji sintetis Go/race/vet/build lulus; preview browser
+browser, attribution/referrer dipertahankan. Katalog awalnya kosong; sekarang
+sudah berisi satu rute dan dapat dibuka melalui URL publik di atas.
+Uji sintetis Go/race/vet/build lulus; preview browser
 berhasil pada subfolder tanpa backend Go. Tidak menjalankan training/unduhan
 atau menambahkan hasil nyata ke katalog secara otomatis. Dokumen TA tetap.
 
-## Ekspor katalog HTML Go — 11 November 2026
+## Pembaruan HTML hasil Go — 12 November 2026
 
 `export.map_mode` mengatur presentasi: testing memakai `standard`, training
 `advanced`; bila dihilangkan, default advanced. Standard mempertahankan graf,
@@ -110,20 +141,29 @@ arah dan overlap; hanya inspeksi Q-values yang tidak disertakan. Advanced memaka
 endpoint Q lokal. Leaflet/CDN dan tile OSM tetap eksternal; seluruh graf tertanam
 sehingga mode standard belum mengurangi ukuran HTML secara berarti.
 
-Command baru `go run ./cmd/cli export --workdir workdirs/testing` (atau training)
-membentuk `<output_dir>/site/` dari payload HTML serta metadata tersimpan, tanpa
-training, unduhan, atau perubahan artefak sumber. Parameter training YAML saat
-ekspor tidak dipakai menghitung ulang skor/rute. Indeks, pencarian/filter,
-halaman metadata lengkap dan tautan berbagi memakai berkas statis/tautan relatif.
-`export.json` merekam mode, tanggal ekspor/hasil dan hash HTML sumber. Analisis
-lama tetap memakai skor/tanggal lamanya. `--profile <nama>` membatasi paket ke
-satu profil; setiap ekspor mengganti seluruh site secara bertahap dan kegagalan
-mempertahankan paket sebelumnya. CSV/Q-table/YAML/snapshot tidak disalin.
+Command `go run ./cmd/cli export --workdir workdirs/testing` (atau training)
+kini memperbarui HTML pada lokasi asli: road-analysis.html/analysis.html serta
+training/<profil>/routes.html/report.html. Opsi --profile hanya memperbarui profil
+terpilih; profil lain dan analisis tetap. Tanpa opsi, seluruh hasil tersimpan
+ikut diperbarui. All results kembali ke indeks CLI serve, bukan katalog salinan.
+
+Data diambil dari payload HTML/metadata tersimpan; YAML hanya menentukan output
+dan mode presentasi. Tidak training/unduhan atau mengubah CSV, Q-table, snapshot,
+config maupun metadata eksperimen. Analisis lama mempertahankan skor/tanggalnya.
+output/export.json schema2 mencatat pembaruan terakhir dan hash HTML sebelum
+pembaruan. Mode advanced memakai Q-table dari direktori hasil yang sama.
+
+Semua HTML disiapkan dahulu; kegagalan publikasi/pembatalan memulihkan file lama,
+tanpa jaminan transaksi tahan crash. Jangan bersamaan dengan train/analyze pada
+workdir yang sama. Folder site lama dibersihkan hanya jika manifest schema1 dan
+struktur hasil ekspor cocok; file tambahan/symlink/manifest asing ditolak tanpa
+perubahan. web-catalog/deployment tetap terpisah. Alur ini menggantikan paket
+output/site versi11November agar tidak muncul dua versi HTML hasil yang sama.
 
 Navigasi seed memakai tombol kiri/kanan, nomor run, seed uint64 lengkap sebagai
 teks dan penjelasan sumber tetap/acak dari metadata. Tautan profil/seed tersimpan
-di URL; representative tetap memakai pemeringkatan semula. Advanced site membaca
-Q dari hasil asli melalui CLI server, bukan Q-table yang dipublikasikan.
+di URL; representative tetap memakai pemeringkatan semula. Advanced membaca
+Q dari hasil pada direktori yang sama melalui CLI server.
 Pengujian memakai fixture sintetis dan browser; tes Go, vet, build lulus. Hasil
 pengguna belum diekspor ulang, diunggah atau dilatih ulang. Ini fasilitas
 publikasi/inspeksi, belum keputusan seleksi katalog atau validasi lapangan.

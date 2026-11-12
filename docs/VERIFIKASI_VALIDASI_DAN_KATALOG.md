@@ -1,11 +1,39 @@
 # Kesepakatan verifikasi, validasi, dan katalog rute
 
-Disinkronkan pada 2 November 2026. Dokumen ini menyimpan hasil diskusi dan batas
-pekerjaan untuk dilanjutkan nanti. Rencana di sini belum menjadi implementasi
-atau hasil validasi. Dokumen TA utama tidak diubah langsung; pengguna memindahkan
-materi dari chat atau Word sementara secara manual.
+Dokumen ini memuat kesepakatan awal2November dan riwayat Python2–4November2026.
+Aturan/hasil Python di bawah bukan parameter aktif Go. Naskah utama tetap diedit
+pengguna; status implementasi terbaru dijelaskan pada pembaruan berikut.
 
-## Status saat ini
+## Pembaruan Go dan katalog publik — 12 November 2026
+
+[Katalog rute lari](https://davidimannuel.github.io/go-running-route-q-learning/) sudah tersedia di GitHub Pages.
+Katalog memakai hasil Go tersimpan, pemilihan profil/seed dan mode standard tanpa
+Q-values/backend Go. Pengunjung membuka peta dan informasi rute; tidak training
+atau memilih titik awal bebas. Command catalog add/rm/clear mengelola situs lokal;
+commit/push memublikasikan perubahan. Saat pemeriksaan publik awal terdapat satu
+rute pilihan; katalog lokal kini tiga kandidat sesuai pembaruan di bawah.
+
+Publikasi tidak membuktikan pemeriksaan lapangan selesai. Status rute masih
+field_validation=not_recorded; validasi GPS, GPX/navigasi dan penyusunan verifikasi
+Go untuk naskah tetap pekerjaan terpisah. Parameter Go mengikuti metadata hasil
+dan [IMPLEMENTASI.md](../IMPLEMENTASI.md), bukan tabel/notebook Python arsip.
+
+## Kandidat validasi lapangan — 12 November 2026
+
+Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
+B horizon100k-total300k. Katalog Go lokal: depan-gang-sebelah-toko9
+(seed13916397716709765191,5151,87m), depan-indomaret-dkb
+(seed16261264761017114444,5298,84m), depan-uwika
+(seed9988407548480542851,5527,50m). Ketiganya masih field_validation=not_recorded;
+ini kandidat untuk diperiksa, bukan hasil validasi atau pengganti60run eksperimen.
+Catat rekaman lintasan/loop, jarak GPS vs graf, akses/hambatan dan penyimpangan;
+temuan gagal tetap dilaporkan. Hasil terbatas pada tiga rute/kondisi pemeriksaan.
+Config testing kini hanya B horizon100k-total300k dengan lima seed acak. Katalog
+menyimpan config/metadata sumber sehingga tidak berubah saat testing titik lain.
+Katalog lokal tiga rute belum berarti versi publik sudah diperbarui; perlu push
+serta deployment. Naskah/DOCX utama dan revisi bab sesi lain tidak diubah.
+
+## Status arsip Python (2–4 November 2026)
 
 | Bagian | Status |
 |---|---|
@@ -20,9 +48,12 @@ materi dari chat atau Word sementara secara manual.
 | verifikasi.ipynb poin 1–5 | 32 cell kode dijalankan ulang, termasuk contoh overlap 20%, pada 3 November |
 | Pemeriksaan dan rekaman lapangan | Direncanakan, belum dilaksanakan |
 | Ekspor GPX/navigasi | Ditunda |
-| Aplikasi katalog rute | Disepakati sebagai bentuk pemanfaatan; belum dibuat |
+| Aplikasi katalog rute | Pada arsip Python belum dibuat; katalog Go kini publik pada URL di atas |
 
-Hasil terbaru dan keterbatasannya: [analisis reward langsung](temp/analisis_reward_direct_20261103/ANALISIS.md). Arsip reward sebelumnya: [analisis surface/width](temp/analisis_surface_width_3m_20261102/ANALISIS.md).
+Catatan laporan Python historis: `temp/analisis_reward_direct_20261103/ANALISIS.md`
+dan `temp/analisis_surface_width_3m_20261102/ANALISIS.md`. Berkas tersebut tidak
+tersedia pada checkout saat pemeriksaan12November; jangan dianggap sebagai hasil
+Go terbaru atau tautan laporan yang masih dapat dibuka.
 Rincian aturan aktif: [IMPLEMENTASI.md](../IMPLEMENTASI.md).
 
 ## Tiga lapisan bukti
@@ -89,8 +120,9 @@ Hasil training baru belum tersedia; hasil lama tetap menurut konfigurasi arsip.
   bahwa lintasan yang dimodifikasi identik dengan rute yang divalidasi.
 - Panjang dari penjumlahan edge graf dan GPS dibandingkan dengan memperhitungkan
   ketidakpastian GPS/geometri. Huawei bukan alat ukur jarak mutlak benar.
-- Jumlah sampel, batas deviasi yang diterima dan format bukti akhir belum ditetapkan.
-  Jangan memasukkan angka toleransi GPS baru tanpa dibahas.
+- Jumlah yang disepakati12November: tiga rute dari tiga titik awal berbeda,
+  memakai profil B horizon100k-total300k Go. Batas deviasi yang diterima dan
+  format bukti akhir belum ditetapkan; jangan mengarang toleransi GPS.
 - Tidak tumpang tindih adalah contoh dari penguji, bukan syarat mutlak penelitian.
   Pengguna mempertahankan aturan revisit sekarang agar agen tidak terlalu dibatasi.
 
@@ -130,21 +162,24 @@ melalui aplikasi. Pengguna melihat daftar, memilih rute, lalu melihat peta,
 titik awal/akhir, panjang, dan status pemeriksaan lapangan.
 
 Tidak perlu melatih agen saat aplikasi dibuka atau menerima titik awal bebas.
-Training pada satu start tidak otomatis berhasil untuk start lain. Framework UI
-belum ditetapkan; Streamlit hanya pernah disebut sebagai kemungkinan.
+Training pada satu start tidak otomatis berhasil untuk start lain. Implementasi
+Go sekarang memakai HTML/JavaScript statis dan Leaflet di GitHub Pages. Streamlit
+adalah opsi diskusi lama yang tidak dipakai pada katalog aktif.
 
 Data calon katalog: ID/nama rute, urutan edge dan geometri, start/panjang,
 skenario/konfigurasi/seed, status/tanggal pemeriksaan dan catatan hambatan.
-Artefak rute JSON eksperimen sudah tersedia sebagai sumber, tetapi penyimpanan
-katalog khusus dan UI belum dibuat.
+Pada tahap Python arsip, artefak JSON sudah tersedia tetapi katalog belum dibuat.
+Implementasi Go kini menyimpan pilihan pada web-catalog dengan ID/deskripsi,
+peta satu seed, detail metadata dan indeks; URL publik ada di bagian atas.
 
 Pilih rute valid; kegagalan tetap tercantum pada laporan eksperimen. Tidak perlu
 memaksakan jumlah tertentu atau mengambil rute dari setiap state. Tinjau
 kemiripan geografis, bukan hanya perbedaan ID atau urutan edge. Dua puluh tujuh
-lintasan valid terbaru berbeda persis secara urutan, tetapi belum tentu menjadi
+lintasan valid pada hasil Python yang dibahas saat itu berbeda persis secara
+urutan, tetapi belum tentu menjadi
 27 pilihan katalog yang cukup berbeda secara penggunaan.
 
-Kandidat konfigurasi yang disarankan untuk sumber awal: B/150k/horizon 50k,
+Kandidat yang dibahas pada arsip Python: B/150k/horizon50k,
 dengan C/75k/dinamis sebagai tambahan. Pemilihan rute tetap berdasarkan hasil,
 kemiripan dan pemeriksaan lapangan, bukan mengambil semua seed secara otomatis.
 Notebook [uji titik start](../uji_titik_start.ipynb) menyediakan pencarian start

@@ -2,7 +2,51 @@
 
 Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detail teknis lengkap berada pada `IMPLEMENTASI.md`.
 
-## Checkpoint CLI/katalog — 12 November 2026
+## Kandidat validasi lapangan — 12 November 2026
+
+Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
+B horizon100k-total300k. Katalog Go lokal: depan-gang-sebelah-toko9
+(seed13916397716709765191,5151,87m), depan-indomaret-dkb
+(seed16261264761017114444,5298,84m), depan-uwika
+(seed9988407548480542851,5527,50m). Ketiganya masih field_validation=not_recorded;
+ini kandidat untuk diperiksa, bukan hasil validasi atau pengganti60run eksperimen.
+Catat rekaman lintasan/loop, jarak GPS vs graf, akses/hambatan dan penyimpangan;
+temuan gagal tetap dilaporkan. Hasil terbatas pada tiga rute/kondisi pemeriksaan.
+Config testing kini hanya B horizon100k-total300k dengan lima seed acak. Katalog
+menyimpan config/metadata sumber sehingga tidak berubah saat testing titik lain.
+Katalog lokal tiga rute belum berarti versi publik sudah diperbarui; perlu push
+serta deployment. Checkpoint Go:3af6b27; tes/vet/build dan integritas tiga rute
+lulus. Naskah/DOCX utama dan revisi bab sesi lain tidak diubah.
+
+## Pembaruan HTML langsung — 12 November 2026
+
+- Export kini menimpa HTML hasil asli, tanpa salinan output/site. --profile hanya
+  memperbarui peta/report profil terpilih; tanpa flag mencakup analisis/profil
+  tersimpan. All results memakai indeks CLI serve. Q advanced pada lokasi hasil.
+- Data eksperimen, CSV/Q/metadata/config tetap; manifest pembaruan terpisah di
+  output/export.json schema2. Semua HTML disiapkan dahulu, rollback kegagalan
+  publikasi biasa/pembatalan. Site lama terverifikasi dibersihkan; data tambahan
+  atau symlink ditolak. web-catalog/deployment tidak ikut berubah.
+- Seluruh tes Go, vet dan build lulus. Site testing lama (8 file hasil ekspor)
+  dihapus atas persetujuan pengguna; HTML asli belum diregenerasi oleh agent.
+- Ini menggantikan alur output/site pada riwayat11November di bawah. Tidak ada
+  training/unduhan, perubahan parameter/hasil ilmiah/DOCX, commit atau push.
+
+## Publikasi GitHub Pages — 12 November 2026
+
+- [Katalog rute lari](https://davidimannuel.github.io/go-running-route-q-learning/) aktif; browser menampilkan indeks
+  satu rute depan-gang-sebelah-toko9. Pengguna menyatakan deployment berhasil.
+- Source=GitHub Actions; workflow mengunggah web-catalog. Run awal404 sebelum
+  Pages aktif berhasil dilanjutkan setelah Source diatur dan workflow diulang.
+- Checkpoint Go ee2ddb9/dokumentasi6768c16 sudah dibuat sebelumnya; pengguna
+  melakukan push. Status belum deploy/kosong pada catatan lama adalah riwayat.
+- Link/status disinkronkan ke README/AGENTS kedua repo, IMPLEMENTASI dan dokumen
+  kesepakatan. field_validation tetap not_recorded; tanpa training atau DOCX baru.
+- Lima tautan laporan Python arsip pada README/dokumen kesepakatan menunjuk
+  berkas yang sudah tidak tersedia lokal. Diubah menjadi catatan path historis
+  dengan status ketersediaan, tanpa mengembalikan atau membuat laporan baru.
+
+## Riwayat checkpoint CLI/katalog — 12 November 2026
 
 - Sinkronisasi command run, catalog add/rm/clear, Pages dan panel responsif selesai.
   Go test/race CLI/vet/build lulus; tidak ada training/unduhan penelitian baru.
@@ -12,7 +56,8 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 - Checkpoint Go mencakup kode, dokumentasi, workflow dan situs katalog. Perubahan
   testing config/output notebook dipisahkan. Checkpoint naskah hanya catatan
   CLI/katalog sesi ini; revisi bab/aset/DOCX sesi lain tetap tidak distage.
-- Belum push/deployment; pilihan katalog tidak mengganti sampel eksperimen60run.
+- Pada saat checkpoint belum push/deploy; kini publikasi aktif seperti catatan
+  terbaru di atas. Pilihan katalog tidak mengganti sampel eksperimen60run.
 
 ## Reset katalog Go — 12 November 2026
 
@@ -25,8 +70,8 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
   Menghapus seluruh rute pilihan dan membuat ulang katalog kosong; menerima
   manifest hilang/rusak atau file map terhapus sebagian. Tolak data di luar
   struktur katalog dan symlink; lock bersama add, publikasi melalui staging.
-- Sudah dijalankan atas permintaan pengguna: web-catalog kini kosong kembali,
-  index/catalog.json/.nojekyll/routes siap untuk catalog add berikutnya.
+- Saat reset atas permintaan pengguna, web-catalog dikosongkan dan indeks dibuat
+  ulang. Setelah itu pengguna menambahkan kembali rute dan memublikasikannya.
 - Download, analisis, hasil training, config dan DOCX tetap. Tidak commit/push.
   README/AGENTS Go dan Markdown naskah disinkronkan.
 
@@ -66,13 +111,14 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
   tanpa Q-values. Index/pencarian/detail/share statis; metadata katalog terpisah
   dari konfigurasi sumber. ID unik, rute lama dipertahankan, publikasi lokal
   bertahap dan lock untuk command paralel. Ctrl+C membatalkan prompt.
-- Workflow GitHub Pages siap pada repo Go; belum commit/push/deploy. Situs
-  proyek masih kosong. User memilih seed dan menjalankan add sendiri; browser
+- Saat implementasi awal, workflow baru disiapkan dan katalog masih kosong.
+  Status terbaru sudah publik pada URL di atas. User memilih seed dan menjalankan
+  add sendiri; browser
   diuji dengan dua entri sintetis terpisah di /tmp, termasuk subfolder URL.
 - Go test/race/vet/build lulus. Tidak mengubah kode RL, config training, hasil
   penelitian, notebook, aset bab atau DOCX. README/AGENTS Go sudah diperbarui.
 
-## Pembaruan presentasi Go — 11 November 2026
+## Riwayat presentasi Go — 11 November 2026 (alur site sudah diganti)
 
 - Config ekspor baru: `export.map_mode`, testing standard/training advanced,
   default advanced. Standard mempertahankan seluruh data/fitur peta tertanam
