@@ -7,7 +7,7 @@ Dokumen ini adalah handover singkat untuk sesi berikutnya atau agent lain. Detai
 Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
 B horizon100k-total300k. Katalog Go lokal: depan-gang-sebelah-toko9
 (seed13916397716709765191,5151,87m), depan-indomaret-dkb
-(seed16261264761017114444,5298,84m), depan-uwika
+(seed16261264761017114444,5298,84m), depan-wk
 (seed9988407548480542851,5527,50m). Ketiganya masih field_validation=not_recorded;
 ini kandidat untuk diperiksa, bukan hasil validasi atau pengganti60run eksperimen.
 Catat rekaman lintasan/loop, jarak GPS vs graf, akses/hambatan dan penyimpangan;
