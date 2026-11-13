@@ -1,0 +1,85 @@
+LAMPIRAN BAB IV BAGIAN 4.2 DAN 4.2.1 SKENARIO A
+
+Draf baru memakai pembahasan PER SKENARIO, bukan per metrik untuk seluruh A–C.
+Word hanya mencakup pengantar4.2 dan4.2.1 Hasil Pelatihan Skenario A.
+Word sebelumnya (12panel keberhasilan A–C) dipertahankan sebagai riwayat;
+gunakan draf baru sebagai pengganti pengantar4.2 dan4.2.1 tersebut.
+Bagian4.2.2 B,4.2.3 C dan4.2.4 ringkasan belum ditulis.
+
+SUMBER
+training.ipynb Go, bagian Hasil per konfigurasi, report.show_profiles().
+workdirs/training/output/analysis/training/<profil>/training.png dan diagnosis.png.
+Salinan gambar asli, termasuk SVG pendampingnya, tersedia pada asli/<profil>/.
+
+VERSI CETAK DALAM WORD
+Seluruh panel gabungan dipertahankan:6panel training dan5panel diagnosis.
+PNG *_cetak.png dibuat dari SVG pendamping gambar yang sama. Semua path kurva
+dan clipping asli dipertahankan; posisi panel/rasio gambar, lebar garis, ukuran
+huruf serta label ditata untuk cetak. Batas dan posisi tick mengikuti sumber.
+Angka episode ditulis dalam RIBUAN tanpa mengubah posisi/nilai pengamatan.
+Skor kenyamanan/comfort pada sumber disebut skor karakter ruas dalam cetak.
+Diagnosis memakai label Indonesia dan pola garis berbeda pada jenis terminasi.
+Tidak membaca ulang history untuk mengganti nilai kurva atau mengubah rolling.
+Lebar gambar dalam Word14cm, huruf minimal8poin. Jangan diperkecil lagi.
+PNG300dpi dan SVG vektor tersedia; seluruh panel tetap satu gambar.
+Caption di bawah gambar, rata tengah, spasi1,5. Nomor akhir mengikuti naskah.
+
+ANGKA DALAM PEMBAHASAN
+Persentase0,03%;0,29%;0,43%;3,08% adalah keberhasilan SELURUH episode A
+pada urutan dinamis150k/dinamis300k/tetap100k-total150k/tetap100k-total300k.
+Dasar750.000 atau1.500.000 observasi per profil, menggabungkan lima seed.
+CSV sumber ada di sumber_terminasi/. Bukan proporsi seed berhasil greedy.
+Ringkasan blok50k dan nilai terakhir50episode pada manifest hanya pemeriksaan
+internal angka/kurva; tidak dijadikan tabel atau ukuran utama baru dalam Word.
+Grafik overlap training tidak dimasukkan. Overlap rute greedy dibahas pada4.3.
+Tidak ada tabel atau rumus baru. Verifikasi/validasi terpisah.
+
+PEMETAAN GAMBAR
+
+Gambar 4.4 Perkembangan pelatihan skenario A dengan epsilon dinamis, 150.000 episode
+Word/PNG: a-dynamic-150000_training_cetak.png
+Vektor: a-dynamic-150000_training_cetak.svg
+Asli: asli/a-dynamic-150000/training.png
+
+Gambar 4.5 Diagnosis pelatihan skenario A dengan epsilon dinamis, 150.000 episode
+Word/PNG: a-dynamic-150000_diagnosis_cetak.png
+Vektor: a-dynamic-150000_diagnosis_cetak.svg
+Asli: asli/a-dynamic-150000/diagnosis.png
+
+Gambar 4.6 Perkembangan pelatihan skenario A dengan epsilon dinamis, 300.000 episode
+Word/PNG: a-dynamic-300000_training_cetak.png
+Vektor: a-dynamic-300000_training_cetak.svg
+Asli: asli/a-dynamic-300000/training.png
+
+Gambar 4.7 Diagnosis pelatihan skenario A dengan epsilon dinamis, 300.000 episode
+Word/PNG: a-dynamic-300000_diagnosis_cetak.png
+Vektor: a-dynamic-300000_diagnosis_cetak.svg
+Asli: asli/a-dynamic-300000/diagnosis.png
+
+Gambar 4.8 Perkembangan pelatihan skenario A dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+Word/PNG: a-horizon-100000-total-150000_training_cetak.png
+Vektor: a-horizon-100000-total-150000_training_cetak.svg
+Asli: asli/a-horizon-100000-total-150000/training.png
+
+Gambar 4.9 Diagnosis pelatihan skenario A dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+Word/PNG: a-horizon-100000-total-150000_diagnosis_cetak.png
+Vektor: a-horizon-100000-total-150000_diagnosis_cetak.svg
+Asli: asli/a-horizon-100000-total-150000/diagnosis.png
+
+Gambar 4.10 Perkembangan pelatihan skenario A dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+Word/PNG: a-horizon-100000-total-300000_training_cetak.png
+Vektor: a-horizon-100000-total-300000_training_cetak.svg
+Asli: asli/a-horizon-100000-total-300000/training.png
+
+Gambar 4.11 Diagnosis pelatihan skenario A dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+Word/PNG: a-horizon-100000-total-300000_diagnosis_cetak.png
+Vektor: a-horizon-100000-total-300000_diagnosis_cetak.svg
+Asli: asli/a-horizon-100000-total-300000/diagnosis.png
+
+
+PEMBARUAN RUJUKAN DALAM PARAGRAF — 13 November 2026
+Word menggunakan rujukan umum seperti grafik/hasil diagnosis/konfigurasi ini.
+Nomor gambar dan subbab lanjutan tidak lagi dirujuk secara tetap dalam paragraf
+isi agar pengguna dapat menyusun ulang. Judul subbab dan caption masih memakai
+nomor sementara; pemetaan gambar di atas tetap berlaku sebagai petunjuk aset.
+Angka konfigurasi, nilai hasil, delapan gambar dan caption tidak diubah.

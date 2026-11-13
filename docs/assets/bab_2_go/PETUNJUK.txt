@@ -1,0 +1,40 @@
+LAMPIRAN BAB II GO
+
+Semua diagram adalah ilustrasi konsep, bukan hasil eksperimen.
+Pembaruan tampilan: siklus_rl dan graf_ruas_paralel telah dirender melalui PlantUML pada Kroki dan diperiksa secara visual. SVG dan PNG tersedia bersama sumber .puml. alur_q_learning.puml belum dirender. Tidak memerlukan instalasi baru di komputer pengguna.
+
+siklus_rl.puml
+Lokasi: 2.1, setelah penjelasan siklus interaksi
+Judul/isi: Siklus interaksi agen dan lingkungan dalam Reinforcement Learning
+
+alur_q_learning.puml
+Lokasi: 2.2, setelah penjelasan rangkaian episode
+Judul/isi: Alur pelatihan Q-Learning
+
+graf_ruas_paralel.puml
+Lokasi: 2.4, setelah penjelasan node dan ruas paralel
+Judul/isi: Ilustrasi graf berarah dengan ruas paralel
+
+tag_osm.csv
+Lokasi: Tabel pada 2.3
+Judul/isi: Tag OpenStreetMap dan Penggunaannya dalam Penelitian
+
+penelitian_terdahulu.csv
+Lokasi: Tabel pada 2.5
+Judul/isi: Ringkasan Penelitian Terdahulu
+
+rumus_bab_2.tex
+Lokasi: Persamaan pada 2.2 dan 2.4
+Judul/isi: Sumber rumus Q-Learning dan Haversine
+
+Render .puml menjadi SVG/PNG. Nomor gambar ditetapkan di naskah, tidak ditanam di sumber diagram. Huruf minimal 8 poin pada ukuran cetak; gunakan pola/garis yang terbaca hitam putih. Dua diagram RL/Q diadaptasi dari Sutton dan Barto (2018); graf merupakan ilustrasi penulis.
+
+CSV memuat tabel isi Bab II; TEX memuat sumber persamaan yang juga tersedia sebagai Equation di Word. Sumber dan alias sitasi tercatat pada sumber_dan_penempatan.json serta referensi_bab_2.txt. Tidak ada tag selain highway/surface/width/access yang dibahas sebagai atribut penelitian.
+
+PEMBARUAN TAMPILAN 11 NOVEMBER 2026
+
+Siklus RL tetap umum: agen, lingkungan, tindakan, kondisi berikutnya dan reward. Warna lembut membedakan komponen; detail Q-Learning/graf tidak dimasukkan pada gambar 2.1.
+
+Graf: mengikuti bentuk percabangan pada docs/assets/multidigraph_representation.puml yang sudah dipakai di naskah. A menuju B; B memiliki dua edge menuju C dengan key 0/1 serta satu menuju D. C dan D menuju E. Gambar hanya menampilkan contoh sebagian arah, bukan seluruh edge graf aktif; edge arah balik sengaja tidak ditampilkan. Tiga edge keluar B adalah struktur ilustrasi, bukan pernyataan semua action pasti lolos pembatasan penelitian. Identitas lengkap tetap (u,v,key).
+
+Gunakan SVG untuk pembesaran tanpa pecah; PNG disediakan sebagai pratinjau. Kode meminta Times New Roman; bentuk huruf pada PNG dapat mengikuti font pengganti layanan renderer. Sumber diagram alur Q-Learning tetap belum dirender. Word sebelumnya tidak diubah pada pembaruan ini.

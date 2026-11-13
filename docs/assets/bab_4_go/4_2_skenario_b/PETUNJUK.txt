@@ -1,0 +1,77 @@
+LAMPIRAN BAB IV SUBBAB HASIL PELATIHAN SKENARIO B
+
+Word hanya mencakup4.2.2 Hasil Pelatihan Skenario B. Salin judul dan isi setelah
+hasil skenario A, tanpa mengulang pengantar4.2. Belum mencakup C/ringkasan.
+Pembahasan memakai rujukan umum; nomor caption dapat diubah oleh pengguna.
+
+SUMBER
+training.ipynb Go, bagian Hasil per konfigurasi, report.show_profiles().
+workdirs/training/output/analysis/training/<profil>/training.png dan diagnosis.png.
+Salinan PNG/SVG asli tersedia pada asli/<profil>/.
+
+GAMBAR CETAK DALAM WORD
+Seluruh panel tetap tergabung:6panel training dan5panel diagnosis.
+Versi *_cetak.svg/.png menyalin path kurva dan clipping SVG sumber. Tidak
+menghitung ulang, memilih ulang titik, mengubah jendela atau mengubah data kurva.
+Tata letak, font dan label disesuaikan untuk lebar14cm/fontminimal8pt.
+Episode dinyatakan dalam ribuan. Khusus sumbu jumlah state juga dalam RIBUAN,
+sehingga100 berarti100.000state; posisi tick dan koordinat kurva tetap.
+Skor kenyamanan/comfort pada sumber disebut skor karakter ruas dalam cetak.
+Jenis akhir episode memakai pola garis berbeda agar dapat dibaca hitam-putih.
+PNG300dpi dan SVG tersedia. Jangan memperkecil lebar gambar di bawah14cm.
+Caption sementara melanjutkan4.12–4.19 dari draf A; sesuaikan dengan naskah.
+
+ANGKA PEMBAHASAN
+Keberhasilan SELURUH training B:dinamis150k0,07%;dinamis300k0,95%;
+tetap100k-total150k13,57%;tetap100k-total300k34,65%.
+Persentase berasal dari termination_training.csv, seluruh lima seed0–4.
+Dasar750.000 atau1.500.000observasi per profil. Semua step_limit0.
+Angka bukan proporsi seed berhasil greedy atau hanya10kepisode terakhir.
+Nilai ringkasan50k/50episode pada manifest hanya pemeriksaan internal sumber;
+tidak menjadi tabel/ukuran utama tambahan. Belum ada klaim optimalitas/stabilitas
+setiap seed atau validasi lapangan. Grafik overlap training tidak dimasukkan.
+
+Tidak ada tabel/rumus baru. Tidak training/download/perubahan kode Go.
+Verifikasi/validasi tetap terpisah. Naskah utama hanya diedit pengguna.
+
+PEMETAAN GAMBAR
+
+Gambar 4.12 Perkembangan pelatihan skenario B dengan epsilon dinamis, 150.000 episode
+PNG: b-dynamic-150000_training_cetak.png
+SVG: b-dynamic-150000_training_cetak.svg
+Asli: asli/b-dynamic-150000/training.png
+
+Gambar 4.13 Diagnosis pelatihan skenario B dengan epsilon dinamis, 150.000 episode
+PNG: b-dynamic-150000_diagnosis_cetak.png
+SVG: b-dynamic-150000_diagnosis_cetak.svg
+Asli: asli/b-dynamic-150000/diagnosis.png
+
+Gambar 4.14 Perkembangan pelatihan skenario B dengan epsilon dinamis, 300.000 episode
+PNG: b-dynamic-300000_training_cetak.png
+SVG: b-dynamic-300000_training_cetak.svg
+Asli: asli/b-dynamic-300000/training.png
+
+Gambar 4.15 Diagnosis pelatihan skenario B dengan epsilon dinamis, 300.000 episode
+PNG: b-dynamic-300000_diagnosis_cetak.png
+SVG: b-dynamic-300000_diagnosis_cetak.svg
+Asli: asli/b-dynamic-300000/diagnosis.png
+
+Gambar 4.16 Perkembangan pelatihan skenario B dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+PNG: b-horizon-100000-total-150000_training_cetak.png
+SVG: b-horizon-100000-total-150000_training_cetak.svg
+Asli: asli/b-horizon-100000-total-150000/training.png
+
+Gambar 4.17 Diagnosis pelatihan skenario B dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+PNG: b-horizon-100000-total-150000_diagnosis_cetak.png
+SVG: b-horizon-100000-total-150000_diagnosis_cetak.svg
+Asli: asli/b-horizon-100000-total-150000/diagnosis.png
+
+Gambar 4.18 Perkembangan pelatihan skenario B dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+PNG: b-horizon-100000-total-300000_training_cetak.png
+SVG: b-horizon-100000-total-300000_training_cetak.svg
+Asli: asli/b-horizon-100000-total-300000/training.png
+
+Gambar 4.19 Diagnosis pelatihan skenario B dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+PNG: b-horizon-100000-total-300000_diagnosis_cetak.png
+SVG: b-horizon-100000-total-300000_diagnosis_cetak.svg
+Asli: asli/b-horizon-100000-total-300000/diagnosis.png

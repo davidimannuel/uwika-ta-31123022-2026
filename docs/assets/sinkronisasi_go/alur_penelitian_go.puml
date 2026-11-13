@@ -1,0 +1,15 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+start
+:Ambil snapshot OpenStreetMap\nmelalui Overpass API;
+:Bentuk graf segmen mentah\ndan hitung panjang Haversine;
+:Periksa akses way dan kedua node,\nlalu siapkan skor karakter ruas;
+:Tetapkan environment, state,\nreward, dan konfigurasi;
+:Latih A, B, dan C\npada empat konfigurasi dan lima seed;
+:Evaluasi setiap Q-table\nmenggunakan epsilon nol;
+:Bandingkan keberhasilan, galat,\nskor ruas, overlap, dan kegagalan;
+stop
+@enduml

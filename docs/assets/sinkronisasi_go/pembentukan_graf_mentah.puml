@@ -1,0 +1,22 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+top to bottom direction
+rectangle "Way OpenStreetMap\nUrutan node A, P, B" as W
+circle "A" as A
+circle "P" as P
+circle "B" as B
+W -[hidden]-> A
+A --> P : segmen maju
+P --> A : segmen balik
+P --> B : segmen maju
+B --> P : segmen balik
+note right of P
+  Node geometri dipertahankan.
+  Panjang tiap segmen: Haversine.
+  Atribut way disalin ke edge.
+  Akses node tetap diperiksa.
+end note
+@enduml

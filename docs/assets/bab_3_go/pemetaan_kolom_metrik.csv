@@ -1,0 +1,11 @@
+Nama metrik,Kolom program,Definisi
+Keberhasilan loop,is_loop,Berhasil jika node akhir sama dengan node awal dan total jarak 4.000–6.000 m.
+Total jarak perjalanan,total_distance_m,"Jumlah panjang seluruh ruas yang dilalui, termasuk pengulangan."
+Galat jarak absolut,absolute_distance_error_m,Selisih absolut total jarak terhadap target 5.000 m.
+Total reward,total_reward,Jumlah seluruh reward dan penalti dalam satu episode.
+Rata-rata skor karakter ruas,mean_comfort,Rata-rata skor ruas berbobot panjang lintasan.
+Rasio pengulangan ruas,overlap_ratio,Proporsi lintasan yang mengulang segmen yang telah dilalui.
+Rasio pergerakan mendekati titik awal,return_progress_ratio,Proporsi langkah fase pulang yang mengurangi jarak langsung ke titik awal.
+Jarak akhir terhadap titik awal,distance_to_start_at_end_m,Jarak Haversine antara node akhir dan node awal.
+Ketersediaan ruas penutup loop,closing_action_available,Pernah tersedia ruas yang dapat langsung menutup loop dengan jarak valid.
+Alasan penghentian episode,termination_reason,"Berhasil, melebihi jarak, tidak tersedia tindakan, atau batas langkah."

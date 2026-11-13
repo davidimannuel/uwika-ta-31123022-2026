@@ -1,0 +1,5 @@
+termination_reason,count,termination_rate,termination_rate_percent
+success,5,1.0,100.0
+over_distance,0,0.0,0.0
+no_available_action,0,0.0,0.0
+step_limit,0,0.0,0.0

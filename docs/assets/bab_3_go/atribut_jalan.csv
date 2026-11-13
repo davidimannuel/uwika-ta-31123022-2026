@@ -1,0 +1,5 @@
+Atribut,Informasi,Penggunaan
+highway,Klasifikasi atau fungsi jalan.,Komponen utama skor karakter ruas.
+surface,Material permukaan jalan.,Komponen skor berdasarkan material permukaan.
+width,Lebar jalan yang tercatat.,Komponen skor berdasarkan lebar ruas.
+access,Keterangan izin akses.,Penyaringan ruas dan penalti permissive.

@@ -1,0 +1,5 @@
+Kondisi,Perlakuan
+highway atau surface kosong,Gunakan skor data kosong pada atribut terkait.
+highway atau surface terisi tetapi tidak dikenali,Gunakan skor kategori lainnya pada atribut terkait.
+highway atau surface memuat beberapa kategori,"Petakan setiap kategori, lalu gunakan skor terendah."
+width tidak dapat dibaca sebagai satu lebar positif,"Gunakan skor data tidak tersedia sebesar −0,50."

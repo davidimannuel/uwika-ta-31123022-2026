@@ -1,0 +1,15 @@
+OpenStreetMap contributors. (n.d.). Copyright and license. Retrieved November 11, 2026, from https://www.openstreetmap.org/copyright
+
+OpenStreetMap Wiki contributors. (n.d.-a). Key: access. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:access
+
+OpenStreetMap Wiki contributors. (n.d.-b). Key: highway. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway
+
+OpenStreetMap Wiki contributors. (n.d.-c). Key: surface. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
+
+OpenStreetMap Wiki contributors. (n.d.-d). Key: width. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
+
+OpenStreetMap Wiki contributors. (n.d.-f). Overpass API. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Overpass_API
+
+Sutton, R. S., & Barto, A. G. (2018). Reinforcement learning: An introduction (2nd ed.). The MIT Press.
+
+Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. Machine Learning, 8, 279–292. https://doi.org/10.1007/BF00992698

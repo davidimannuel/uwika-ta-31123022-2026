@@ -1,0 +1,548 @@
+{
+  "source_project": "/Users/david/development/go-running-route-q-learning",
+  "source_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "review_date": "2026-11-11",
+  "common": {
+    "snapshot_sha256": "f0a5885db46c2f9cd962674aaeaa82f7d5c69579d5ba5d80641f727b6e20f964",
+    "start_node": 311432306,
+    "reward_constants": {
+      "road": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "return_phase_ratio": 0.5,
+      "outward_penalty_scale": 0,
+      "return_reward_scale": 1.2,
+      "permissive_penalty_per_100m": -0.1,
+      "revisit_penalty": -10,
+      "distance_error_penalty_per_100m": -5,
+      "success_bonus": 100,
+      "over_distance_penalty": -50,
+      "no_action_penalty": -50,
+      "step_limit_penalty": -50
+    },
+    "resolved_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "access_policy_version": "edge_and_endpoint_whitelist_v1",
+    "map": {
+      "latitude": -7.281518,
+      "longitude": 112.710178,
+      "radius_m": 3025,
+      "timeout_sec": 90
+    },
+    "environment": {
+      "target_distance_m": 5000,
+      "distance_tolerance": 0.2,
+      "progress_bins": 25,
+      "max_steps": 500,
+      "allow_revisit": true,
+      "revisit_after_ratio": 0.5,
+      "max_node_visits": 2,
+      "max_snap_distance_m": 100
+    }
+  },
+  "snapshot_download_map": {
+    "latitude": -7.282187,
+    "longitude": 112.709282,
+    "radius_m": 3025,
+    "timeout_sec": 90
+  },
+  "osm_timestamp": "2026-11-05T10:59:34Z",
+  "profiles": [
+    {
+      "profile": "a-dynamic-150000",
+      "scenario": "A",
+      "episodes": 150000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 0,
+      "success_rate": 0.0,
+      "valid_error_mean_m": null,
+      "valid_comfort_mean": null,
+      "valid_overlap_mean": null,
+      "all_error_mean_m": 1014.8405821791661,
+      "all_q_states_mean": 13342.6,
+      "terminations": {
+        "over_distance": 5
+      },
+      "history_rows": 750000,
+      "training_total_steps": 33936614,
+      "tail_10000_success_rate": 0.00226
+    },
+    {
+      "profile": "a-dynamic-300000",
+      "scenario": "A",
+      "episodes": 300000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 1,
+      "success_rate": 0.2,
+      "valid_error_mean_m": 476.28962624350424,
+      "valid_comfort_mean": 0.8576917320190641,
+      "valid_overlap_mean": 0.0,
+      "all_error_mean_m": 844.7688062759129,
+      "all_q_states_mean": 14469.2,
+      "terminations": {
+        "over_distance": 3,
+        "no_available_action": 1,
+        "success": 1
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 68689868,
+      "tail_10000_success_rate": 0.02044
+    },
+    {
+      "profile": "a-horizon-100000-total-150000",
+      "scenario": "A",
+      "episodes": 150000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 0,
+      "success_rate": 0.0,
+      "valid_error_mean_m": null,
+      "valid_comfort_mean": null,
+      "valid_overlap_mean": null,
+      "all_error_mean_m": 1012.7187654104634,
+      "all_q_states_mean": 14801.4,
+      "terminations": {
+        "over_distance": 4,
+        "no_available_action": 1
+      },
+      "history_rows": 750000,
+      "training_total_steps": 64182828,
+      "tail_10000_success_rate": 0.0024
+    },
+    {
+      "profile": "a-horizon-100000-total-300000",
+      "scenario": "A",
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 1,
+      "success_rate": 0.2,
+      "valid_error_mean_m": 557.8087740664896,
+      "valid_comfort_mean": 0.4928827151985804,
+      "valid_overlap_mean": 0.0091324200913242,
+      "all_error_mean_m": 918.4048296471589,
+      "all_q_states_mean": 16577.0,
+      "terminations": {
+        "over_distance": 4,
+        "success": 1
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 188447399,
+      "tail_10000_success_rate": 0.04422
+    },
+    {
+      "profile": "b-dynamic-150000",
+      "scenario": "B",
+      "episodes": 150000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 0,
+      "success_rate": 0.0,
+      "valid_error_mean_m": null,
+      "valid_comfort_mean": null,
+      "valid_overlap_mean": null,
+      "all_error_mean_m": 762.8742487596685,
+      "all_q_states_mean": 95483.2,
+      "terminations": {
+        "no_available_action": 2,
+        "over_distance": 3
+      },
+      "history_rows": 750000,
+      "training_total_steps": 31534765,
+      "tail_10000_success_rate": 0.009
+    },
+    {
+      "profile": "b-dynamic-300000",
+      "scenario": "B",
+      "episodes": 300000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 5,
+      "success_rate": 1.0,
+      "valid_error_mean_m": 373.4596333161142,
+      "valid_comfort_mean": 0.9058109947177904,
+      "valid_overlap_mean": 0.010776155349980854,
+      "all_error_mean_m": 373.4596333161142,
+      "all_q_states_mean": 126963.0,
+      "terminations": {
+        "success": 5
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 64182681,
+      "tail_10000_success_rate": 0.32172
+    },
+    {
+      "profile": "b-horizon-100000-total-150000",
+      "scenario": "B",
+      "episodes": 150000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 5,
+      "success_rate": 1.0,
+      "valid_error_mean_m": 268.67002538947565,
+      "valid_comfort_mean": 0.9086567068848762,
+      "valid_overlap_mean": 0.0068609918405910224,
+      "all_error_mean_m": 268.67002538947565,
+      "all_q_states_mean": 112642.0,
+      "terminations": {
+        "success": 5
+      },
+      "history_rows": 750000,
+      "training_total_steps": 54126928,
+      "tail_10000_success_rate": 0.53128
+    },
+    {
+      "profile": "b-horizon-100000-total-300000",
+      "scenario": "B",
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 5,
+      "success_rate": 1.0,
+      "valid_error_mean_m": 161.28861654277733,
+      "valid_comfort_mean": 0.909346892872575,
+      "valid_overlap_mean": 0.007053506131265199,
+      "all_error_mean_m": 161.28861654277733,
+      "all_q_states_mean": 136379.8,
+      "terminations": {
+        "success": 5
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 157290364,
+      "tail_10000_success_rate": 0.621
+    },
+    {
+      "profile": "c-dynamic-150000",
+      "scenario": "C",
+      "episodes": 150000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 0,
+      "success_rate": 0.0,
+      "valid_error_mean_m": null,
+      "valid_comfort_mean": null,
+      "valid_overlap_mean": null,
+      "all_error_mean_m": 940.4266099379436,
+      "all_q_states_mean": 134623.6,
+      "terminations": {
+        "no_available_action": 1,
+        "over_distance": 4
+      },
+      "history_rows": 750000,
+      "training_total_steps": 31330599,
+      "tail_10000_success_rate": 0.00332
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "scenario": "C",
+      "episodes": 300000,
+      "epsilon_decay_episodes": null,
+      "runs": 5,
+      "valid": 1,
+      "success_rate": 0.2,
+      "valid_error_mean_m": 474.43907458897866,
+      "valid_comfort_mean": 0.8145818435376766,
+      "valid_overlap_mean": 0.0,
+      "all_error_mean_m": 931.006403626188,
+      "all_q_states_mean": 185193.8,
+      "terminations": {
+        "over_distance": 4,
+        "success": 1
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 63613350,
+      "tail_10000_success_rate": 0.06286
+    },
+    {
+      "profile": "c-horizon-100000-total-150000",
+      "scenario": "C",
+      "episodes": 150000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 2,
+      "success_rate": 0.4,
+      "valid_error_mean_m": 435.05200771597856,
+      "valid_comfort_mean": 0.8301430224520481,
+      "valid_overlap_mean": 0.0035714285714285713,
+      "all_error_mean_m": 689.820599443778,
+      "all_q_states_mean": 155231.6,
+      "terminations": {
+        "success": 2,
+        "no_available_action": 2,
+        "over_distance": 1
+      },
+      "history_rows": 750000,
+      "training_total_steps": 58273886,
+      "tail_10000_success_rate": 0.12672
+    },
+    {
+      "profile": "c-horizon-100000-total-300000",
+      "scenario": "C",
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "runs": 5,
+      "valid": 2,
+      "success_rate": 0.4,
+      "valid_error_mean_m": 454.12700091545867,
+      "valid_comfort_mean": 0.8553739437416363,
+      "valid_overlap_mean": 0.003703703703703704,
+      "all_error_mean_m": 789.1956834805062,
+      "all_q_states_mean": 193953.0,
+      "terminations": {
+        "over_distance": 3,
+        "success": 2
+      },
+      "history_rows": 1500000,
+      "training_total_steps": 175668442,
+      "tail_10000_success_rate": 0.1932
+    }
+  ],
+  "files": [
+    {
+      "profile": "a-dynamic-150000",
+      "completed_at": "2026-11-11T01:37:22.975942Z",
+      "metadata_sha256": "1ce09a35a245f37b27dfbc96b69bba0d49bf4ae8b457a8e1064376e2b2886e86",
+      "evaluation_sha256": "4d25c3cb825efcfe3723ee9b07b8c0131dcb93666aa8d4f3a5ee28a4f4052609",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "a-dynamic-300000",
+      "completed_at": "2026-11-11T01:37:34.751613Z",
+      "metadata_sha256": "06fc334726339fb46d20799a899ea123ea90cd739d506ea386c241320177e2d2",
+      "evaluation_sha256": "f3f9eea490d38e877b3a46c3c9f74a3576043b678e5ebba205a158d608793965",
+      "history_sha256": null,
+      "episodes": 300000
+    },
+    {
+      "profile": "a-horizon-100000-total-150000",
+      "completed_at": "2026-11-11T01:37:45.621757Z",
+      "metadata_sha256": "4b0f319600fa013efb03cc5975ecaa2c2d7b9bff1571247b7c3fd7072d5c86a0",
+      "evaluation_sha256": "9f2fbcb41d1189770c8ba8473ee48d97dd613b9a425ae7589486b1893e153998",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "a-horizon-100000-total-300000",
+      "completed_at": "2026-11-11T01:38:17.461597Z",
+      "metadata_sha256": "e3c96d4b68677df2cf7e7eb14c81440e4899d9a40283afe6b3d827c8f7517f3f",
+      "evaluation_sha256": "0acecb0b86cd8f43697a00cfee6c166c157d93298f5a6dd7cf1a5312a15d6c7d",
+      "history_sha256": null,
+      "episodes": 300000
+    },
+    {
+      "profile": "b-dynamic-150000",
+      "completed_at": "2026-11-11T01:38:23.733276Z",
+      "metadata_sha256": "6b2884a574eaeb36bfad4a8270615a59915b115c8bbaa0308fea81c259e2434f",
+      "evaluation_sha256": "3362ccd371f66aa8f40496481e21e2f96cce5af34d26304d05e4b0ed5d7a47e9",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "b-dynamic-300000",
+      "completed_at": "2026-11-11T01:38:36.05684Z",
+      "metadata_sha256": "5df2d3c8f67b66e76228cdc86d56c23c39ee125803dc37aaf4c760da9371af74",
+      "evaluation_sha256": "f00c0892d2fdb39fd29d99c3ceb7e0ee98fac12e8af25daaa91e1dd0f8375c23",
+      "history_sha256": null,
+      "episodes": 300000
+    },
+    {
+      "profile": "b-horizon-100000-total-150000",
+      "completed_at": "2026-11-11T01:38:46.5302Z",
+      "metadata_sha256": "278681f003d1c9aae56f5d78ea857ec6dd50522d094b73cf427b23a5f9ca7fcf",
+      "evaluation_sha256": "ce03d07439c9e3977ef3cceec9d7e79d6711b65ca113d12d439c4034dedfa11f",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "b-horizon-100000-total-300000",
+      "completed_at": "2026-11-11T01:39:14.987005Z",
+      "metadata_sha256": "be969b82937c429bc35d09fe1183d8b7af7c1ae370fa4b91bfb9f50681998c99",
+      "evaluation_sha256": "de9784f7722475f40e02ecfcc9d40beb6eece0d810ff16923793ae55f7f39684",
+      "history_sha256": null,
+      "episodes": 300000
+    },
+    {
+      "profile": "c-dynamic-150000",
+      "completed_at": "2026-11-11T01:39:21.685834Z",
+      "metadata_sha256": "11867bc74e2f19dc83c96f251434062fdba200f7bc76fdf85a9a87f706f70e21",
+      "evaluation_sha256": "f8979581fdcb7bdbc0539b866fd9790023c8a6801160acb853f21db1d798363b",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "completed_at": "2026-11-11T01:39:34.665731Z",
+      "metadata_sha256": "f9953e97c62097c4867d50ba5ae83209b67b873fda7241a9d01d8f5f68bf7e25",
+      "evaluation_sha256": "6fdb0802b5e27503c0a77ae538148adc843a981b8b98d847cbb6db087c312030",
+      "history_sha256": null,
+      "episodes": 300000
+    },
+    {
+      "profile": "c-horizon-100000-total-150000",
+      "completed_at": "2026-11-11T01:39:46.515326Z",
+      "metadata_sha256": "80c2f5f24df3cae9c98b3ca4711b6a9e0cb386b6c56e9d808305f5f993eb035a",
+      "evaluation_sha256": "b71e36c2ed70a8c07b41f7e01e60417ab26066277490cf83d8cc5c09a1ee8131",
+      "history_sha256": null,
+      "episodes": 150000
+    },
+    {
+      "profile": "c-horizon-100000-total-300000",
+      "completed_at": "2026-11-11T01:40:21.000824Z",
+      "metadata_sha256": "44dd271912a5fb01a5a1dba58e58138ebd9590497504abf247c69210765a7019",
+      "evaluation_sha256": "21d018b9d154403e3a58eebce1f77fc7c75b25ac5f4a816cf44881586885ef88",
+      "history_sha256": null,
+      "episodes": 300000
+    }
+  ],
+  "graph": {
+    "nodes": 26345,
+    "directed_edges": 58020,
+    "legal_edges": 56816,
+    "weak_components_all_nodes": 38,
+    "mean_length_m": 25.116473123742622,
+    "start_outgoing_raw": 4,
+    "start_outgoing_legal": 4,
+    "start_lat": -7.2815254,
+    "start_lon": 112.7101872,
+    "attributes": {
+      "highway": {
+        "filled": 58020,
+        "percent": 100.0
+      },
+      "surface": {
+        "filled": 37082,
+        "percent": 63.91244398483281
+      },
+      "width": {
+        "filled": 36544,
+        "percent": 62.985177524991386
+      },
+      "access": {
+        "filled": 1652,
+        "percent": 2.8472940365391244
+      }
+    },
+    "scores_all": {
+      "n": 58020,
+      "min": -5.95,
+      "mean": -0.6416873491899345,
+      "median": 0.7000000000000001,
+      "max": 1.0,
+      "sd_population": 2.5963695745019466
+    },
+    "scores_legal": {
+      "n": 56816,
+      "min": -5.95,
+      "mean": -0.653553576457336,
+      "median": 0.7000000000000001,
+      "max": 1.0,
+      "sd_population": 2.601236432838985
+    }
+  },
+  "total_history_rows": 13500000,
+  "total_training_steps": 991277724,
+  "checks": [
+    "Common config/snapshot/start/seeds/access policy across 12 profiles",
+    "60 CSV metrics agree with stored trace distance and total reward",
+    "Every traversed way and endpoint passes configured access whitelist",
+    "13.5 million current history rows read; per-profile counts checked"
+  ],
+  "limits": [
+    "No new training, no Q-table replay, no field validation",
+    "Block curves average all seeds and 1000 episodes per block, not rolling 50 episodes",
+    "Valid-only metric means explicitly separate from all-run means"
+  ],
+  "source_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "figure_aggregation": "Mean across 5 seeds and blocks of 1000 training episodes; tail summaries use 10000 episodes per seed.",
+  "source_config": {
+    "scenario": "B",
+    "reward": {
+      "road": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "return_phase_ratio": 0.5,
+      "outward_penalty_scale": 0,
+      "return_reward_scale": 1.2,
+      "permissive_penalty_per_100m": -0.1,
+      "revisit_penalty": -10,
+      "distance_error_penalty_per_100m": -5,
+      "success_bonus": 100,
+      "over_distance_penalty": -50,
+      "no_action_penalty": -50,
+      "step_limit_penalty": -50
+    },
+    "environment": {
+      "target_distance_m": 5000,
+      "distance_tolerance": 0.2,
+      "progress_bins": 25,
+      "max_steps": 500,
+      "allow_revisit": true,
+      "revisit_after_ratio": 0.5,
+      "max_node_visits": 2,
+      "max_snap_distance_m": 100
+    },
+    "training": {
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "alpha": 0.15,
+      "gamma": 0.95,
+      "epsilon_start": 1,
+      "epsilon_end": 0.05,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "runs": null,
+      "max_workers": 5
+    }
+  }
+}

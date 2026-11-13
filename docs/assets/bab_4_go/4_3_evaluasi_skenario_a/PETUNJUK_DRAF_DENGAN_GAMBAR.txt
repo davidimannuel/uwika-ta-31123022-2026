@@ -1,0 +1,73 @@
+LAMPIRAN EVALUASI RUTE SKENARIO A
+
+WORD
+DRAF_BAB_IV_4_3_DAN_4_3_1_EVALUASI_SKENARIO_A.docx pada
+/docs/temp/bab_4_3_evaluasi_skenario_a_go_20261113/.
+9halaman termasuk1halaman petunjuk. Salin mulai4.3,kemudian4.3.1.
+Hanya pengantar evaluasi dan skenario A. B/C,ringkasan antarstate,verifikasi,
+validasi dan peta belum disusun. Naskah utama hanya diedit pengguna.
+
+SUMBER NOTEBOOK
+training.ipynb Go bagian5/report.compare_profiles():ringkasan4profil A dan
+2gambar evaluation_comparison pada scenario-a/comparison/dynamic serta
+horizon-100000. Bagian4/report.show_profiles():tabel Metrik Evaluasi Greedy
+per Seed. Angka sumber:sumber/<profil>/evaluation.csv dan metadata.json.
+Keempatprofil memiliki graf,start,reward,aturanperjalanan serta5seed sama.
+Evaluasi epsilon0,nilaiQ tidak diperbarui,pilihanQsetara masih dapat acak.
+
+TABEL
+Satu tabel ringkasan dan empat tabel masing-masing5seed0–4. Semua20evaluasi
+termasuk gagal tetap ditampilkan. Rincian:seed,panjang,galat,skor ruas,
+pengulangan(%),dan akhir episode. Tidak menyalin semua kolom diagnostik ke
+Word; CSV evaluasi asli tetap utuh dengan kolom lain termasuk reward.
+Berhasil0/5=0%;1/5=20%. Ini bukan persentase jutaan episode training.
+Rerata meliputi semua5rute, dihitung sebelum pembulatan. Skor per rute sudah
+berbobot panjang; ringkasan antar-seed memberi setiap rute bobot yang sama.
+Overlap yang diringkas juga rata-rata rasio5rute,bukan poolingpanjang/lintasan.
+Galatjarak=abs(panjangrute-5000),bukan jarak nodeakhir terhadap start.
+
+GAMBAR
+Dua gambar tetap4panel lengkap. Versi cetak menyalin data path,koordinat marker,
+clipping dan batas sumbu asli; tata letak/font/label disesuaikan. Episode
+pelatihan dalam ribuan. Lebar14cm menjaga hurufminimal8pt. PNG1654px dan SVG
+tersedia. Source PNG/SVG pada asli/. Grafik overlap tersendiri disalin untuk
+pilihan lampiran,tetapi tidak dimasukkan Word karena sudah di tabel.
+Setiap titik=5evaluasi konfigurasi terpisah,bukan riwayat episode; tidak ada
+rolling50 pada gambar ini. Ticknegatif pada panel yang semua nilainya0 adalah
+batas sumbu otomatis sumber,bukan proporsi negatif. Data aktual tetap0.
+
+ANGKA UTAMA
+Keberhasilan urut dinamis150k,dinamis300k,tetap100k-total150k,tetap100k-total300k:
+0/5,0/5,0/5,1/5. Seed3 profil terakhir berhasil5957,956893m;galat957,956893m;
+skor0,72585545;overlap1,111111%.4seed lain overdistance. Seed0 overlap26,923077%
+membentuk bagian besar meanoverlap6,529635%. Total1/20lintasempatprofil bukan
+ukuran konvergensi,signifikansi,kemampuanumum atau bukti validasi lapangan.
+
+Tidak training/evaluasiulang/download/instalasipaket/perubahan sumber Go/commit.
+
+PEMETAAN
+
+Tabel 4.4 Ringkasan Hasil Evaluasi Skenario A
+CSV: ringkasan_evaluasi_skenario_a.csv
+
+Tabel 4.5 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 150.000 Episode
+CSV: a-dynamic-150000_setiap_seed.csv
+
+Tabel 4.6 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 300.000 Episode
+CSV: a-dynamic-300000_setiap_seed.csv
+
+Tabel 4.7 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 150.000 Episode
+CSV: a-horizon-100000-total-150000_setiap_seed.csv
+
+Tabel 4.8 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 300.000 Episode
+CSV: a-horizon-100000-total-300000_setiap_seed.csv
+
+Gambar 4.28 Perbandingan hasil evaluasi skenario A dengan epsilon dinamis
+PNG: evaluasi_a_dinamis_cetak.png
+SVG: evaluasi_a_dinamis_cetak.svg
+Asli: asli/dynamic/evaluation_comparison.png
+
+Gambar 4.29 Perbandingan hasil evaluasi skenario A dengan durasi penurunan epsilon tetap 100.000 episode
+PNG: evaluasi_a_durasi_tetap_cetak.png
+SVG: evaluasi_a_durasi_tetap_cetak.svg
+Asli: asli/horizon-100000/evaluation_comparison.png

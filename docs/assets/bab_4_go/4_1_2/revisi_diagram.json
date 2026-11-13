@@ -1,0 +1,30 @@
+{
+  "main_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "main_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_1_2_go_20261113/DRAF_BAB_IV_4_1_2.docx",
+  "source_docx_sha256": "784cefff63da7b3fa5d3dbdb9ee10c236ce0e65d6d5ff1bf117b3d826fe1a92b",
+  "completeness_source": "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_1_2/sumber_attribute_completeness.csv",
+  "completeness_source_sha256": "1827e592b2c30fbf492b7f9c14d4707ced5a5079722d405e4e95abb45ee87807",
+  "figure_number": "4.2",
+  "figure_title": "Kelengkapan Atribut Jalan pada Graf Penelitian",
+  "access_table_number": "4.2",
+  "source_denominator": 59176,
+  "notes": [
+    "Replaces completeness table, not an additional duplicate figure",
+    "Labels in Indonesian; source data unchanged",
+    "Percent labels show filled share; light gray remainder is not recorded",
+    "No connectivity conclusions from total edge count",
+    "Go notebook, code, config and research outputs unchanged",
+    "Previous two-table DOCX retained as history"
+  ],
+  "word_pages": 3,
+  "all_pages_visually_reviewed": true,
+  "figure_visually_reviewed": true,
+  "docx_sha256": "9ccbb4375663c26506017ad6bbe2e81d5523c9ed3b37e5c9665b766c6bfef403",
+  "asset_hashes": {
+    "kelengkapan_atribut.svg": "1fe3896f2f707e61941deabf84ceabcb1972ef7c37c1ed3b3c17e2ff1a2379f8",
+    "PETUNJUK.txt": "b56f91fbbe35e0b7d3af7977b504ba34f5a8f2fae8abb4e0615c95818f368997",
+    "kelengkapan_atribut.png": "08ee2ed103d45eaf083019e0304d2b4c3d2beb036cc5b6b92ade0e8ab132d6b7",
+    "buat_diagram_kelengkapan.py": "8a99f110e039b27e97d257e3a93c0274249355868971ba30cd3907bf11251d20"
+  }
+}

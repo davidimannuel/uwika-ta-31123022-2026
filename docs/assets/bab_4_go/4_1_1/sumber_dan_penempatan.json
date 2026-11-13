@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-13",
+  "scope": "Only introduction 4.1 and subsection 4.1.1; ignore previous Bab IV content.",
+  "source_project": "/Users/david/development/go-running-route-q-learning",
+  "main_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "main_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_files": {
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/graph_summary.csv": "336d2d4bc154ca2ebae91718cc27a6e59df6e6656bfb17614114c6273b6493c5",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/nodes.csv": "5d7099d390d3e01e2f2e35e67e4fb97aa0efec753375e6a70ab005318fa63a04",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/edges.csv": "969ba1360ae47e30173ffd5ea137b4ae64c0be712065dabfb64025e3dba3a9e1",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis.json": "c3c67538a46f75a4e0c068ef01fa5e20847034044ee2792a5fe07f911652efc2"
+  },
+  "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+  "notebook": {
+    "file": "/Users/david/development/go-running-route-q-learning/analisa.ipynb",
+    "section": "3. Sampel dan ringkasan graf",
+    "cell_call": "report.show_summary()",
+    "use": "Last summary table, not initial samples"
+  },
+  "table": {
+    "number": "4.1",
+    "title": "Ringkasan Hasil Pembentukan Graf Jalan",
+    "file": "ringkasan_graf.csv",
+    "values": {
+      "nodes": 26835,
+      "directed_edges": 59176,
+      "source_osm_ways": 6874
+    }
+  },
+  "figure": {
+    "number": "4.1",
+    "title": "Jaringan jalan pada wilayah penelitian dan titik awal agen",
+    "source_html": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/road-analysis.html",
+    "expected_screenshot": "graf_dan_titik_awal.png",
+    "status": "pending_user_screenshot",
+    "requirements": [
+      "Show network and START marker",
+      "Close popups and minimize details",
+      "Retain OSM attribution",
+      "Retain highway legend if using highway colors"
+    ]
+  },
+  "notes": [
+    "Only three graph metrics included, per user agreement.",
+    "No additional formula needed.",
+    "Graph supports parallel edges structurally; current summary reports zero parallel directed node pairs.",
+    "Graph snapshot and start matched across 12 stored profiles.",
+    "No thesis body, Go code, config, training or raw outputs edited.",
+    "User says Bab I–III have been revised; this request does not independently certify those revisions."
+  ],
+  "word_pages": 2,
+  "word_visual_reviewed": true,
+  "docx_sha256": "e448d08fdeff02278ca7661b5319d9659234249debf1e1fb32cf7ece2b64f608",
+  "asset_hashes": {
+    "ringkasan_graf.csv": "e6f39fb88d758e807849ecf1fc4da0b815be134147c4c7f58a2542cc1ec4c141",
+    "PETUNJUK.txt": "d0d52eeb55f58a679046cf84dbdb3c230d43cde49cacec1d7187a71b0eb0f44b"
+  }
+}

@@ -1,0 +1,7 @@
+Komponen atau kondisi,Nilai dan aturan
+Kunjungan ulang node selain start,−10 setiap langkah kunjungan ulang yang masih diperbolehkan.
+success,+100 jika kembali ke start pada total 4.000–6.000 m.
+over_distance,−50 jika total jarak melebihi 6.000 m.
+no_available_action,−50 jika tidak ada action yang diperbolehkan.
+step_limit,−50 pada batas 500 langkah jika kondisi akhir yang diperiksa lebih dahulu belum terpenuhi.
+Galat jarak akhir,−5 per 100 m selisih absolut terhadap 5.000 m; dihitung proporsional sekali pada akhir episode.

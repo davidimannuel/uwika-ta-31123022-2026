@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+start
+:Inisialisasi Q-table satu kali;
+while (Masih ada episode pelatihan?) is (ya)
+  :Atur ulang lingkungan dan\ntentukan state awal;
+  while (Episode belum berakhir?) is (ya)
+    if (Ada tindakan yang diperbolehkan?) then (ya)
+      :Pilih tindakan dengan epsilon-greedy;
+      :Lakukan tindakan dan terima reward,\nstate berikutnya serta status akhir;
+      if (Episode berakhir?) then (ya)
+        :Tetapkan estimasi nilai masa depan = 0;
+      else (tidak)
+        :Ambil nilai Q tertinggi dari tindakan\nyang diperbolehkan pada state berikutnya;
+      endif
+      :Perbarui Q(state, tindakan);
+      :Gunakan state berikutnya;
+    else (tidak)
+      :Akhiri episode;
+    endif
+  endwhile (tidak)
+  :Catat hasil episode;
+endwhile (tidak)
+stop
+@enduml

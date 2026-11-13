@@ -1,0 +1,6 @@
+Seed,Panjang Rute (m),Galat Jarak (m),Skor Karakter Ruas,Pengulangan Ruas (%),Akhir Episode
+0,"6.000,94","1.000,94","0,2995","26,92",Melebihi batas jarak
+1,"6.060,59","1.060,59","0,8091","0,91",Melebihi batas jarak
+2,"6.000,32","1.000,32","0,5306","0,82",Melebihi batas jarak
+3,"5.957,96","957,96","0,7259","1,11",Berhasil loop
+4,"6.154,35","1.154,35","0,4505","2,88",Melebihi batas jarak

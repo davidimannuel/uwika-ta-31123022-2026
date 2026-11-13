@@ -1,0 +1,5 @@
+Kondisi,Ketentuan,Nilai
+Berhasil membentuk loop,Kembali ke node awal dengan jarak 4.000–6.000 m.,+100
+Melebihi batas jarak,Total jarak lebih dari 6.000 m.,−50
+Tidak tersedia tindakan,Tidak ada ruas yang memenuhi ketentuan akses dan perjalanan.,−50
+Mencapai batas langkah,Telah melakukan 500 langkah tanpa memenuhi kondisi penghentian yang diperiksa lebih dahulu.,−50

@@ -1,0 +1,5 @@
+﻿Tag,Makna,Penggunaan dalam Penelitian
+highway,Jenis atau klasifikasi jalan dan jalur.,Masukan penilaian karakter ruas.
+surface,Material permukaan jalan atau jalur.,Masukan penilaian karakter ruas.
+width,Lebar jalan atau jalur yang tercatat.,Masukan penilaian karakter ruas.
+access,Informasi izin atau pembatasan akses.,Penyaringan pilihan ruas dan pertimbangan penalti akses.

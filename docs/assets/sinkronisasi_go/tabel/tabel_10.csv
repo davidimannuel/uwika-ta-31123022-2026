@@ -1,0 +1,9 @@
+Parameter,Nilai
+Learning rate α,"0,15"
+Discount factor γ,"0,95"
+Epsilon awal dan minimum,"1,00 dan 0,05"
+Epsilon evaluasi,0
+Batas langkah per episode,500
+Progress bin,25 pada rentang 0–6.000 m
+Seed,"0,1,2,3,4"
+Pelaksanaan paralel,Maksimal 5 pekerja; Q-table tidak dibagikan antar-seed

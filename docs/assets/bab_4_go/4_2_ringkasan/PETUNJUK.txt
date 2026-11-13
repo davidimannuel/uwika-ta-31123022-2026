@@ -1,0 +1,46 @@
+PEMBARUAN JUMLAH BERHASIL DAN PEMBAGI — 13 November 2026
+Word aktif: DRAF_BAB_IV_4_2_4_RINGKASAN_PELATIHAN_REVISI.docx pada folder
+Word sebelumnya. Versi tanpa akhiran REVISI dipertahankan sebagai riwayat.
+Tabel baru: tabel_keberhasilan_jumlah_dan_persentase.csv.
+Enam kolom: penurunan epsilon,episode per seed,total episode lima seed,
+lalu A/B/C yang masing-masing memuat JUMLAH berhasil diikuti PERSENTASE.
+Pembagi persentase ada pada kolom total lima seed pada baris yang sama.
+Contoh519.821/1.500.000*100=34,654733...%,dibulatkan34,65%.
+Semua12pembilang dan pembagi dicocokkan CSV terminasi asli.
+Nilai persentase/interpretasi sebelumnya tetap; hanya transparansi perhitungan
+serta penyajian tabel ditambah. Tidak menambahkan persamaan bernomor.
+CSV persentase lama dan helper lama tetap untuk riwayat/format sebelumnya.
+
+LAMPIRAN RINGKASAN PERBANDINGAN HASIL PELATIHAN
+
+Penempatan: setelah pembahasan skenario C, subbab4.2.4.
+Word hanya memuat ringkasan perbandingan, tidak mengulang seluruh grafik.
+Satu tabel, caption sementara Tabel4.3; sesuaikan nomor pada naskah utama.
+Tidak ada gambar/rumus baru. Grafik training dan diagnosis tetap pada subbab
+masing-masing skenario. Evaluasi greedy, verifikasi, validasi belum disusun.
+
+TABEL
+File tabel_keberhasilan_seluruh_pelatihan.csv siap disalin atau diolah.
+Persentase=100*jumlah episode success/(total episode per seed*5).
+Seluruh episode lima seed0–4, termasuk fase awal, bukan10kepisode terakhir
+atau proporsi lima evaluasi greedy. Dasar750.000 atau1.500.000episode/profil.
+Angka tabel dibulatkan2desimal. A/C dinamis300k tampak sama0,29% karena
+pembulatan; nilai aslinya0,286933% dan0,286067%. Tidak disimpulkan setara.
+
+SUMBER
+12 termination_training.csv dari proyek Go, hasil analisis training.ipynb,
+bagian report.show_profiles(), tabel Termination Rate Training.
+Salinan tersedia di sumber_terminasi/<profil>/termination_training.csv.
+ringkasan_12_profil.csv juga memuat kegagalan dan mean Q-state akhir; nilai
+Q-state dari baris terakhir episode_means.csv, bukan rata-rata50episode terakhir.
+Manifest mencatat hash sumber termasuk metadata yang telah diperiksa pada A–C.
+Graf/start/reward/aturan perjalanan/lima seed sama; budget150k/300k dan
+epsilon dinamis/tetap100k. Seluruh step_limit0. Konfigurasi dilatih terpisah.
+
+BATAS PEMBAHASAN
+B tertinggi untuk ukuran keberhasilan SELURUH PELATIHAN di4konfigurasi.
+Tetap100k lebih tinggi daripada dinamis pada6pasangan state/budget yang sama.
+Bukan uji signifikansi, konvergensi, optimalitas, kestabilan tiap seed, mutu
+akhir kebijakan atau bukti lapangan. Pelatihan tetap eksplorasi5%di akhir.
+Peningkatan budget dinamis juga memperpanjang durasi penurunan epsilon.
+Tidak ada training/download/perubahan sumber Go/naskah TA utama.

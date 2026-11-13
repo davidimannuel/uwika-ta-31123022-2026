@@ -1,0 +1,4 @@
+Skenario,State,Informasi
+A,(u),Node saat ini.
+B,"(u, b)",Node saat ini dan kategori progres jarak.
+C,"(u, p, b)","Node saat ini, node sebelumnya, dan kategori progres jarak."

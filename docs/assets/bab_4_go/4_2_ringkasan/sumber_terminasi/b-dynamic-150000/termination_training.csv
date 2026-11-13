@@ -1,0 +1,5 @@
+termination_reason,count,termination_rate,termination_rate_percent
+success,520,0.0006933333333333333,0.06933333333333333
+over_distance,18468,0.024624,2.4624
+no_available_action,731012,0.9746826666666667,97.46826666666666
+step_limit,0,0.0,0.0

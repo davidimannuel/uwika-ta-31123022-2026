@@ -1,0 +1,2077 @@
+{
+  "date": "2026-11-12",
+  "scope": "Bab III replacement guide after all subsections agreed; no edits to main thesis, code, training or verification/validation chapters",
+  "source_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "source_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_project": "/Users/david/development/go-running-route-q-learning",
+  "source_code_hashes": {
+    "internal/osm/overpass.go": "76970a55f9370265f1767456e33d3c6de17c22b084e775ae2a168619414f38c3",
+    "internal/osm/geo.go": "a24c264a85840175e3918bc34ccbd0451a3116f8ac4e596943fdd650d723db8a",
+    "internal/osm/graph.go": "e64077fd306b2b9e6acdbb67d14785e7d2b9042ed7113264e73c9595aebf9331",
+    "internal/osm/width.go": "d91647b570e5d167bbf3500a7b3d8bb429dec7da69c30a9cd363bf8c879071bb",
+    "internal/qlearning/scoring.go": "201694a4b3f3912e2ecc1a397fa5cf3931ca083031d17bffbd466095e0a1b455",
+    "internal/qlearning/action.go": "b05a65de23816a3e3c76d2e9bebb3f7cdaf1b9db674417a6732fc078189e5d6d",
+    "internal/qlearning/prepared_graph.go": "67c322a8161a1539c4080f49d775aa237e75720637d4719c619769d187692edd",
+    "internal/qlearning/environment.go": "8ddafddf2585aaeb103fc3f43fcf55f09dd57dd9eea45f9c2fb4247d488685be",
+    "internal/qlearning/agent.go": "8f597b14a532a2c9ceee4a4fb104226a21bca238302aaf943b2caeb7fa677abb",
+    "internal/qlearning/training.go": "56f1bf31c5e0c2f5a5ed45c01d13bfcd431c26bc0a3478ebe8f766e79753f07d",
+    "internal/qlearning/metrics.go": "1058829cb774ccd8e56475101188061d19e3992a9232c5fcae0ee5b9cab28134",
+    "workdirs/training/config.yaml": "06036ad6ee3850d348091f7506c974bae39576de3c0a9a571c89fd1c5a745008",
+    "analysis/training.py": "5104fca7df622ad296a310edccc3cc16a8e6afe07b3f1537c1d212fff97da1b5",
+    "go.mod": "5f3eb983e0949e0d45230e273a9a396236bbc127added52c452d60c0cf7890ca",
+    "pyproject.toml": "68103c005287ba0744fd1e9595b2c3a47f60b2149d82aa06ad7231456875b3a9"
+  },
+  "profiles": [
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-150000/metadata.json",
+      "sha256": "276c89907ce686210874814e21cb594e96258710610d1f32335ebbcdd45b2c6d",
+      "profile": "a-dynamic-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "A",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-300000/metadata.json",
+      "sha256": "a8a3e6cf5959225f1a54fd10ab7cbff63e04d82bf1ea0f5cbc728c99b5c535d2",
+      "profile": "a-dynamic-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "A",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-150000/metadata.json",
+      "sha256": "55dce0ce90edc4b946e6f3724267387a77a03f3b9729fbadc148be6fe9176f26",
+      "profile": "a-horizon-100000-total-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "A",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-300000/metadata.json",
+      "sha256": "6e3bd1b8e0560df0343d6fbce128b97615db700d670053b22453d4f403f02397",
+      "profile": "a-horizon-100000-total-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "A",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-150000/metadata.json",
+      "sha256": "0ff21e7fbc464bb5a31e6449fc16edba123f8ee83600801dc5a8e578cddc9031",
+      "profile": "b-dynamic-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "B",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-300000/metadata.json",
+      "sha256": "1be39e1d99d8e9190409154796cecfeeb5f6ee5414eb5b7dae5f6d341026c2e5",
+      "profile": "b-dynamic-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "B",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-150000/metadata.json",
+      "sha256": "d58e885ee3a6fe60c59be597ae195348452cea18ea1b43e9a289703cb27d9611",
+      "profile": "b-horizon-100000-total-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "B",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-300000/metadata.json",
+      "sha256": "168bcbf5599f44451bb4675042cc063e02258554a1cb959b15a473d8ef243e67",
+      "profile": "b-horizon-100000-total-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "B",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-150000/metadata.json",
+      "sha256": "78de9f874017edf368b4e03c5db7daf3e3f6d32b2a1949eaf5d4403f012fa3ea",
+      "profile": "c-dynamic-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "C",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/metadata.json",
+      "sha256": "0acc12945a237d02af7a2c4c1834416c67062d124653154e35dd48717e1bceab",
+      "profile": "c-dynamic-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "C",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": null,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-150000/metadata.json",
+      "sha256": "ba9a91e26480e3d19a3c4153db78aa7d47f84b4979becbc78415a039f3a33201",
+      "profile": "c-horizon-100000-total-150000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "C",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 150000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    },
+    {
+      "file": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-300000/metadata.json",
+      "sha256": "24b776e46c74a2f02c1e945e4834b2e6b73701bc6643d48fcdcdc50807926f23",
+      "profile": "c-horizon-100000-total-300000",
+      "start_node": 311432306,
+      "map": {
+        "latitude": -7.281518,
+        "longitude": 112.710178,
+        "radius_m": 3025,
+        "timeout_sec": 90
+      },
+      "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+      "road_score": {
+        "highway": {
+          "weight": 0.55,
+          "priority": 1,
+          "other": -10,
+          "missing": -2,
+          "secondary_priority": 0.5
+        },
+        "surface": {
+          "weight": 0.3,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width": {
+          "weight": 0.15,
+          "priority": 1,
+          "other": -1,
+          "missing": -0.5
+        },
+        "width_threshold_m": 3
+      },
+      "reward_constants": {
+        "road": {
+          "highway": {
+            "weight": 0.55,
+            "priority": 1,
+            "other": -10,
+            "missing": -2,
+            "secondary_priority": 0.5
+          },
+          "surface": {
+            "weight": 0.3,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width": {
+            "weight": 0.15,
+            "priority": 1,
+            "other": -1,
+            "missing": -0.5
+          },
+          "width_threshold_m": 3
+        },
+        "return_phase_ratio": 0.5,
+        "outward_penalty_scale": 0,
+        "return_reward_scale": 1.2,
+        "permissive_penalty_per_100m": -0.1,
+        "revisit_penalty": -10,
+        "distance_error_penalty_per_100m": -5,
+        "success_bonus": 100,
+        "over_distance_penalty": -50,
+        "no_action_penalty": -50,
+        "step_limit_penalty": -50
+      },
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "config": {
+        "scenario": "C",
+        "reward": {
+          "road": {
+            "highway": {
+              "weight": 0.55,
+              "priority": 1,
+              "other": -10,
+              "missing": -2,
+              "secondary_priority": 0.5
+            },
+            "surface": {
+              "weight": 0.3,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width": {
+              "weight": 0.15,
+              "priority": 1,
+              "other": -1,
+              "missing": -0.5
+            },
+            "width_threshold_m": 3
+          },
+          "return_phase_ratio": 0.5,
+          "outward_penalty_scale": 0,
+          "return_reward_scale": 1.2,
+          "permissive_penalty_per_100m": -0.1,
+          "revisit_penalty": -10,
+          "distance_error_penalty_per_100m": -5,
+          "success_bonus": 100,
+          "over_distance_penalty": -50,
+          "no_action_penalty": -50,
+          "step_limit_penalty": -50
+        },
+        "environment": {
+          "target_distance_m": 5000,
+          "distance_tolerance": 0.2,
+          "progress_bins": 25,
+          "max_steps": 500,
+          "allow_revisit": true,
+          "revisit_after_ratio": 0.5,
+          "max_node_visits": 2,
+          "max_snap_distance_m": 100
+        },
+        "training": {
+          "episodes": 300000,
+          "epsilon_decay_episodes": 100000,
+          "alpha": 0.15,
+          "gamma": 0.95,
+          "epsilon_start": 1,
+          "epsilon_end": 0.05,
+          "seeds": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "runs": null,
+          "max_workers": 5
+        }
+      }
+    }
+  ],
+  "coordinate_for_text": {
+    "latitude": -7.281518,
+    "longitude": 112.710178,
+    "meaning": "Research and start reference, as instructed by user; no claim historical snapshot was downloaded around this exact center."
+  },
+  "historical_download_map": {
+    "latitude": -7.281518,
+    "longitude": 112.710178,
+    "radius_m": 3025,
+    "timeout_sec": 90
+  },
+  "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+  "tables": [
+    {
+      "number": "3.1",
+      "title": "Sumber Data dan Acuan Wilayah Penelitian",
+      "file": "sumber_data.csv",
+      "rows": 7
+    },
+    {
+      "number": "3.2",
+      "title": "Atribut Jalan dan Penggunaannya",
+      "file": "atribut_jalan.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.3",
+      "title": "Pemetaan Skor Highway",
+      "file": "skor_highway.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.4",
+      "title": "Pemetaan Skor Surface",
+      "file": "skor_surface.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.5",
+      "title": "Pemetaan Skor Width",
+      "file": "skor_width.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.6",
+      "title": "Penanganan Atribut Tidak Lengkap dan Gabungan",
+      "file": "penanganan_atribut.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.7",
+      "title": "Parameter Lingkungan Perjalanan",
+      "file": "parameter_environment.csv",
+      "rows": 5
+    },
+    {
+      "number": "3.8",
+      "title": "Representasi State yang Dibandingkan",
+      "file": "representasi_state.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.9",
+      "title": "Contoh Penentuan Kategori Progres Jarak",
+      "file": "contoh_progres.csv",
+      "rows": 5
+    },
+    {
+      "number": "3.10",
+      "title": "Ketentuan Access pada Ruas dan Node",
+      "file": "aturan_access.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.11",
+      "title": "Ketentuan Perjalanan untuk Pemilihan Ruas",
+      "file": "aturan_perjalanan.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.12",
+      "title": "Contoh Reward Karakter Ruas",
+      "file": "contoh_reward_ruas.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.13",
+      "title": "Contoh Reward Arah pada Fase Pulang",
+      "file": "contoh_reward_arah.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.14",
+      "title": "Bonus dan Penalti Kondisi Akhir Episode",
+      "file": "reward_terminal.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.15",
+      "title": "Contoh Kontribusi Kondisi Akhir dan Selisih Jarak",
+      "file": "contoh_reward_terminal.csv",
+      "rows": 3
+    },
+    {
+      "number": "3.16",
+      "title": "Contoh Epsilon pada Pelatihan 150.000 Episode",
+      "file": "contoh_epsilon.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.17",
+      "title": "Parameter Dasar Pelatihan",
+      "file": "parameter_pelatihan.csv",
+      "rows": 6
+    },
+    {
+      "number": "3.18",
+      "title": "Kombinasi Jumlah Episode dan Durasi Penurunan Epsilon",
+      "file": "konfigurasi_eksperimen.csv",
+      "rows": 4
+    },
+    {
+      "number": "3.19",
+      "title": "Metrik Evaluasi Rute",
+      "file": "metrik_evaluasi.csv",
+      "rows": 10
+    },
+    {
+      "number": "3.20",
+      "title": "Perangkat Pustaka dan Format yang Digunakan",
+      "file": "perangkat_implementasi.csv",
+      "rows": 9
+    }
+  ],
+  "equations": [
+    {
+      "number": "3.1",
+      "latex": "C_e=0{,}55H_e+0{,}30S_e+0{,}15W_e"
+    },
+    {
+      "number": "3.2",
+      "latex": "C_e=0{,}55(1)+0{,}30(1)+0{,}15(1)=1{,}00"
+    },
+    {
+      "number": "3.3",
+      "latex": "C_e=0{,}55(-10)+0{,}30(-0{,}5)+0{,}15(-0{,}5)=-5{,}725"
+    },
+    {
+      "number": "3.4",
+      "latex": "b=\\min\\left(24,\\max\\left(0,\\left\\lfloor\\frac{d}{6000}\\times25\\right\\rfloor\\right)\\right)"
+    },
+    {
+      "number": "3.5",
+      "latex": "D_t=d_H(v_t,v_0)"
+    },
+    {
+      "number": "3.6",
+      "latex": "R_e=C_e\\frac{L_e}{100}"
+    },
+    {
+      "number": "3.7",
+      "latex": "R_a=-0{,}10\\frac{L_e}{100}I_p"
+    },
+    {
+      "number": "3.8",
+      "latex": "R_d=1{,}20\\frac{D_{\\mathrm{sebelum}}-D_{\\mathrm{sesudah}}}{100}"
+    },
+    {
+      "number": "3.9",
+      "latex": "R_\\delta=-5\\frac{|d_{\\mathrm{akhir}}-5000|}{100}"
+    },
+    {
+      "number": "3.10",
+      "latex": "r=R_e+R_a+R_d+R_v+R_T+R_\\delta"
+    },
+    {
+      "number": "3.11",
+      "latex": "Q(s,a)\\leftarrow Q(s,a)+\\alpha\\left[r+\\gamma\\max_{a^\\prime\\in A_{\\mathrm{boleh}}}Q(s^\\prime,a^\\prime)-Q(s,a)\\right]"
+    },
+    {
+      "number": "3.12",
+      "latex": "\\varepsilon_n=0{,}05+0{,}95\\left[1-\\min\\left(\\frac{n-1}{D-1},1\\right)\\right]"
+    },
+    {
+      "number": "3.13",
+      "latex": "\\varepsilon_{50.000}=0{,}05+0{,}95\\left(1-\\frac{49.999}{99.999}\\right)\\approx0{,}5250"
+    },
+    {
+      "number": "3.14",
+      "latex": "I_{\\mathrm{loop}}=\\mathbf{1}\\{v_{\\mathrm{akhir}}=v_0\\;\\land\\;4000\\le d_{\\mathrm{akhir}}\\le6000\\}"
+    },
+    {
+      "number": "3.15",
+      "latex": "O=\\frac{N-U}{N}"
+    },
+    {
+      "number": "3.16",
+      "latex": "\\overline C=\\frac{\\sum_{i=1}^{N}C_iL_i}{\\sum_{i=1}^{N}L_i}"
+    },
+    {
+      "number": "3.17",
+      "latex": "P=\\frac{n_{\\mathrm{mendekat}}}{n_{\\mathrm{pulang}}}"
+    },
+    {
+      "number": "3.18",
+      "latex": "S=\\frac{n_{\\mathrm{berhasil}}}{n_{\\mathrm{dinilai}}}\\times100\\%"
+    },
+    {
+      "number": "3.19",
+      "latex": "T_j=\\frac{n_j}{n_{\\mathrm{dinilai}}}\\times100\\%"
+    },
+    {
+      "number": "3.20",
+      "latex": "d_{\\mathrm{akhir}}=1200+2000+1650=4850\\;\\mathrm{m}"
+    },
+    {
+      "number": "3.21",
+      "latex": "E=|4850-5000|=150\\;\\mathrm{m}"
+    },
+    {
+      "number": "3.22",
+      "latex": "R_{\\mathrm{total}}=-12{,}50+100-10=77{,}50"
+    },
+    {
+      "number": "3.23",
+      "latex": "\\overline C=\\frac{1000(1)+3000(0{,}325)+1000(0{,}725)}{5000}=0{,}54"
+    },
+    {
+      "number": "3.24",
+      "latex": "O=\\frac{10-8}{10}=0{,}20=20\\%"
+    }
+  ],
+  "figures": [
+    {
+      "number": "3.1",
+      "file": "alur_penelitian.puml",
+      "title": "Alur penelitian dan penerapan katalog rute",
+      "location": "3.2, setelah uraian tahapan eksperimen",
+      "type": "Ilustrasi rancangan penulis; bukan hasil eksperimen."
+    },
+    {
+      "number": "3.2",
+      "file": "alur_environment.puml",
+      "title": "Alur perjalanan agen dalam satu episode",
+      "location": "3.3.5, setelah contoh kategori progres",
+      "type": "Ilustrasi rancangan penulis; bukan hasil eksperimen."
+    },
+    {
+      "number": "3.3",
+      "file": "jarak_langsung.puml",
+      "title": "Perbedaan jalur perjalanan dan jarak langsung terhadap titik awal",
+      "location": "3.3.7, setelah penjelasan dua jenis jarak",
+      "type": "Ilustrasi rancangan penulis; bukan hasil eksperimen."
+    }
+  ],
+  "sources": [
+    {
+      "reference": "OpenStreetMap contributors. (n.d.). Copyright and license. Retrieved November 11, 2026, from https://www.openstreetmap.org/copyright",
+      "url": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-a). Key: access. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:access",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:access"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-b). Key: highway. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:highway"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-c). Key: surface. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:surface"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-d). Key: width. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:width",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:width"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-f). Overpass API. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Overpass_API",
+      "url": "https://wiki.openstreetmap.org/wiki/Overpass_API"
+    },
+    {
+      "reference": "Sutton, R. S., & Barto, A. G. (2018). Reinforcement learning: An introduction (2nd ed.). The MIT Press.",
+      "url": "https://mitpress.mit.edu/9780262039246/reinforcement-learning/"
+    },
+    {
+      "reference": "Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. Machine Learning, 8, 279–292. https://doi.org/10.1007/BF00992698",
+      "url": "https://link.springer.com/article/10.1007/BF00992698"
+    }
+  ],
+  "notes": [
+    "All numerical examples are illustrative, not observed results.",
+    "Reward direction exposition focuses only on active return reward; phase-crossing behavior retained.",
+    "Mean/overlap may be undefined, never silently treated as zero.",
+    "All seed outcomes used for success rate; a representative map is only an illustration.",
+    "Overlap uses raw endpoint coordinate pairs, not networkx key identity or distance weighting.",
+    "Analysis label Melebihi 5,5 km is stale and must be adjusted before results are illustrated; no code changed here."
+  ],
+  "word_pages": 33,
+  "display_equations": 24,
+  "inline_and_display_math_elements": 35,
+  "docx_sha256": "f6b10a74dc7db126d257d5997c762b7142e281c98a74fb7d440f7cb43f9068d2",
+  "visual_review": {
+    "word_all_pages": true,
+    "all_diagrams": true,
+    "margin_audit_exceptions": 0,
+    "illustrative_calculations_checked": true
+  },
+  "diagram_render_status": {
+    "alur_penelitian.puml": {
+      "rendered": true,
+      "engine": "PlantUML via Kroki",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "visually_reviewed": true
+    },
+    "alur_environment.puml": {
+      "rendered": true,
+      "engine": "PlantUML via Kroki",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "visually_reviewed": true
+    },
+    "jarak_langsung.puml": {
+      "rendered": true,
+      "engine": "PlantUML via Kroki",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "visually_reviewed": true
+    }
+  },
+  "asset_hashes": {
+    "reward_terminal.csv": "39ad49291a56aa856dd979c6ea469a1f06f4b7e7d03e4e2bd4db2d64679c8a34",
+    "jarak_langsung.svg": "847ed3dccdb332fc388e70a822443e7198b822c737b1862e2826af3360abe2c1",
+    "perangkat_implementasi.csv": "8492b43b43983b1f43808d6a37e2e6d21f27f0c8d701ec40ba959747ad8d9a2f",
+    "atribut_jalan.csv": "ef646bdce8b5565c5887f6173ab27bf7ddff9f66e8cde2eb7d310e881300f48c",
+    "parameter_environment.csv": "bb7bbe3ecdf6ff0fa4c490616e5528de16b51f2fe2c426b6883ae1339a7a690a",
+    "contoh_reward_arah.csv": "3f24668e836dfcdd710ec54e2b1eee0b1f4c53d37c2b6cf374d7ba4c0ff4c645",
+    "metrik_evaluasi.csv": "bbbc41a191a979ae12dc125ad257619c578c5fd5445b07b579d40a2036742d03",
+    "konfigurasi_eksperimen.csv": "c5871014f3aa817989a8eb50a26bf8c55b57e557da4a7acb9565f3cdf9a4dffe",
+    "alur_penelitian.png": "9951f1d1b956ce0ca21c58313dd0e3b53b601f73565c4d7b30449da2fa81a42f",
+    "contoh_reward_terminal.csv": "091bb13caf7d0580bab01b52e4e084d065838c40dcb91c58183aa42568cc2e9e",
+    "contoh_progres.csv": "72bc6991958f983cb9b5de7a5c7178f9b2e21d1d5c25d6759b504b62cc1e064d",
+    "aturan_access.csv": "a8d0b6d201afb685bea9cd7254f7b8da803d42c00b6dc432f58c847d9f5fc678",
+    "alur_penelitian.puml": "793f96baadd4b378d299efa38ce46189b00639e1ac58d50a751547db77ee4ffa",
+    "contoh_epsilon.csv": "334d1c92eff4e7aa7e0edec93849cd26691375d6b1c26e347a43c60a14d88ca0",
+    "referensi_bab_3.txt": "b95c1abdf821a0bce1ef8a496189333c5f43485bfa3e59d23fbda098f7ec7f8c",
+    "alur_penelitian.svg": "eac85a4c2deebf346e72edd73175b28b1fef7cfdca361204d336250317c57e6b",
+    "jarak_langsung.puml": "cee74815a51b45e0ad7d4b0ebaa250efc4c63ac0f2dbb1b0374daae9908e0329",
+    "parameter_pelatihan.csv": "926118f469e85528b6d8ac474926d91e6cf7cc9eab825c03902e5be5605e9022",
+    "contoh_reward_ruas.csv": "f2392704664860ecb7ee735f5ce47af1b2e376bf490c338ce20d95a7fa2cb34a",
+    "aturan_perjalanan.csv": "fa7d5da6f7d4819339e10826d31ad25593e8f7ddc22ba5bb7c5c445e74b2592d",
+    "rumus_bab_3.tex": "b582468ab8fd27d69ca260fc895fb06634fcddce75ea5297492ad1dcf5baa805",
+    "jarak_langsung.png": "2eaaa91993398f155e83976311c5c984dbfc01ca3735bc5b3e538b1a9c9c1d3c",
+    "skor_surface.csv": "cce13b4bbcbc79bef2fe84c6cc2907897e43a2feb0e6ec36e3231710896df5f0",
+    "alur_environment.svg": "c3bd17c0b6b5b63094c70f0c1271510678d3a2f7e9e72707e3431935ebbc0a05",
+    "sumber_data.csv": "e4c196795947ee18f6092e9152d2dbc65b2a713f810dfd1feb6729635369807b",
+    "penanganan_atribut.csv": "2eb22d5e5f3f31959aaeddd57642a913bd22ee676bb8993a0e110eedca59aeb6",
+    "representasi_state.csv": "ba09149dae02f080e421bc5aeace93cd0bec7348009eaba6897af833a7a9084b",
+    "skor_highway.csv": "04250caf10c04fd2038b25c407959a0629351754056756d84842ed1435346c63",
+    "alur_environment.puml": "bace74f5a368fce599cbfe8f323c2c903f802e8df6323f1a264d561f2d46f5d9",
+    "PETUNJUK.txt": "b7299d95661ddb006761ba36a65244493ba013988546d8f06d714b76e9281602",
+    "skor_width.csv": "8323d10f8254f7d4474201c0daaa4d0a696b5972dc72da79658174c74fa5c330",
+    "alur_environment.png": "34ef399efd6bae7e775c819682fa24bce11fbcfe58c68c3cfa41993d8effddb1",
+    "pemetaan_kolom_metrik.csv": "848dbefda8d36834ef708f638bb93053446587efae1216b35c0d631cea67f087"
+  }
+}

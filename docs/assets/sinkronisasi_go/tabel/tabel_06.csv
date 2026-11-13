@@ -1,0 +1,4 @@
+Skenario,Representasi state
+A,(current_node)
+B,"(current_node, progress_bin)"
+C,"(current_node, previous_node, progress_bin)"

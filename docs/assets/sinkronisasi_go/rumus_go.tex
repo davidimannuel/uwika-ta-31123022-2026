@@ -1,0 +1,25 @@
+% Sumber rumus netral untuk dipindahkan ke Equation Microsoft Word.
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+\begin{document}
+\section*{Skor ruas}
+\[ C_e=0{,}55H_e+0{,}30S_e+0{,}15W_e. \]
+\[ W_e=\begin{cases}1,&w_e\geq3,\\-1,&0<w_e<3,\\-0{,}5,&\text{kosong atau tidak valid}.\end{cases} \]
+\section*{Kategori perkembangan jarak}
+\[ b(d)=\min\!\left(24,\max\!\left(0,\left\lfloor\frac{25d}{6000}\right\rfloor\right)\right). \]
+\section*{Haversine}
+\[ h=\sin^2\!\left(\frac{\phi_2-\phi_1}{2}\right)+\cos\phi_1\cos\phi_2\sin^2\!\left(\frac{\lambda_2-\lambda_1}{2}\right). \]
+\[ \delta=2R\arcsin\sqrt{h},\qquad R=6371009\text{ meter}. \]
+\section*{Reward}
+\[ r_{\mathrm{ruas}}=C_e\frac{L_e}{100},\qquad r_{\mathrm{akses}}=\begin{cases}-0{,}10L_e/100,&\text{way permissive},\\0,&\text{lainnya}.\end{cases} \]
+\[ r_{\mathrm{pulang}}=1{,}20\frac{\delta_{\mathrm{sebelum}}-\delta_{\mathrm{sesudah}}}{100}. \]
+% Penerapan fase dan pengecualian terminal mengikuti penjelasan Word.
+\[ r_{\mathrm{galat}}=-5\frac{|D_{\mathrm{akhir}}-5000|}{100}\quad\text{sekali pada akhir episode}. \]
+\[ r=r_{\mathrm{ruas}}+r_{\mathrm{akses}}+r_{\mathrm{arah}}+r_{\mathrm{kunjungan}}+r_{\mathrm{terminal}}+r_{\mathrm{galat}}. \]
+\section*{Q-Learning dan epsilon}
+\[ Q(s,a)\leftarrow Q(s,a)+\alpha\left[r+\gamma\max_{a'\in A_{\mathrm{legal}}(s')}Q(s',a')-Q(s,a)\right]. \]
+\[ \epsilon_k=0{,}05+0{,}95\left[1-\min\left(\frac{k}{H-1},1\right)\right]. \]
+\section*{Metrik}
+\[ D=\sum_iL_i,\quad E=|D-5000|,\quad \bar C=\frac{\sum_iC_iL_i}{\sum_iL_i}. \]
+\[ O=\frac{N_{\mathrm{lintasan}}-N_{\mathrm{segmen\ fisik\ unik}}}{N_{\mathrm{lintasan}}}. \]
+\end{document}

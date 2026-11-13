@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 18
+skinparam ArrowColor #34495E
+skinparam activity {
+  BackgroundColor #E7F0F8
+  BorderColor #34495E
+  FontColor #172A3A
+}
+skinparam partition {
+  BackgroundColor white
+  BorderColor #7C8C9A
+  FontColor #172A3A
+}
+start
+partition "Eksperimen perbandingan state" {
+  :Ambil data OpenStreetMap\nmelalui Overpass API;
+  :Bentuk graf tanpa simplifikasi;\nolah atribut dan periksa akses;
+  :Rancang lingkungan perjalanan,\nstate A/B/C, dan fungsi reward;
+  :Latih setiap state pada konfigurasi\ndan kelompok seed yang sama;
+  :Evaluasi greedy dan\nanalisis perbandingan hasil;
+}
+partition "Penerapan katalog" {
+  :Pilih konfigurasi dan hasilkan\nkandidat rute pada beberapa titik awal;
+  :Pilih dan simpan rute;\ntampilkan melalui antarmuka katalog;
+}
+stop
+@enduml

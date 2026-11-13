@@ -4,6 +4,529 @@ Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acua
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
+## Ringkasan evaluasi lintas skenario 4.3.4 selesai — 13 November 2026
+
+Word baru khusus 4.3.4 Ringkasan Perbandingan Hasil Evaluasi:
+`docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx`.
+Empat halaman termasuk satu petunjuk, satu tabel 12 baris data dan tanpa gambar.
+Seluruh halaman dirender dan diperiksa; tabel utuh di halaman kedua, font tabel
+10 poin. Caption sementara Tabel 4.19, paragraf memakai rujukan umum. Draf ini
+melengkapi evaluasi A–C sebelumnya; tidak mengulang atau menggantinya.
+
+Angka 12 konfigurasi dicocokkan dengan 60 evaluation.csv asli dan metadata Go;
+graf, start, reward, mask, hyperparameter bersama dan lima seed 0–4 konsisten.
+Keberhasilan jumlah/5 dan persen; galat, skor dan pengulangan rata-rata seluruh
+lima hasil, termasuk gagal. Tabel disusun per konfigurasi lalu A/B/C agar
+perbandingan state memakai kondisi yang sama. Semua konfigurasi mandiri dari
+awal; 300k bukan kelanjutan 150k, evaluasi epsilon 0.
+
+B menghasilkan loop terbanyak pada tiga konfigurasi; dinamis150k semuanya 0/5.
+Durasi penurunan tetap 100k memberi keberhasilan sama atau lebih tinggi pada
+enam pasangan dibanding dinamis. Penambahan informasi node sebelumnya C belum
+mengungguli B. Fixed150k/300k B sama 5/5, tetapi galat 145,71/168,81 m dan
+pengulangan 0,97/0,70%; tidak ada klaim optimum, signifikansi atau generalisasi.
+Skor ruas bukan bukti keamanan/kenyamanan lapangan. Temuan terbatas pada lokasi,
+parameter dan seed yang diuji. Peta berhasil/gagal tetap pada subbab A/B/C;
+belum ada screenshot yang disisipkan. Katalog dan verifikasi/validasi ditunda.
+
+Lampiran permanen `docs/assets/bab_4_go/4_3_ringkasan_evaluasi/` berisi CSV tabel,
+data 12 konfigurasi presisi penuh, helper standar Python yang menghasilkan CSV
+identik, PETUNJUK dan manifest sumber/hash/QA. Tidak ada diagram atau rumus baru.
+Naskah utama dan sumber/kode/config/notebook/hasil Go tetap; tanpa pelatihan,
+evaluasi ulang, unduhan, instalasi atau commit. Tunggu review sebelum lanjut.
+
+## Evaluasi A–C lengkap dalam Word tabel saja — 13 November 2026
+
+Pengguna menyetujui format tabel A lalu meminta semua skenario A–C.
+Word gabungan aktif: `docs/temp/bab_4_3_evaluasi_a_c_go_20261113/DRAF_BAB_IV_4_3_EVALUASI_SKENARIO_A_B_C_TABEL.docx`.
+17halaman termasuk1petunjuk,15tabel,0gambar. Mencakup4.3pengantar serta4.3.1A,
+4.3.2B,4.3.3C;belum subbab ringkasanlintasstate,peta,verifikasi/validasi.
+A tetap identikXML dengan TABEL_SAJA,6halamanA identikpixelhasilrender yang
+sudahdireview. Seluruhhalaman/gambarhalamanbaru diperiksa. Captionsementara
+Tabel4.4–4.18,paragraf rujukanumum,tanpa subjudulbernomorlebihkecil.
+
+Semua12metadata/markercompleted,60evaluationCSV dan3profile_summary cocok;
+12termination_evaluationcocok. Graf/start/reward/environment/seed0–4/parameter
+bersama sepadan. Rerata termasuksemuagagal,berhasiljumlah/5danpersen. Tidak
+melatih ulang,replayQ atau membaca ulanghistoryjutaanepisode. Konfigurasi
+mandiri sejakawal,300k bukan continuation150k;epsilon evaluasi0.
+
+Keberhasilanurutdinamis150k/dinamis300k/tetap100k-total150k/tetap100k-total300k:
+A0/0/0/1,B0/4/5/5,C0/1/2/2masing-masingdari5. TotalA1/20,B14/20,C5/20.
+Bfixed150kgalat145,71433m vsfixed300k168,81494m;overlap0,96679%vs0,69749%.
+Dua5/5 tidakmenetapkanoptimum;penambahanepisode tidakmemperbaiki semuametrik.
+Cfixed150/300 sama2/5 tetapi seedberhasil0&3vs2&3;overlap2,15327%vs0,34574%,
+galat689,82060mvs789,19568m. Cfixed300seed4overlap0tetapgagal.
+
+Lampiranpermanen docs/assets/bab_4_go/4_3_evaluasi_a_c/:15CSVtabel,12evaluation/
+metadata/terminationasli,3summaryasli,CSVgabungan60seed+12profil,helper,
+PETUNJUK danmanifest. Draft/asetAsebelumnya tetapriwayat;A jangan disalin2kali.
+Naskahutama,kode/config/notebook/hasilGo utuh,tanpatraining,evaluasiulang,
+download,instalasibaruataucommit. Tunggu review sebelum bagian berikutnya.
+
+## Evaluasi 4.3 memakai tabel saja dan Word A diperbaiki — 13 November 2026
+
+Pengguna menilai diagram garis evaluasi mudah dianggap kelanjutan150k→300k,
+memilih tabel saja,lalu meminta perbaikan draf A. Word aktif kini:
+`docs/temp/bab_4_3_evaluasi_skenario_a_go_20261113/DRAF_BAB_IV_4_3_DAN_4_3_1_EVALUASI_SKENARIO_A_TABEL_SAJA.docx`.
+7halaman termasuk1petunjuk;5tabel identik nilai/header dengan draf9halaman,
+0gambar. Semua halaman dirender/diperiksa. Dua gambar4.28/4.29 dan caption
+dihapus dari Word; paragraf yang bergantung grafik dihapus/disesuaikan.
+
+Sebelum ringkasan tertulis setiap konfigurasi dilatih terpisah dari awal dengan
+Q-table baru;300k bukan continuation150k. Pada fixed100k,epsilon turun100k lalu
+0,05 sampai budgetmasingmasing selesai. Tidak mengubah desain/hasil eksperimen.
+Seluruh20seed dan5CSVtabel utuh. Fokus evaluasi pada berhasil/5+persentase,
+galat,skor,overlap dan terminasi perseed. Statistikreturnprogress/closing tetap
+pada sumberCSV tetapi tidak dibahas terpisah tanpa tabel dalam draf baru.
+
+Lampiran masih docs/assets/bab_4_go/4_3_evaluasi_skenario_a/. PETUNJUK/manifest
+mengarah WordTABEL_SAJA;petunjuklama diPETUNJUK_DRAF_DENGAN_GAMBAR.txt,asli/
+versicetak/helpergambar tidak dihapus. Preferensi untuk penulisan4.3 selanjutnya:
+tabel+prosa terhubung, hindari diagram garis antarbudget; ini tidak mengubah
+grafik perkembangan episode pada4.2. Belum melanjutkan B/C atau subbab lain.
+Naskahutama,kode/notebook/config/hasilGo utuh;tidak training,evaluasiulang,
+download,instalasiataucommit. Verifikasi/validasi tetapditunda.
+
+## Contoh Word 4.3 dan 4.3.1 dengan rincian seluruh seed A — 13 November 2026
+
+Pengguna meminta contoh skenario A dan memastikan data setiap seed disertakan.
+Selesai pengantar4.3 Evaluasi Rute Setelah Pelatihan serta4.3.1 Hasil Evaluasi
+Skenario A: `docs/temp/bab_4_3_evaluasi_skenario_a_go_20261113/DRAF_BAB_IV_4_3_DAN_4_3_1_EVALUASI_SKENARIO_A.docx`.
+9halaman termasuk1petunjuk,5tabel,2gambar inline; semua halaman/gambar diperiksa.
+Tabel4.4 ringkasan4profil;Tabel4.5–4.8 masing-masing5seed,semua20 termasukgagal.
+Kolom seed,panjang(m),galat(m),skor ruas,pengulangan(%),akhir episode. Gambar4.28/
+4.29 empatpanel evaluation_comparison epsilon dinamis/durasi tetap100k.
+Captionsementara,paragraf rujukanumum,tanpa subjudul bernomorlebihkecil.
+
+Sumber report.compare_profiles() bagian5 untuk tabel/grafik;show_profiles()
+bagian4 untuk evaluasi perseed.20baris CSVvalid terhadap4metadata/markerstatus
+completed,seed0–4,epsilon0,graf/start/reward/environment sama. Rerata summary
+cocokCSV,termasuk galat/score/overlap/reward/returnprogress/closing. Tidak replay
+Qatau evaluasiulang. Semua sourcehash dan naskahutama diperiksa tetap.
+Keberhasilan4profil0/5,0/5,0/5,1/5;total1/20lintasprofil. Hanyaseed3fixed300k
+berhasil5957,956893m,galat957,956893m,score0,725855,overlap1,111111%.
+Meanerrorfixed300k1034,831109m dan meanoverlap6,529635% meliputi4gagal;
+seed0overlap26,923077%,seedlain<3%.19evaluasi gagal tidak pernah memiliki
+closingactionlegal. Jangan klaimA selalu gagal/optimalitas/stabilitas/lapangan.
+
+Lampiran permanen `docs/assets/bab_4_go/4_3_evaluasi_skenario_a/`:5CSVtabel,
+4CSV evaluasi asli+metadata+terminasi evaluasi,asliPNG/SVG,2versicetak,helper,
+PETUNJUK/manifest.8panel mempertahankan path,titik,clipping,batas sumbu sumber;
+label/font/layoutdisesuaikan14cm>=8pt,episode ribuan. Tidak rolling50.
+Grafikoverlap asli disimpan opsi lampiran,bukan gambar ketiga dalamWord.
+Peta rute belum dimasukkan. B/C dan ringkasan4.3 belum ditulis.
+
+Naskah utama serta kode/notebook/config/hasilGo tetap,tanpa training,evaluasi
+ulang,download,dependensi baru atau commit. Verifikasi/validasi tetap ditunda.
+Tunggu review contoh A sebelum melanjutkan bagian lain.
+
+## Mulai pembahasan 4.3 evaluasi setelah pelatihan — 13 November 2026
+
+Pengguna meminta lanjut setelah klarifikasi sumber termination training.
+Mulai diskusi4.3 Evaluasi Rute Setelah Pelatihan, pertama4.3.1 skenario A.
+Belum membuat Word4.3; susunan/penyajian subbab baru dibahas dahulu.
+Sumber training.ipynb bagian5/report.compare_profiles(), tabel/gambar perstate,
+dan bagian4/report.show_profiles() untuk detail evaluasi perseed.
+Empat profile_summary A dicocokkan20baris evaluation.csv serta seed metadata0–4:
+loop dinamis150k0/5,dinamis300k0/5,tetap100k-total150k0/5,tetap100k-total300k1/5.
+Urutan sama: mean galat1017,00/919,16/951,91/1034,83m; skor0,8433/0,5504/
+0,6641/0,5631; overlap8,05/8,52/5,41/6,53%. Rerata mencakup rute gagal.
+Terminasi:5over;3over+2noaction;4over+1noaction;4over+1success.
+Jangan menyebut episode training yang berhasil sebagai greedy. Perbandingan
+0/5atau1/5 adalah hasil akhir lima Q-table, bukan seluruhtraining jutaanepisode.
+Kandidat penyajian:1tabel empatprofil (jumlahberhasil/5,galat,skor,overlap),
+2gambar gabungan evaluation_comparison epsilon dinamis/durasi tetap yang tersedia
+pada analysis/training/scenario-a/comparison/. Grafik overlap terpisah belum
+perlu jika sudah ada kolom tabel; peta dipilih saat diperlukan, belum screenshot.
+Pembahasan B/C,ringkasan4.3,verifikasi/validasi belum dikerjakan. Naskah utama,
+seluruh kode/notebook/config/hasil Go tetap; tanpa training/download/commit.
+
+## Revisi 4.2.4 dengan jumlah berhasil dan pembagi — 13 November 2026
+
+Pengguna meminta jumlah berhasil per total episode serta penjelasan hitungnya.
+Word aktif kini `docs/temp/bab_4_2_ringkasan_go_20261113/DRAF_BAB_IV_4_2_4_RINGKASAN_PELATIHAN_REVISI.docx`.
+Versi sebelumnya tanpa REVISI tetap sebagai riwayat.4halaman dirender/diperiksa.
+Satu tabel6kolom:pengaturan,episode/seed,totalepisode5seed,A/B/Cjumlah(%).
+Seluruh12pembilang/pembagi sesuai CSVterminasi; persentase tidak berubah.
+150k*5=750.000;300k*5=1.500.000observasi/profil. Contoh Bfixed300k
+519.821/1.500.000*100=34,654733%=34,65%;Bdinamis150k520/750.000=0,069333%.
+Angka mencakup seluruh episode, bukan rolling50/10kakhir/5evaluasi greedy.
+
+CSVbaru tabel_keberhasilan_jumlah_dan_persentase.csv dan helperbuat_tabel_jumlah.py
+pada docs/assets/bab_4_go/4_2_ringkasan/. PETUNJUK/manifest disinkronkan,
+formatCSVpersentase lama/helper lama dipertahankan. Data/interpretasi sebelumnya
+utuh; pembahasan diberi cara membaca tabel dan contoh pembagian. Tidak ada
+rumus bernomor baru, training,download,perubahan Go,naskahutama atau commit.
+Masih hanya4.2.4;4.3/verifikasi/validasi belum dikerjakan.
+
+## Word 4.2.4 Ringkasan Perbandingan Hasil Pelatihan selesai — 13 November 2026
+
+Pengguna meminta lanjut setelah C. Selesai Word khusus4.2.4:
+`docs/temp/bab_4_2_ringkasan_go_20261113/DRAF_BAB_IV_4_2_4_RINGKASAN_PELATIHAN.docx`.
+4halaman (1petunjuk,3isi),1tabel4konfigurasi×A/B/C; tanpa gambar/rumus baru.
+Semua halaman dirender/diperiksa. Caption sementaraTabel4.3; paragraf memakai
+rujukan umum. Grafik gabungan pada A/B/C tidak diulang atau diubah.
+
+Tabel keberhasilan SELURUHtraining (%):dinamis150k A0,03/B0,07/C0,04;
+dinamis300k A0,29/B0,95/C0,29;tetap100k-total150k A0,43/B13,57/C2,79;
+tetap100k-total300k A3,08/B34,65/C10,59. Dua nilai0,29 dibulatkan, bukan bukti
+setara. Dasar750.000/1.500.000episode5seed per profil, bukan tail10k/greedy.
+89hash sumber A–C/config/metadata diperiksa tetap; 12CSV terminasi dihitung
+ulang dan jumlah/persentase cocok; Q-state akhir dicek baris final episode_means.
+Ini sintesis hasil tersimpan, bukan replay/history/training ulang.
+
+B tertinggi4konfigurasi pada metrik seluruhtraining; fixed100k lebih tinggi
+pada6pasanganstate/budget. Menambah node sebelumnya belum mengungguli B;
+fixed300k mean Q-state C193.953/B135.876. Tidak klaim representasi lebihkaya
+selalu buruk, konvergensi, optimalitas/signifikansi atau stabilitas semua seed.
+Durasi dinamis berubah jika budget berubah; fixed100k episode lanjutan50k/200k.
+Run300k mandiri dari awal, bukan continuation150k. Noaction dominan semua
+profil; artinya tidak ada perpindahan legal, bukan selalu jalan buntu fisik.
+
+CSVtabel,ringkasan12profil,12CSVterminasi,helper,pemetaan/manifest di
+`docs/assets/bab_4_go/4_2_ringkasan/`. Naskah TA utama dan sumber/kode/hasil Go
+utuh; tidak training/download/commit.4.3/evaluasi greedy,verifikasi/validasi
+belum ditulis. Tunggu review sebelum melanjutkan bagian berikutnya.
+
+## Word 4.2.3 Hasil Pelatihan Skenario C selesai — 13 November 2026
+
+Pengguna melanjutkan penulisan setelah skenario B selesai.
+Selesai Word khusus4.2.3 C: `docs/temp/bab_4_2_skenario_c_go_20261113/DRAF_BAB_IV_4_2_3_SKENARIO_C.docx`.
+10halaman,8gambar gabungan inline, seluruh halaman dan8gambar diperiksa.
+Tanpa tabel/rumus baru; rujukan paragraf umum, caption sementara4.20–4.27.
+Pengantar umum4.2 serta A/B tidak diubah atau diulang. 4.2.4 belum ditulis.
+
+Sumber report.show_profiles():training.png/diagnosis.png empatprofil C.
+Asli PNG/SVG,versi cetak,CSVterminasi,helper,manifest dan PETUNJUK permanen
+`docs/assets/bab_4_go/4_2_skenario_c/`. Semua44panel/pathkurva/clipping
+dipertahankan; tata letak/label/font disesuaikan14cm>=8pt. Episode ribuan;
+sumbu Q-state C juga ribuan agar6digit tidak bertabrakan, data tidak diubah.
+Grafik overlap training tidak masuk; evaluasi greedy dan overlapnya terpisah.
+
+Empat C memakai seed0–4,150k/300k,dinamis/tetap100k; snapshot/start/reward/env
+cocok A.900.000baris episode_means dicek urutan/panjang; bukan audit ulanghistory
+13,5juta/Q-replay. Sukses SELURUHtraining0,0392%/0,2861%/2,7944%/10,5925%;
+profil terakhir no_action58,5439%/over_distance30,8636%,step_limit0semua C.
+Persentase bukan tail10k/proporsi seed greedy. Q-state akhir profil terakhir
+mean193.953=194ribu. Kurva rerata tidak membuktikan semua seed stabil.
+
+Klarifikasi penyajian: setiap nomor episode dirata-ratakan lima seed, lalu
+rolling50; awal memakai episode tersedia. Epsilon tanpa penghalusan. Hindari
+istilah horizon atau rujukan Gambar4.x tetap di paragraf untuk penulisan lanjut.
+
+Naskah utama dan seluruh sumber/kode Go tetap, tanpa training/download/commit.
+Verifikasi/validasi ditunda. Tunggu review sebelum lanjut subbab berikutnya.
+
+## Word 4.2.2 Hasil Pelatihan Skenario B selesai — 13 November 2026
+
+Pengguna melanjutkan setelah review A dan klarifikasi mean5seed/rolling50.
+Selesai Word khusus4.2.2 B: `docs/temp/bab_4_2_skenario_b_go_20261113/DRAF_BAB_IV_4_2_2_SKENARIO_B.docx`.
+10halaman,8gambar gabungan inline, seluruh halaman dan8gambar diperiksa.
+Tanpa tabel/rumus baru; rujukan paragraf umum, caption sementara4.12–4.19.
+Pengantar umum4.2/A tidak diubah atau diulang. C/4.2.4 belum ditulis.
+
+Sumber report.show_profiles():training.png/diagnosis.png empatprofil B.
+Asli PNG/SVG,versi cetak,CSVterminasi,helper,manifest dan PETUNJUK permanen
+`docs/assets/bab_4_go/4_2_skenario_b/`. Semua44panel/pathkurva/clipping
+dipertahankan; tata letak/label/font disesuaikan14cm>=8pt. Episode ribuan;
+sumbu Q-state B juga ribuan agar6digit tidak bertabrakan, data tidak diubah.
+Grafik overlap training tidak masuk; evaluasi greedy dan overlapnya terpisah.
+
+Empat B memakai seed0–4,150k/300k,dinamis/tetap100k; snapshot/start/reward/env
+cocok A.900.000baris episode_means dicek urutan/panjang; bukan audit ulanghistory
+13,5juta/Q-replay. Sukses SELURUHtraining0,0693%/0,9479%/13,5667%/34,6547%;
+profil terakhir no_action55,2571%/over_distance10,0881%,step_limit0semua B.
+Persentase bukan tail10k/proporsi seed greedy. Q-state akhir profil terakhir
+mean135.876=135,9ribu. Kurva rerata tidak membuktikan semua seed stabil.
+
+Klarifikasi penyajian: setiap nomor episode dirata-ratakan lima seed, lalu
+rolling50; awal memakai episode tersedia. Epsilon tanpa penghalusan. Hindari
+istilah horizon atau rujukan Gambar4.x tetap di paragraf untuk penulisan lanjut.
+
+Naskah utama dan seluruh sumber/kode Go tetap, tanpa training/download/commit.
+Verifikasi/validasi ditunda. Tunggu review sebelum lanjut subbab berikutnya.
+
+## Rujukan paragraf dibuat umum — 13 November 2026
+
+Preferensi pengguna: kurangi rujukan nomor gambar/tabel/subbab yang tetap di
+paragraf karena pengguna menyusun ulang nomor sendiri. Gunakan istilah umum
+seperti grafik pelatihan, hasil diagnosis, konfigurasi yang dibahas atau evaluasi
+setelah pelatihan. Pertahankan angka konfigurasi/hasil dan identitas yang perlu
+untuk menghindari pembahasan ambigu. Caption/judul boleh bernomor sementara.
+
+Word terbaru `docs/temp/bab_4_2_skenario_a_go_20261113/DRAF_BAB_IV_4_2_DAN_4_2_1_SKENARIO_A.docx` diperbarui pada
+15paragraf termasuk petunjuk; kini10halaman, semuanya dirender/diperiksa.
+Isi utama tidak lagi merujuk Gambar4.x atau bagian4.3 secara tetap.
+Delapan gambar, seluruh caption, angka hasil dan format tetap.
+PETUNJUK/manifest lampiran diperbarui. Naskah utama dan sumber Go tetap;
+tanpa training/download/commit. Pekerjaan masih hanya4.2pengantar/4.2.1A.
+## Bab IV 4.2 disusun per skenario dan Word skenario A selesai — 13 November 2026
+
+Pengguna mengubah susunan4.2:4.2.1 A,4.2.2 B,4.2.3 C,4.2.4 ringkasan
+perbandingan training. Gunakan gabungan training.png dan diagnosis.png pada
+setiap konfigurasi, pembahasan menghubungkan metrik; bukan panel/metrik terpisah.
+Grafik overlap training hanya diagnosis/lampiran, tidak dimasukkan ke4.2;
+overlap hasil greedy tetap4.3. Hindari istilah horizon dalam naskah; gunakan
+durasi penurunan epsilon tetap100.000episode. Epsilon tetap0,05, bukan nol.
+
+Word baru hanya pengantar4.2 dan4.2.1 Hasil Pelatihan Skenario A:
+`docs/temp/bab_4_2_skenario_a_go_20261113/DRAF_BAB_IV_4_2_DAN_4_2_1_SKENARIO_A.docx`.
+10halaman,8gambar gabungan inline, tanpa tabel/rumus baru. Seluruh halaman
+dan8gambar diperiksa visual. Menggantikan draf4.2.1 lama per metrik A–C;
+draf/lampiran lama dipertahankan sebagai riwayat. Belum menulis B/C/4.2.4.
+
+Gambar4.4–4.11:empatprofil A×training/diagnosis. Asli PNG/SVG disalin ke
+`docs/assets/bab_4_go/4_2_skenario_a/asli/`. Versi cetak tetap semua panel,
+kurva path-d/clipping sumber identik, layout/teks/dimensi/garis disesuaikan.
+Sumbu episode ribuan, lebar14cm, fontminimum8pt; angka/rolling/skala tidak diubah.
+Ada helperSVG/PNG,CSVterminasi sumber,manifesthash dan PETUNJUK permanen.
+Penyesuaian font diperlukan karena gambar asli memberi huruf<8pt saat14cm.
+
+Angka sukses SELURUH training A:dinamis150k0,0309%;dinamis300k0,2869%;
+tetap100k-total150k0,4332%;tetap100k-total300k3,0787%. Bukan tail10k/greedy.
+Konfigurasi terakhir no_action65,7569%/over_distance31,1644%;step_limit0semua A.
+Mean-episode sumber900.000baris dicek urutan/panjang dan grafik terhadap angka;
+ini pemeriksaan sumber analisis A, bukan audit ulang13,5juta history/Q-replay.
+Jarak/reward meningkat belum berarti loop stabil; hindari kesimpulan antar-state
+sebelum B/C dibahas. Noaction bukan bukti node tidak punya edge fisik.
+
+Naskah utama dan seluruh sumber/kode Go tidak diubah; tanpa training/download/
+commit. Verifikasi/validasi ditunda. Lanjut per subbab setelah review pengguna.
+
+## Word 4.2 dan 4.2.1 dengan grafik asli selesai — 13 November 2026
+
+Pengguna menyepakati penggunaan grafik/tabel yang sudah dihasilkan
+report.show_profiles(), bukan menjadikan tail10k sebagai acuan utama. Pengguna
+meminta gambar ditempelkan langsung di Word. Selesai pengantar4.2 dan4.2.1:
+`docs/temp/bab_4_2_1_go_20261113/DRAF_BAB_IV_4_2_DAN_4_2_1.docx`.
+11halaman, semuanya dirender/diperiksa;12gambar inline dan1tabel12baris data.
+
+Gambar4.4–4.15 adalah panel keberhasilan axes_1 dari12training.svg sumber,
+diambil sebagai vector dan dirender PNG2200px. Kurva/skala/tick/grid identik
+dengan asli (signatureXML diperiksa), hanya panel lain/judul generik dihilangkan;
+identitas pada caption. Ini bukan plot perbandingan baru. Lebar14cm menjaga
+huruf sumbu kira-kira8pt. Rata-rata5seed dan rolling50 dijelaskan, bukan proporsi
+seed berhasil evaluasi. Gambar/data/code ekstraksi/manifest/PETUNJUK permanen di
+`docs/assets/bab_4_go/4_2_1/`. Seluruh12panel diperiksa visual.
+
+Tabel4.3 merangkum Termination Rate: Training, seluruh episode dari12CSV profil,
+750.000/1.500.000 observasi per profil (150k/300k per seed,5seed). Batas langkah
+semua0 disebut dalam teks; CSV asli tetap lengkap. Keberhasilan SEMUAepisode:
+dinamis150k A0,0309% B0,0693% C0,0392%; dinamis300k A0,2869% B0,9479% C0,2861%;
+horizon150k A0,4332% B13,5667% C2,7944%; horizon300k A3,0787% B34,6547% C10,5925%.
+B horizon300k gagal no_action55,2571%, over_distance10,0881%. Ini berbeda dari
+tail10k B62,694% karena mencakup fase awal; bukan evaluasi greedy. Semua12CSV
+jumlah/persentase sesuai metadata; graf/start/reward/environment sama. Variasi
+antar-seed tidak disimpulkan dari kurva rata-rata. Tidak klaim optimum/general.
+
+DOCX utama dan file Go/sumber tetap; tidak training, download atau commit.
+Belum mengerjakan4.2.2/4.3/verifikasi/validasi. Tunggu review pengguna dan diskusi
+subbab berikutnya; jangan otomatis menyusun seluruh4.2. Usulan grafik4panel dan
+ringkasan10k di catatan sebelumnya kini hanya riwayat/opsi, tidak dipakai di draf.
+
+## Analisis training terbaru sudah diperbarui — 13 November 2026
+
+Pengguna sudah menjalankan seluruh training.ipynb. Pemeriksaan baca-saja:
+configurations/last_window_summary kini12baris A/B/C, snapshot d2402df59465;
+semua metadata sesuai profil, seed0–4, graf/start/reward/environment sama.
+Notebook tanpa error tersimpan; semua cell berisi kode dieksekusi berurutan.
+2.700.000 baris episode_means diperiksa urutan/panjang dan tail10k terhadap
+last_window_summary serta rerata last_window_by_seed; cocok12profil.
+Ini audit hasil analisis turunan/metadata, bukan replay Q atau audit history
+mentah13,5juta baru. Catatan stale B/C tanggal9Nov di bawah sudah teratasi.
+
+Keberhasilan10.000 episode terakhir per seed (5seed=50.000 observasi per profil):
+dinamis150k A0,344% B0,900% C0,332%; dinamis300k A2,696% B25,088% C6,286%;
+horizon100k-total150k A1,152% B56,122% C12,672%; horizon100k-total300k
+A3,176% B62,694% C19,320%. B tertinggi4kondisi. Horizon lebih tinggi daripada
+dinamis pada durasi sama untuk ukuran training tail ini; belum kesimpulan
+kebijakan greedy/optimalitas. Epsilon akhir0,05 dan eksplorasi masih ada.
+
+Seed horizon300k: B57,43–65,24%; C1,99/7,18/21,40/63,14/2,89%, sehingga
+rerata C menyembunyikan variasi. A pada konfigurasi sama0,02–13,17%.
+Grafik training.png horizon300k A/B/C diperiksa visual: B berkembang lebih
+tinggi; kurva C tidak membuktikan semua seed stabil. Kurva menggunakan rolling50,
+tabel akhir tail10k; keduanya harus dibedakan. Proposed4.2.1 kurva4panel A/B/C
+belum dibuat; grafik existing masih6panel per profil. Diskusi4.2.1 berlanjut,
+belum Word, kode baru, training, download atau commit. Evaluasi greedy tetap4.3.
+
+## Mulai diskusi 4.2 dan temuan analisis training lama — 13 November 2026
+
+Pengguna meminta lanjut setelah pembahasan skor; aturan skor/bobot cukup pada
+BabIII, tidak perlu diulang. Mulai diskusi 4.2 Hasil Pelatihan Q-Learning, belum
+Word atau perubahan kode. Usulan awal 4.2.1 Perkembangan Keberhasilan Pembentukan
+Loop; grafik utama membandingkan A/B/C pada masing-masing empat kondisi episode
+serta epsilon, agregat lima seed dan rolling50. Evaluasi greedy dipisah ke4.3.
+
+Pemeriksaan baca-saja:12metadata terbaru snapshot d2402df59465 konsisten A–C,
+150k/300k, dinamis/horizon100k, seed0–4. Completed_at saat ini 12Nov09:29–09:32UTC
+(dapat terpengaruh eksporHTML; jangan jadikan durasi training dari timestamp ini).
+Namun output/analysis/training/configurations.csv dan last_window_summary.csv
+masih bertanggal9Nov21:01/21:03WIB, hanya8baris B/C; configurations snapshot
+f0a5885db46c berbeda. Grafik/ringkasan analisis lama jangan dipakai sebagai hasil
+batch terbaru. Perlu regenerasi analisis dari history tersimpan, tanpa training
+atau unduhan ulang, sebelum memberi angka/kurva pada Word4.2.
+
+Notebook training.ipynb sumber sudah memiliki perubahan/output pengguna;
+jangan ditimpa tanpa memeriksa pengaturan. Pada turn ini belum menjalankan
+analisis history, menulis Word4.2, mengubah kode/hasil atau commit.
+
+## Word Bab IV subbab 4.1.3 selesai — 13 November 2026
+
+Word khusus 4.1.3 Distribusi Skor Karakter Ruas Jalan selesai:
+`docs/temp/bab_4_1_3_go_20261113/DRAF_BAB_IV_4_1_3.docx`.
+Dua halaman (petunjuk dan teks siap salin) dirender dan diperiksa seluruhnya.
+Pengguna sudah mempunyai gambar; Word berisi posisi sisip dan caption sementara
+Gambar4.3, bukan gambar pengganti. Hapus kalimat petunjuk setelah sisip gambar.
+Tidak ada tabel/rumus tambahan; satu histogram mewakili distribusi dan ringkasan.
+
+Lampiran permanen `docs/assets/bab_4_go/4_1_3/`: salinan PNG notebook, tiga CSV
+groups/statistics/intervals, PETUNJUK dan manifest hash. Sumber analisa.ipynb Go
+bagian9/report.show_score_distribution(), ekspor bagian10/report.save().
+Nilai/counter tiap interval dicocokkan dengan edges.csv: 59.176 edge, positif
+45.784(77,37%), negatif13.392(22,63%), nol0, rentang−5,95sampai1,00. Interval
+terbanyak0,50≤s<0,75:17.090(28,88%); negatif−5,75≤s<−5,50:9.908(16,74%).
+Snapshot dan konfigurasi skor cocok12profil. Distribusi seluruh graf sebelum
+filter akses/perjalanan, bukan rute hasil training atau pengukuran keamanan.
+Interval0,25 hanya penyajian. Aturan/rumus BabIII tidak diulang.
+
+Naskah utama dan kode/hasil Go tidak diubah; tanpa training, download atau commit.
+Penerapan I–III dan screenshot pengguna tidak diperiksa ulang. Berikutnya diskusi
+4.2 Hasil Pelatihan Q-Learning; jangan langsung menulis seluruh4.2 tanpa diskusi.
+Verifikasi/validasi tetap terpisah. Catatan 4.1.3 belum ditulis di bawah riwayat.
+
+## Distribusi skor dalam satu histogram interval — 13 November 2026
+
+Pengguna meminta satu gambar yang juga menampilkan range nilai, menggantikan
+usulan tabel tanda skor terpisah. Bagian 9 analisa.ipynb Go tetap memanggil
+report.show_score_distribution(), tetapi kini satu histogram interval 0,25.
+Sumbu X nilai skor kontinu; Y jumlah edge; angka tiap batang jumlah interval.
+Judul mencantumkan total 59.176 edge dan rentang -5,95 sampai 1,00; legenda
+memuat negatif 13.392 (22,63%), nol 0, positif 45.784 (77,37%). Interval kosong
+tetap menempati sumbu agar jarak nilai tidak terdistorsi. Lebar interval hanya
+penyajian, bukan perubahan pemetaan skor atau parameter training.
+
+Batas interval kiri termasuk/kanan tidak, kecuali interval terakhir keduanya
+termasuk. Nol dihitung terpisah sebagai tanda di legenda, walaupun bin histogram
+juga dapat memuat skor positif. Nilai asli tidak dibulatkan atau dipotong.
+Tabel tiga kelompok tidak lagi ditampilkan; CSV ringkasan tetap disimpan.
+Ekspor baru road_score_intervals.csv melengkapi groups/statistics CSV dan PNG
+pada workdirs/training/output/analysis/. Semua nilai dari comfort_score tersimpan,
+seluruh graf sebelum filter akses/perjalanan, bukan skor rute atau bukti aman.
+
+Seluruh cell notebook lulus kernel bersih; histogram diperiksa visual. Uji tanda,
+nol, nilai invalid dan batas interval sintetis lulus; hash data sumber/config/
+metadata training/notebook training/dependensi tetap. Source notebook tanpa
+output; muat ulang dari disk dan Restart Kernel and Run All untuk melihatnya.
+README/AGENTS Go disinkronkan. Tidak ada training/unduhan/dependensi baru,
+perubahan Go/reward, Word atau commit. Catatan sebelumnya tentang tabel dan
+bar chart tiga kategori merupakan riwayat sebelum permintaan satu histogram.
+
+## Analisis distribusi skor ditambahkan di Go — 13 November 2026
+
+Atas permintaan pengguna, analisa.ipynb Go kini memiliki bagian 9 Distribusi
+Skor Karakter Ruas Jalan, memanggil report.show_score_distribution(); penyimpanan
+menjadi bagian 10. Implementasi tetap di analysis/graph.py. Membaca comfort_score
+tersimpan dari edges.csv tanpa menghitung ulang reward. Tabel/diagram bahasa
+Indonesia: positif, nol, negatif; rentang minimum/maksimum. Semua edge berarah
+sebelum mask akses/perjalanan, bukan distribusi rute atau ukuran keamanan.
+
+Ekspor pada workdirs/training/output/analysis/: road_score_groups.csv,
+road_score_statistics.csv, road_score_distribution.png. Hasil 45.784 positif
+(77,37%), 0 nol, 13.392 negatif (22,63%), rentang -5,95 sampai 1,00.
+Kategori nol tetap ditampilkan; skor kosong/non-finite ditolak. Tidak ada
+library/dependensi tambahan. README dan AGENTS proyek Go sudah disinkronkan.
+Notebook sumber disimpan tanpa output sesuai pedoman repo; pengguna perlu
+memuat ulang dari disk lalu Restart Kernel and Run All untuk menampilkan hasil.
+
+QA: seluruh cell notebook dijalankan dari kernel bersih pada salinan sementara;
+tidak ada error; grafik diperiksa visual. Kasus tanda positif/nol/negatif,
+kategori nol dan data invalid diperiksa. Hash nodes/edges/analysis.json,
+konfigurasi, 12 metadata training, training.ipynb, pyproject.toml/uv.lock tetap.
+Training notebook sudah memiliki perubahan pengguna sebelumnya dan tidak diubah
+agent. Tidak training, unduh OSM, ubah logika/reward Go, menulis Word, atau commit.
+Diskusi/Word 4.1.3 dilanjutkan sesudah pengguna meninjau bagian notebook ini.
+Catatan sebelumnya bahwa bagian skor belum tersedia adalah riwayat.
+
+## Pilihan screenshot 4.1.2 dan diskusi 4.1.3 — 13 November 2026
+
+Pengguna sudah memakai screenshot diagram kelengkapan langsung dari analisa.ipynb.
+Jangan menggantinya dengan gambar buatan agent atau menganggap file screenshot
+sudah tersedia pada repositori. Aset gambar hasil adaptasi tetap sebagai alternatif.
+Berikutnya hanya diskusi 4.1.3 Distribusi Skor Karakter Ruas Jalan, belum Word.
+
+Notebook Go saat ini tidak memuat distribusi skor; GraphAnalysis hanya memuat
+atribut mentah. Nilai skor tersedia pada output/edges.csv kolom comfort_score.
+Pemeriksaan baca-saja menemukan 59.176 edge: positif 45.784 (77,37%), nol 0,
+negatif 13.392 (22,63%), rentang -5,95 sampai 1. Rumus tertimbang cocok seluruh
+baris; snapshot dan konfigurasi road score sama dengan 12 metadata training.
+Ini seluruh edge graf, bukan hanya action legal atau rute hasil evaluasi.
+Positif/negatif adalah preferensi desain, bukan bukti aman/tidak aman.
+Belum menambah notebook/grafik/Word, mengubah kode/hasil atau menjalankan training.
+
+## Revisi 4.1.2 memakai diagram kelengkapan — 13 November 2026
+
+Pengguna menyetujui diagram kelengkapan dari analisa.ipynb sebagai pengganti
+tabel kelengkapan. Word aktif kini
+`docs/temp/bab_4_1_2_go_20261113/DRAF_BAB_IV_4_1_2_DIAGRAM.docx`.
+Tiga halaman dirender dan seluruhnya diperiksa. Memuat Gambar 4.2 Kelengkapan
+Atribut Jalan pada Graf Penelitian dan Tabel 4.2 Distribusi Nilai Akses pada Ruas
+Jalan. Nomor akhir mengikuti naskah; tabel akses sebelumnya 4.3 kini 4.2.
+
+Lampiran tetap docs/assets/bab_4_go/4_1_2/: PNG resolusi tinggi, SVG, kode pembuat
+diagram, CSV, PETUNJUK dan manifest aktif. Data sama persis dengan notebook Go
+bagian 5/report.show_completeness(); hanya tampilan/label Indonesia disesuaikan.
+Diagram dibuat ulang dari CSV sumber, bukan screenshot notebook. Warna terang
+gelap membedakan terisi dan tidak tercatat; persentase label adalah bagian terisi.
+Tidak menampilkan ulang tabel kelengkapan pada isi agar tidak duplikat.
+Word dua tabel/CSV sebelumnya dipertahankan sebagai riwayat/sumber data.
+
+Naskah utama serta notebook/kode/config/hasil Go tetap; tanpa instalasi dependensi
+proyek, training, unduhan atau commit. Subbab 4.1.3 belum dibahas/disusun dalam
+perubahan ini; verifikasi/validasi terpisah. Catatan dua tabel di bawah riwayat.
+
+## Bab IV subbab 4.1.2 selesai — 13 November 2026
+
+Subbab 4.1.2 Kelengkapan Atribut Jalan dan Akses sudah dibahas dan disusun.
+Word tiga halaman (satu petunjuk, dua isi) dirender dan seluruh halaman diperiksa:
+`docs/temp/bab_4_1_2_go_20261113/DRAF_BAB_IV_4_1_2.docx`.
+Lampiran permanen: `docs/assets/bab_4_go/4_1_2/`, berisi dua CSV tabel siap salin,
+dua salinan CSV sumber, petunjuk dan manifest hash. Tidak menambah gambar/rumus.
+
+Tabel 4.2: highway terisi 59.176 (100%); surface 37.272 (62,98%);
+width 36.610 (61,87%); access 1.708 (2,89%). Tabel 4.3 akses ruas:
+kosong 57.468; permissive 1.034; yes 462; destination 170; no 42.
+Sumber analisa.ipynb Go bagian 5/report.show_completeness() dan
+6/report.show_distributions(), tabel access. Jumlah dihitung ulang dari edges.csv.
+
+Pengguna meminta makna 59.176 edge diperjelas: setiap edge menunjukkan satu
+arah antara dua node, arah balik dihitung terpisah. Angka ini bukan bukti seluruh
+graf terhubung dengan start. Tag akses ruas bukan jumlah action legal setelah
+filter akses kedua endpoint dan pembatasan dinamis. Data kosong bukan bukti
+jalan terbuka/aman; terisi juga bukan bukti layak lari. Tidak menyatakan validasi
+lapangan sudah dilakukan. Naskah utama, kode/config/hasil Go tetap; tanpa training,
+unduhan atau commit. Selanjutnya diskusi 4.1.3, belum disusun. Catatan lama bahwa
+4.1.2 belum ditulis di bawah adalah riwayat sebelum pembaruan ini.
+
+## Draf awal Bab IV baru bagian 4.1 dan 4.1.1 — 13 November 2026
+
+[Word sementara](docs/temp/bab_4_1_1_go_20261113/DRAF_BAB_IV_4_1_DAN_4_1_1.docx)
+berisi satu halaman petunjuk dan satu halaman teks siap salin. Judul induk4.1
+memiliki pengantar sebelum4.1.1. Seluruh halaman dirender dan diperiksa.
+[Petunjuk lampiran](docs/assets/bab_4_go/4_1_1/PETUNJUK.txt) menjelaskan tabel
+serta screenshot. CSV tabel hanya tiga baris: node26.835, edgeberarah59.176,
+wayOSM6.874. Empat metrik pemeriksaan struktur tidak dimasukkan sesuai diskusi.
+Data dicocokkan dengan analisa.ipynb bagian3/report.show_summary(), ekspor
+analysis/graph_summary.csv, CSV node/edge dan graf12profil. Manifest mencatat
+hash sumber. Struktur mendukung paralel, tetapi ringkasan data mencatat0pasangan.
+
+Screenshot Gambar4.1 akan dibuat pengguna dari road-analysis.html; belum ada
+file gambar. Placeholder berupa petunjuk jelas, bukan gambar hasil buatan.
+Tidak ada rumus tambahan. Naskah utama, data/kode/hasil Go tidak diubah dan tidak
+ada training. Bab IV lama sengaja tidak dibaca/dijadikan acuan. Alur Bab IV kini
+per subbab;4.1.2 dan bagian lain belum ditulis, verifikasi/validasi terpisah.
+
 ## Kandidat validasi lapangan — 12 November 2026
 
 Pengguna menetapkan tiga rute dari tiga titik awal berbeda, seluruhnya memakai
@@ -132,6 +655,124 @@ Uji sintetis Go/race/vet/build lulus; preview browser
 berhasil pada subfolder tanpa backend Go. Tidak menjalankan training/unduhan
 atau menambahkan hasil nyata ke katalog secara otomatis. Dokumen TA tetap.
 
+## Revisi Bab III yang telah disepakati — 12 November 2026
+
+[Word Bab III](docs/temp/revisi_bab_3_go_20261112/REVISI_BAB_III_GO.docx) selesai
+setelah seluruh subbab dibahas, 33 halaman. Panduan memuat penghapusan,
+penggantian, bagian tetap, teks siap salin, 20 tabel dan24 rumus editable.
+[Petunjuk lampiran](docs/assets/bab_3_go/PETUNJUK.txt) dan
+[ZIP](docs/assets/bab_3_go/LAMPIRAN_BAB_III.zip) disimpan permanen. Tiga sumber
+PlantUML (alur penelitian, environment, jarak langsung) telah dirender lewat
+PlantUML/Kroki ke SVG/PNG dan diperiksa visual. Semua halaman Word diperiksa.
+
+- Struktur3.1–3.7 dipertahankan;3.8 perangkat duplikat digabung3.7. Tidak menambah
+  tingkat subbab di bawah3.3.4. Istilah skor karakter ruas menggantikan comfort.
+- Satu koordinat acuan−7.281518/112.710178 sesuai instruksi pengguna. Salinan peta
+  yang sama tetap dipakai; tidak menyatakan pusat pengunduhan historis berubah.
+- Graf mentah/Haversine/dua arah, akses ruas dan kedua endpoint,25kategori,
+  jarakvalid4–6km dan500langkah mengikuti implementasi aktif.
+- Reward serta contoh dihitung dari konfigurasi hasil Go: H/S/W0,55/0,30/0,15,
+  highway+1/secondary+0,5/other−10/missing−2, S/W+1/−1/missing−0,5, width3m.
+  Arah hanya fase pulang1,20 pada pembahasan; detail transisi fase tetap tepat.
+  Revisit−10, permissive−0,10/100m, sukses+100/gagal−50 dan selisih akhir−5/100m.
+- A/B/C,150k/300k,dinamis/100k,lima seed menghasilkan60run. Persamaan epsilon
+  memakai nomor episode mulai1 yang setara dengan indeks program mulai0.
+- Overlap dari hitungan segmen tak berarah; nilai kosong bukan nol; semuaepisode
+  masuk grafik pengulangan. Rata-rata khusus loop valid wajib menyebut jumlahnya.
+- Sitasi tetap Watkins–Dayan/Sutton–Barto dan OSM sesuai alias Bab II a–g.
+  Konfigurasi dinyatakan keputusan desain, bukan hasil optimasi universal.
+- Label “Melebihi 5,5 km” pada analysis/training.py ditemukan masih lama. Perlu
+  menjadi6km sebelum grafik dipakai; kode tidak diubah dalam pekerjaan naskah.
+
+DOCX utama, kode/konfigurasi/data Go dan hasil training tidak diubah. Verifikasi,
+validasi serta Bab IV tidak ditulis. Penerapan revisi oleh pengguna belum dicek.
+
+## Perbaikan tampilan diagram Bab II — 11 November 2026
+
+Siklus RL diperbaiki memakai warna lembut dan dua panah melengkung; isi tetap
+teori umum. Graf mengikuti bentuk lama yang disukai pengguna pada multidigraph_representation.puml:
+A–B–C/D–E, dua ruas B→C dengan key 0/1 serta satu B→D. Arah balik tidak
+ditampilkan pada ilustrasi. Identitas edge tetap (u,v,key); metode tidak berubah. Kedua sumber .puml telah dirender melalui
+PlantUML/Kroki menjadi SVG/PNG dan diperiksa visual. File, ZIP, petunjuk dan
+manifest diperbarui pada docs/assets/bab_2_go/. Alur Q-Learning belum dirender.
+Word sementara dan naskah utama tidak diubah; pernyataan belum dirender pada
+Word adalah status sebelum pembaruan tampilan ini.
+
+## Revisi Bab II yang telah disepakati — 11 November 2026
+
+Pembahasan 2.1 sampai 2.5 selesai sebelum penyusunan dokumen.
+[Word Bab II](docs/temp/revisi_bab_2_go_20261111/REVISI_BAB_II_GO.docx) memuat
+petunjuk Hapus/Ganti/Pertahankan dan teks siap salin, 14 halaman. Penghapusan
+menunjuk awal paragraf simplifikasi, proyeksi EPSG:32749/Euclidean, dan sumber
+panjang ruas OSMnx lama. Naskah utama tidak diubah.
+
+- 2.1: pengertian RL diperjelas; enam komponen tetap; penalti tidak dijelaskan
+  sebagai jaminan tindakan dihindari. Diagram bersifat umum.
+- 2.2: Q-table sekali sebelum rangkaian episode; penjelasan nilai Q, simbol,
+  pemilihan tindakan legal, terminal bernilai masa depan nol, epsilon-greedy.
+- 2.3: node/way/tag dan Overpass; hanya highway/surface/width/access. Pengguna
+  secara eksplisit menolak penambahan tag yang tidak berperan, termasuk barrier.
+  Access dapat pada node/way; permissive tetap dibedakan dari kondisi pagar.
+- 2.4: graf berarah/ruas paralel/identitas (u,v,key), node mentah dipertahankan,
+  dua arah per segmen, Haversine dan dua jenis jarak. Tidak ada proyeksi maupun
+  simplifikasi dalam implementasi aktif; detail program/parameter di Bab III.
+- 2.5: empat penelitian pada tabel; Watkins–Dayan tetap pada teori/daftar pustaka.
+  Tidak mengklaim bobot berasal langsung dari kajian runnability atau metode
+  lebih unggul tanpa eksperimen pembanding langsung.
+- Sitasi web aktif OSM Wiki: n.d.-a access, b highway, c surface, d width,
+  e Node, f Overpass API, g Way. Susunan baru menggantikan panduan gabungan lama.
+
+[Aset dan petunjuk](docs/assets/bab_2_go/PETUNJUK.txt) memuat tiga sumber diagram:
+`siklus_rl.puml` (Gambar 2.1), `alur_q_learning.puml` (2.2),
+`graf_ruas_paralel.puml` (2.3). Dua tabel CSV, sumber tiga rumus TEX, referensi dan
+manifest juga permanen di folder yang sama. [ZIP](docs/assets/bab_2_go/LAMPIRAN_BAB_II.zip).
+Nomor akhir mengikuti naskah. Diagram adalah ilustrasi konsep, belum dirender lokal.
+Word menggunakan A4/margin kampus/TNR12/spasi1,5, istilah asing miring, tabel
+terbaca dan rumus editable bernomor rata kanan; seluruh halaman diperiksa.
+Tidak membuat lampiran data training baru, mengubah kode/hasil, training atau
+commit. Verifikasi/validasi tetap ditunda. Berikutnya diskusi Bab III dahulu.
+
+## Ketentuan penyusunan lampiran bab selanjutnya — 11 November 2026
+
+Pengguna mengizinkan pengambilan tabel/gambar/rumus dari data yang tersedia serta
+pembuatan kode diagram PlantUML atau Mermaid. Pencarian dilakukan terlebih dahulu;
+ketiadaan atau ketidakcukupan data harus dijelaskan dan dibahas, tanpa mengarang
+hasil. Lampiran permanen berada pada `docs/assets/`, terpisah dari Word sementara
+di `docs/temp/`. Panduan penempatan menyebut nama berkas, gambar/subbab yang
+dituju, usulan caption dan sumbernya; nomor mengikuti naskah utama.
+
+Seluruh penulisan dan tampilan DOCX sementara mengikuti panduan kampus pada
+`docs/PANDUAN-TA-SKRIPSI-LENGKAP.pdf`, disertai render dan pemeriksaan setiap
+halaman. Ketentuan ini tidak mengubah urutan diskusi per bab/subbab dan tidak
+memerlukan perubahan kode atau lampiran baru sebelum kebutuhan bab dibahas.
+
+## Revisi Bab I yang telah disepakati — 11 November 2026
+
+Setelah panduan gabungan, pengguna mengubah alur: diskusi gambaran bab, bahas
+setiap subbab, lalu buat Word khusus setelah semuanya disepakati. Bab berikutnya
+belum dikerjakan. Dokumen [revisi Bab I](docs/temp/revisi_bab_1_go_20261111/REVISI_BAB_I_GO.docx)
+memuat teks lengkap agar mudah disalin menurut judul subbab. Naskah utama tetap
+utuh, hanya pengguna yang memindahkan teks. Panduan gabungan lama bukan acuan
+keputusan Bab I terbaru.
+
+- Rumusan masalah dan tujuan identik dengan teks sempro pengguna.
+- Latar belakang mempertahankan alur/sumber yang sesuai, menjelaskan istilah
+  awal, memakai skor karakter ruas jalan, tanpa identifier program dan tanpa
+  angka toleransi atau rentang jarak.
+- Manfaat pengguna ditambahkan untuk katalog rute dari beberapa titik awal.
+  Perbandingan state tetap memakai satu titik dengan kondisi eksperimen sama.
+- Batasan hanya menyebut target sekitar 5 km dan kembali ke titik awal. Toleransi
+  20%/4–6 km tetap implementasi, dijelaskan di Bab III; tidak mengubah kode.
+- Penalti permissive disebut secara umum tanpa konstanta. Detail rumus/nilai
+  berada di Bab III. Penalti selisih jarak akhir Go tetap simetris terhadap target,
+  sekali saat terminasi; pembahasan teknis tidak dimasukkan ke Bab I.
+- Implementasi utama Go, Python/Jupyter untuk analisis. Katalog menampilkan rute
+  tersimpan; pengguna tidak menjalankan training baru melalui katalog.
+- Uraian Bab IV pada sistematika ditambah penyajian rute melalui katalog.
+- Word enam halaman dirender dan diperiksa. Tidak ada perubahan kode, config,
+  hasil training, download, atau naskah utama; tidak ada commit. Tidak membuat
+  lampiran baru karena Bab I tidak memerlukan diagram/tabel/rumus tambahan.
+
 ## Pembaruan HTML hasil Go — 12 November 2026
 
 `export.map_mode` mengatur presentasi: testing memakai `standard`, training
@@ -168,7 +809,69 @@ Pengujian memakai fixture sintetis dan browser; tes Go, vet, build lulus. Hasil
 pengguna belum diekspor ulang, diunggah atau dilatih ulang. Ini fasilitas
 publikasi/inspeksi, belum keputusan seleksi katalog atau validasi lapangan.
 
-## Acuan implementasi Go — sinkronisasi 9 November 2026
+## Penyelarasan laporan dengan Go — 11 November 2026
+
+Pengguna memulai penyelarasan penuh naskah. Pemeriksaan mencakup Bab I–V pada
+`31123022_David_TA.docx`, panduan kampus, sumber Go, YAML, metadata, seluruh
+60 evaluasi/trace dan 13.500.000 baris history. Jumlah langkah tersimpan adalah
+991.277.724; langkah tidak disamakan dengan episode. Tidak menjalankan training,
+unduhan, replay Q-table lengkap atau pengujian unit baru.
+
+### Bahan untuk pengguna
+
+- Word siap salin: [panduan revisi Bab I–V](docs/temp/sinkronisasi_go_20261111/PANDUAN_SINKRONISASI_TA_GO.docx).
+- [Aset permanen dan petunjuk](docs/assets/sinkronisasi_go/README.md): 21 tabel CSV,
+  delapan gambar PNG/SVG, empat sumber PlantUML, sumber rumus, script gambar,
+  hasil per seed, ringkasan profil/history, trace evaluasi dan manifest sumber.
+- [Paket lampiran](docs/assets/sinkronisasi_go/LAMPIRAN_SINKRONISASI_GO.zip).
+- Rumusan masalah dan tujuan dipertahankan. Penulisan verifikasi/validasi ditunda.
+  Naskah utama tidak diedit; pengguna memindahkan teks secara manual. Persamaan
+  pada panduan berupa Equation yang dapat diedit; nomor ditentukan di naskah.
+- Diagram PlantUML diperiksa struktur sumbernya, belum dirender lokal. Gambar
+  PNG/SVG telah diperiksa. Aset Python terdahulu dipertahankan sebagai arsip.
+
+### Acuan hasil dan perhitungan baru
+
+Metadata terbaru selesai 11 November 08.37–08.40 WIB. Parameter bersama tetap
+seperti tabel Go 9 November di bawah, termasuk penalti galat −5 per 100 m dan
+filter access pada way serta kedua node. Semua 60 trace konsisten dengan total
+jarak/reward CSV dan tidak melewati way/endpoint di luar whitelist.
+
+| Konfigurasi | A, dari 5 | B, dari 5 | C, dari 5 |
+|---|---:|---:|---:|
+| Dinamis 150.000 | 0 | 0 | 0 |
+| Dinamis 300.000 | 1 | 5 | 1 |
+| Horizon 100.000, total 150.000 | 0 | 5 | 2 |
+| Horizon 100.000, total 300.000 | 1 | 5 | 2 |
+
+Total 22/60 valid; kegagalan 31 over_distance dan 7 no_available_action.
+B horizon 100k-total 300k: 5/5 valid, galat rata-rata 161,29 m, skor ruas 0,909,
+overlap berdasarkan hitungan segmen 0,71%. Rerata galat/skor/overlap pada tabel
+rute berhasil hanya memakai seed berhasil dan ukuran sampelnya ditampilkan.
+Tidak mengisi nol untuk profil tanpa loop. Hasil ini belum membuktikan nilai
+reward optimal, kelayakan lapangan, atau keunggulan untuk semua wilayah.
+
+Analisis graf dijalankan ulang lewat CLI Go pada salinan snapshot/YAML di folder
+sementara, tanpa menimpa output proyek Go. Snapshot 5 November memiliki 26.345
+node/58.020 edge terarah, 38 komponen lemah, rata-rata segmen 25,12 m; 56.816 edge
+memenuhi akses statis (belum mask riwayat perjalanan). Node bukan hanya simpang.
+Kelengkapan seluruh edge: highway 100%, surface 63,91%, width valid 62,99%, access
+pada way 2,85%. Skor seluruh edge: min −5,95, mean −0,642, median 0,700, max 1.
+
+Pusat unduh snapshot −7.282187/112.709282 berbeda dari input start pelatihan
+−7.281518/112.710178; node 311432306, jarak snap 1,31 m. Jangan menyebut perubahan
+start sebagai pengunduhan baru atau menggunakan koordinat start sebagai pusat
+snapshot lama. Hash snapshot dan file sumber terdapat dalam
+`docs/assets/sinkronisasi_go/sumber_dan_ringkasan.json`.
+
+Grafik training merata-ratakan seluruh lima seed dalam blok 1.000 episode;
+ringkasan akhir memakai 10.000 episode terakhir per seed. Overlap ditampilkan
+terpisah untuk semua episode. Perbandingan state memakai jumlah episode dan
+pengaturan epsilon yang sama; perbandingan epsilon dilakukan dalam state yang
+sama. Model dengan riwayat lebih banyak tidak dijamin unggul pada batas episode
+tersebut. Angka ini menjadi acuan draf, bukan keputusan parameter final.
+
+## Riwayat acuan implementasi Go — 9 November 2026
 
 ### Lokasi, sumber dan status
 

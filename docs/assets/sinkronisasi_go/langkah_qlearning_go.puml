@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+start
+:Susun daftar action yang diperbolehkan;
+if (Daftar kosong?) then (Ya)
+  :Akhiri episode tanpa action,\nberi penalti buntu dan galat jarak;
+  stop
+else (Tidak)
+  :Pilih action dengan epsilon-greedy;
+endif
+:Jalankan edge dan perbarui node,\njarak, langkah, serta riwayat kunjungan;
+:Hitung komponen reward,\nperiksa terminal dan kebuntuan;
+:Tambahkan penalti galat jarak\nsekali jika episode berakhir;
+if (Episode berakhir?) then (Ya)
+  :Tetapkan nilai masa depan nol;
+else (Tidak)
+  :Ambil Q maksimum dari action\nyang diperbolehkan pada state berikutnya;
+endif
+:Perbarui Q untuk state dan action tadi;
+:Simpan metrik episode\natau lanjutkan langkah berikutnya;
+stop
+@enduml

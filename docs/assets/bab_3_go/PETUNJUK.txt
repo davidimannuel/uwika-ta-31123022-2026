@@ -1,0 +1,120 @@
+LAMPIRAN BAB III METODE PENELITIAN
+
+Paket ini menyertai Word khusus Bab III, diselesaikan 12 November 2026.
+Word: docs/temp/revisi_bab_3_go_20261112/REVISI_BAB_III_GO.docx
+Panduan per bab ini menggantikan usulan Bab III pada panduan gabungan lama.
+Naskah utama tidak diubah; pengguna memindahkan isi secara manual.
+Verifikasi, validasi, dan hasil Bab IV tidak ditulis dalam pekerjaan ini.
+
+DIAGRAM
+Semua diagram adalah ilustrasi metode penulis, bukan hasil eksperimen.
+Tiga sumber PlantUML telah dirender melalui PlantUML/Kroki dan diperiksa visual.
+Gunakan SVG untuk pembesaran atau PNG sebagai pratinjau. Kode meminta Times New
+Roman; PNG dapat memakai font pengganti pada layanan render. Pertahankan huruf
+minimal 8 poin pada ukuran cetak. Judul gambar di bawah gambar, rata tengah.
+Nomor akhir mengikuti naskah; nomor tidak ditanam di gambar.
+
+Gambar 3.1 — Alur penelitian dan penerapan katalog rute
+Kode: alur_penelitian.puml
+SVG/PNG: alur_penelitian.svg / .png
+Lokasi: 3.2, setelah uraian tahapan eksperimen
+
+Gambar 3.2 — Alur perjalanan agen dalam satu episode
+Kode: alur_environment.puml
+SVG/PNG: alur_environment.svg / .png
+Lokasi: 3.3.5, setelah contoh kategori progres
+
+Gambar 3.3 — Perbedaan jalur perjalanan dan jarak langsung terhadap titik awal
+Kode: jarak_langsung.puml
+SVG/PNG: jarak_langsung.svg / .png
+Lokasi: 3.3.7, setelah penjelasan dua jenis jarak
+
+Diagram graf ruas paralel cukup dirujuk dari Bab II; tidak perlu digandakan.
+Diagram jarak langsung menggantikan ilustrasi koordinat proyeksi x–y lama.
+
+TABEL
+Setiap CSV berikut berisi data tabel rancangan atau contoh perhitungan, bukan
+hasil pelatihan baru. Judul tabel di atas tabel, rata tengah. Tabel metrik 3.19
+memiliki bagian lanjutan di Word tetapi sumber CSV-nya tetap satu file.
+
+Tabel 3.1 — Sumber Data dan Acuan Wilayah Penelitian
+Sumber: sumber_data.csv
+
+Tabel 3.2 — Atribut Jalan dan Penggunaannya
+Sumber: atribut_jalan.csv
+
+Tabel 3.3 — Pemetaan Skor Highway
+Sumber: skor_highway.csv
+
+Tabel 3.4 — Pemetaan Skor Surface
+Sumber: skor_surface.csv
+
+Tabel 3.5 — Pemetaan Skor Width
+Sumber: skor_width.csv
+
+Tabel 3.6 — Penanganan Atribut Tidak Lengkap dan Gabungan
+Sumber: penanganan_atribut.csv
+
+Tabel 3.7 — Parameter Lingkungan Perjalanan
+Sumber: parameter_environment.csv
+
+Tabel 3.8 — Representasi State yang Dibandingkan
+Sumber: representasi_state.csv
+
+Tabel 3.9 — Contoh Penentuan Kategori Progres Jarak
+Sumber: contoh_progres.csv
+
+Tabel 3.10 — Ketentuan Access pada Ruas dan Node
+Sumber: aturan_access.csv
+
+Tabel 3.11 — Ketentuan Perjalanan untuk Pemilihan Ruas
+Sumber: aturan_perjalanan.csv
+
+Tabel 3.12 — Contoh Reward Karakter Ruas
+Sumber: contoh_reward_ruas.csv
+
+Tabel 3.13 — Contoh Reward Arah pada Fase Pulang
+Sumber: contoh_reward_arah.csv
+
+Tabel 3.14 — Bonus dan Penalti Kondisi Akhir Episode
+Sumber: reward_terminal.csv
+
+Tabel 3.15 — Contoh Kontribusi Kondisi Akhir dan Selisih Jarak
+Sumber: contoh_reward_terminal.csv
+
+Tabel 3.16 — Contoh Epsilon pada Pelatihan 150.000 Episode
+Sumber: contoh_epsilon.csv
+
+Tabel 3.17 — Parameter Dasar Pelatihan
+Sumber: parameter_pelatihan.csv
+
+Tabel 3.18 — Kombinasi Jumlah Episode dan Durasi Penurunan Epsilon
+Sumber: konfigurasi_eksperimen.csv
+
+Tabel 3.19 — Metrik Evaluasi Rute
+Sumber: metrik_evaluasi.csv
+
+Tabel 3.20 — Perangkat Pustaka dan Format yang Digunakan
+Sumber: perangkat_implementasi.csv
+
+RUMUS DAN SUMBER
+rumus_bab_3.tex: sumber semua 24 persamaan. Nomor akhir mengikuti naskah.
+Rumus pada Word berupa Equation native (OMML), dapat disalin dan diedit.
+pemetaan_kolom_metrik.csv: nama metrik pada laporan dan kolom program.
+referensi_bab_3.txt: entri sumber yang sama dengan Bab II; jangan digandakan.
+sumber_dan_penempatan.json: lokasi, hash sumber, konfigurasi yang dicocokkan,
+serta batas interpretasi dan status render.
+
+CATATAN PEMINDAHAN
+Gunakan satu koordinat acuan penelitian: -7.281518, 112.710178. Penamaan ini
+tidak mengklaim arsip peta diunduh ulang; pusat historis tercatat pada manifest.
+Pembahasan reward arah berfokus pada fase pulang. Ketentuan langkah peralihan
+2.500 meter dijelaskan agar sesuai kode, tanpa membahas penalti awal nonaktif
+sebagai komponen tersendiri.
+Penalti selisih jarak akhir diterapkan sekali pada seluruh alasan penghentian.
+Overlap dihitung dari jumlah lintasan segmen dan pasangan koordinat endpoint,
+bukan panjang meter atau key berarah. Nilai tak terdefinisi bukan nol.
+Contoh 3.6.1 adalah ilustrasi. Grafik hasil eksperimen tidak dibuat di paket ini.
+Label lama Melebihi 5,5 km pada analysis/training.py perlu disesuaikan menjadi
+Melebihi 6 km sebelum dipakai dalam laporan; kode belum diubah di pekerjaan ini.
+Gabungkan bagian perangkat 3.7 dan 3.8 lama menjadi satu subbab 3.7.

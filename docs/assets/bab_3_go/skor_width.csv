@@ -1,0 +1,4 @@
+Kondisi width,Wₑ
+Lebar valid minimal 3 meter,"+1,00"
+Lebar valid lebih dari 0 dan kurang dari 3 meter,"−1,00"
+"Kosong, tidak valid, tidak positif, atau memuat beberapa nilai","−0,50"

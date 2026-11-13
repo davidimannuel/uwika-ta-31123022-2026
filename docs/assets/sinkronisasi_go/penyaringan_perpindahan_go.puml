@@ -1,0 +1,18 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+start
+:Ambil edge keluar dari node saat ini;
+:Terima hanya panjang positif dan valid,\ndengan akses way dan kedua node\nkosong, yes, atau permissive;
+:Untuk tujuan start, terima hanya\njika total sesudah langkah 4.000-6.000 m;
+:Untuk node selain start, terima node baru\natau kunjungan ulang setelah 2.500 m\njika tujuan dikunjungi kurang dari dua kali;
+:Gabungkan pilihan yang diperbolehkan;
+if (Ada pilihan?) then (Ya)
+  :Gunakan untuk eksplorasi, greedy,\ndan maksimum Q state berikutnya;
+else (Tidak)
+  :Episode berakhir karena\ntidak ada action yang diperbolehkan;
+endif
+stop
+@enduml

@@ -1,0 +1,29 @@
+Boeing, G. (2017). OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks. Computers, Environment and Urban Systems, 65, 126–139. https://doi.org/10.1016/j.compenvurbsys.2017.05.004
+
+Loepp, B., & Ziegler, J. (2018). Recommending running routes: Framework and demonstrator. In ComplexRec ’18: Proceedings of the 2nd Workshop on Recommendation in Complex Scenarios (pp. 26–29). https://interactivesystems.info/system/pdfs/858/original/ComplexRec-18-Final.pdf
+
+OpenStreetMap contributors. (n.d.). Copyright and license. Retrieved November 11, 2026, from https://www.openstreetmap.org/copyright
+
+OpenStreetMap Wiki contributors. (n.d.-a). Key: access. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:access
+
+OpenStreetMap Wiki contributors. (n.d.-b). Key: highway. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway
+
+OpenStreetMap Wiki contributors. (n.d.-c). Key: surface. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
+
+OpenStreetMap Wiki contributors. (n.d.-d). Key: width. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
+
+OpenStreetMap Wiki contributors. (n.d.-e). Node. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Node
+
+OpenStreetMap Wiki contributors. (n.d.-f). Overpass API. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Overpass_API
+
+OpenStreetMap Wiki contributors. (n.d.-g). Way. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Way
+
+OSMnx Developers. (n.d.). User reference. OSMnx documentation. Retrieved November 11, 2026, from https://osmnx.readthedocs.io/en/stable/user-reference.html
+
+Sutton, R. S., & Barto, A. G. (2018). Reinforcement learning: An introduction (2nd ed.). The MIT Press.
+
+Tegart, A. D., Schuurman, N., & Harden, S. R. (2025). Runnability: A scoping review. International Journal of Environmental Research and Public Health, 22(1), 71. https://doi.org/10.3390/ijerph22010071
+
+Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. Machine Learning, 8, 279–292. https://doi.org/10.1007/BF00992698
+
+Zhang, X., Li, H., Peng, J., & Liu, W. (2015). A cooperative Q-learning path planning algorithm for origin-destination pairs in urban road networks. Mathematical Problems in Engineering, 2015, Article 146070. https://doi.org/10.1155/2015/146070

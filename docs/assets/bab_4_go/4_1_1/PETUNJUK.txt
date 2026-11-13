@@ -1,0 +1,24 @@
+LAMPIRAN BAB IV BAGIAN 4.1 DAN 4.1.1
+
+Tabel 4.1 Ringkasan Hasil Pembentukan Graf Jalan
+File: ringkasan_graf.csv
+Lokasi: 4.1.1, setelah paragraf hasil jumlah node dan edge.
+Sumber: analisa.ipynb proyek Go, bagian 3. Sampel dan ringkasan graf,
+cell report.show_summary(), tabel ringkasan terakhir.
+Ekspor sumber: workdirs/training/output/analysis/graph_summary.csv.
+Hanya tiga metrik dipakai; metrik lain tetap pada notebook.
+
+Gambar 4.1 Jaringan jalan pada wilayah penelitian dan titik awal agen
+Sumber: workdirs/training/output/road-analysis.html pada proyek Go.
+STATUS: menunggu screenshot pengguna; gambar belum disertakan.
+Simpan screenshot sebagai graf_dan_titik_awal.png pada folder lampiran ini.
+Tampilkan area graf dan marker START; tutup popup dan kecilkan panel.
+Pertahankan atribusi OpenStreetMap dan legenda jika memakai warna jenis jalan.
+Sisipkan di lokasi petunjuk pada Word, lalu hapus kalimat petunjuk.
+Judul gambar di bawah gambar, rata tengah. Ukuran huruf pada gambar minimal
+8 poin pada ukuran cetak. Tidak perlu rumus tambahan untuk subbab ini.
+
+Judul 4.1 merupakan induk pembahasan dan disertai paragraf pengantar.
+Judul 4.1.1 berada di bawahnya; bukan pengganti 4.1.
+Nomor akhir tabel/gambar mengikuti urutan naskah Bab IV baru.
+Word tidak memuat ulang seluruh Bab IV. Naskah utama tidak diubah.

@@ -1,0 +1,5 @@
+Kondisi highway,Hₑ
+"footway, pedestrian, living_street, residential, tertiary","+1,00"
+secondary,"+0,50"
+Kategori terisi selain kelompok tersebut,"−10,00"
+Kosong atau tidak tersedia,"−2,00"

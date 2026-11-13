@@ -1,0 +1,5 @@
+Nilai access,Perlakuan
+yes,Diizinkan.
+permissive,Diizinkan; penalti akses dijelaskan pada bagian reward.
+Tidak tersedia atau kosong,Diizinkan berdasarkan ketentuan penelitian.
+Nilai terisi selain yes dan permissive,Tidak diizinkan.

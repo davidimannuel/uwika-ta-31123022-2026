@@ -1,0 +1,102 @@
+LAMPIRAN AKTIF EVALUASI RUTE SKENARIO A B DAN C
+
+WORD
+DRAF_BAB_IV_4_3_EVALUASI_SKENARIO_A_B_C_TABEL.docx pada
+/docs/temp/bab_4_3_evaluasi_a_c_go_20261113/.
+17halaman termasuk1halamanpetunjuk. Salin mulai4.3. Isi A dipertahankan persis
+dari draf TABEL_SAJA sebelumnya; B/C ditambahkan. Jangan menyalin A dua kali
+jika sudah dimasukkan ke naskah utama. Caption tabel sementara4.4–4.18.
+
+CAKUPAN
+4.3 Evaluasi Rute Setelah Pelatihan (pengantar)
+4.3.1 Hasil Evaluasi Skenario A
+4.3.2 Hasil Evaluasi Skenario B
+4.3.3 Hasil Evaluasi Skenario C
+Belum ada subbab ringkasan perbandingan lintasskenario, peta rute,verifikasi,
+validasi,atau penulisan bab lain. Naskah utama hanya diedit pengguna.
+
+PENYAJIAN
+15tabel,0gambar. Setiap skenario:1ringkasan4profil+4rincianmasingmasing5seed.
+Semua60evaluasi ditampilkan,termasukgagal. Berhasil perprofil dibagi5,ditampilkan
+jumlah/5danpersen. Rerata mencakup seluruh5seedsebelumpembulatan, bukan hanya
+loopberhasil. Setiap konfigurasi dilatih dari awal dengan Q-tablebaru;
+300k bukan continuation150k. Evaluasi epsilon0,nilaiQ tidak diperbarui;
+Qsetara masih dapat dipilih acak. Grafik training4.2tidakdiubah.
+
+SUMBER
+training.ipynb Go bagian5/report.compare_profiles() untuk ringkasan.
+Bagian4/report.show_profiles(),Metrik Evaluasi Greedy per Seed,untuk rincian.
+Angka dicocokkan12evaluation.csv+metadata+markerstatuscompleted dan12CSV
+termination_evaluation. Semua menggunakan snapshot/start/reward/aturan/seed
+serta hyperparameterbersama yang sepadan. Metadata dan CSV asli disalin pada
+sumber/<profil>/.Ringkasan asli perstate pada sumber_ringkasan/scenario-x/.
+CSV evaluasi_seluruh_seed.csv memuat60recorddenganprofile;CSV ringkasan_seluruh_
+konfigurasi.csv memuat12baris ringkasan. Semua sumber dicatat hashmanifest.
+Tidak mengakses ulang historyjutaanepisode,replayQ,training,evaluasiulang,unduhan.
+
+METRIK
+Galat=abs(panjangrute-5000),bukan jaraknodeakhirkeawal. Skor ruas perrute
+berbobot panjang,sementara rerata antar-seed memberi tiaprute bobotsama.
+Overlap adalah rasio pengulangan lintasan berdasarkan jumlah, bukanmeter.
+Rata-rata overlap=rerata5rasio,rutegagal ikut. Data0bukan tidaktersedia.
+Kolom detail:seed,panjang(m),galat(m),skor4desimal,pengulangan(%),terminasi.
+Kolom lain seperti reward/returnprogress/closingtetap diCSV asli tanpa menambah
+kolomWord. Skor bukan persentase kenyamanan atau bukti keamanan/lapangan.
+
+ANGKA UTAMA
+Urutan4profil:dinamis150k,dinamis300k,tetap100k-total150k,tetap100k-total300k.
+Keberhasilan A0/5,0/5,0/5,1/5; B0/5,4/5,5/5,5/5; C0/5,1/5,2/5,2/5.
+TotalperstateA1/20,B14/20,C5/20;total20/60lintas12profil bukan satu kondisi
+atau uji signifikansi. Bfixed150kmeanerror145,71433m lebihkecil darifixed300k
+168,81494m;overlapfixed300k0,69749%lebihkecil dari0,96679%. Cfixed300k
+meanoverlap0,34574%tetap hanya2/5loop,galat789,19568m. Tidak klaim optimum,
+konvergensi,semuaseedstabil,kelayakanlapangan,atau episodelebihbanyakselalubaik.
+
+NaskahTAutama dan seluruh data/kode/config/notebookGo utuh. Tidak commit.
+
+PEMETAAN TABEL
+
+Tabel 4.4 Ringkasan Hasil Evaluasi Skenario A
+CSV: ringkasan_evaluasi_skenario_a.csv
+
+Tabel 4.5 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 150.000 Episode
+CSV: a-dynamic-150000_setiap_seed.csv
+
+Tabel 4.6 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 300.000 Episode
+CSV: a-dynamic-300000_setiap_seed.csv
+
+Tabel 4.7 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 150.000 Episode
+CSV: a-horizon-100000-total-150000_setiap_seed.csv
+
+Tabel 4.8 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 300.000 Episode
+CSV: a-horizon-100000-total-300000_setiap_seed.csv
+
+Tabel 4.9 Ringkasan Hasil Evaluasi Skenario B
+CSV: ringkasan_evaluasi_skenario_b.csv
+
+Tabel 4.10 Hasil Evaluasi Setiap Seed Skenario B dengan Epsilon Dinamis dan 150.000 Episode
+CSV: b-dynamic-150000_setiap_seed.csv
+
+Tabel 4.11 Hasil Evaluasi Setiap Seed Skenario B dengan Epsilon Dinamis dan 300.000 Episode
+CSV: b-dynamic-300000_setiap_seed.csv
+
+Tabel 4.12 Hasil Evaluasi Setiap Seed Skenario B dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 150.000 Episode
+CSV: b-horizon-100000-total-150000_setiap_seed.csv
+
+Tabel 4.13 Hasil Evaluasi Setiap Seed Skenario B dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 300.000 Episode
+CSV: b-horizon-100000-total-300000_setiap_seed.csv
+
+Tabel 4.14 Ringkasan Hasil Evaluasi Skenario C
+CSV: ringkasan_evaluasi_skenario_c.csv
+
+Tabel 4.15 Hasil Evaluasi Setiap Seed Skenario C dengan Epsilon Dinamis dan 150.000 Episode
+CSV: c-dynamic-150000_setiap_seed.csv
+
+Tabel 4.16 Hasil Evaluasi Setiap Seed Skenario C dengan Epsilon Dinamis dan 300.000 Episode
+CSV: c-dynamic-300000_setiap_seed.csv
+
+Tabel 4.17 Hasil Evaluasi Setiap Seed Skenario C dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 150.000 Episode
+CSV: c-horizon-100000-total-150000_setiap_seed.csv
+
+Tabel 4.18 Hasil Evaluasi Setiap Seed Skenario C dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 300.000 Episode
+CSV: c-horizon-100000-total-300000_setiap_seed.csv

@@ -1,0 +1,10 @@
+Kebutuhan,Aset
+Alur penelitian,alur_penelitian_go.puml
+Pembentukan graf mentah,pembentukan_graf_mentah.puml
+Penyaringan action,penyaringan_perpindahan_go.puml
+Satu langkah Q-Learning,langkah_qlearning_go.puml
+Rumus,rumus_go.tex
+Tabel hasil,evaluasi_per_seed.csv; ringkasan_profil.csv
+Data grafik training,perkembangan_pelatihan.csv; ringkasan_seed_pelatihan.csv
+Statistik dan asal data,sumber_dan_ringkasan.json
+Gambar dan sumber pembuatannya,PNG/SVG serta buat_gambar.py

@@ -1,0 +1,11 @@
+Metrik,Definisi dan Kegunaan
+Keberhasilan loop,Berhasil jika node akhir sama dengan node awal dan total jarak 4.000–6.000 m.
+Total jarak perjalanan,"Jumlah panjang seluruh ruas yang dilalui, termasuk pengulangan."
+Galat jarak absolut,Selisih absolut total jarak terhadap target 5.000 m.
+Total reward,Jumlah seluruh reward dan penalti dalam satu episode.
+Rata-rata skor karakter ruas,Rata-rata skor ruas berbobot panjang lintasan.
+Rasio pengulangan ruas,Proporsi lintasan yang mengulang segmen yang telah dilalui.
+Rasio pergerakan mendekati titik awal,Proporsi langkah fase pulang yang mengurangi jarak langsung ke titik awal.
+Jarak akhir terhadap titik awal,Jarak Haversine antara node akhir dan node awal.
+Ketersediaan ruas penutup loop,Pernah tersedia ruas yang dapat langsung menutup loop dengan jarak valid.
+Alasan penghentian episode,"Berhasil, melebihi jarak, tidak tersedia tindakan, atau batas langkah."

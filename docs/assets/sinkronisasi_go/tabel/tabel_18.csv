@@ -1,0 +1,13 @@
+State dan konfigurasi,Loop,Galat m,Skor ruas,Overlap%
+A Dinamis 150 ribu,0/5,—,—,—
+A Dinamis 300 ribu,1/5,"476,29","0,858","0,00"
+A Horizon 100 ribu total 150 ribu,0/5,—,—,—
+A Horizon 100 ribu total 300 ribu,1/5,"557,81","0,493","0,91"
+B Dinamis 150 ribu,0/5,—,—,—
+B Dinamis 300 ribu,5/5,"373,46","0,906","1,08"
+B Horizon 100 ribu total 150 ribu,5/5,"268,67","0,909","0,69"
+B Horizon 100 ribu total 300 ribu,5/5,"161,29","0,909","0,71"
+C Dinamis 150 ribu,0/5,—,—,—
+C Dinamis 300 ribu,1/5,"474,44","0,815","0,00"
+C Horizon 100 ribu total 150 ribu,2/5,"435,05","0,830","0,36"
+C Horizon 100 ribu total 300 ribu,2/5,"454,13","0,855","0,37"

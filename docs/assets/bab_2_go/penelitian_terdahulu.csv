@@ -1,0 +1,5 @@
+﻿Peneliti,Konteks,Relevansi,Perbedaan dengan Penelitian Ini
+"Zhang, Li, Peng, and Liu (2015)",Q-Learning kooperatif untuk beberapa rute asal–tujuan pada jaringan jalan.,Penerapan Q-Learning pada graf jalan.,Berfokus pada perjalanan kendaraan; penelitian ini membentuk rute lari loop.
+Loepp and Ziegler (2018),Kerangka dan aplikasi rekomendasi rute lari personal.,Rute dibentuk dengan mempertimbangkan kebutuhan dan tujuan pelari.,Berfokus pada rekomendasi personal; penelitian ini menguji Q-Learning tabular dan representasi state.
+"Tegart, Schuurman, and Harden (2025)",Kajian hubungan lingkungan dengan aktivitas berlari.,Dasar konseptual pertimbangan karakter ruas.,Kajian literatur; penelitian ini membentuk dan mengevaluasi rute pada graf jalan.
+Boeing (2017),OSMnx untuk pemodelan dan analisis jaringan jalan OpenStreetMap.,Referensi pendekatan pemodelan jaringan sebagai graf.,Berfokus pada perangkat pemodelan jaringan; penelitian ini menggunakan implementasi Go untuk pembelajaran rute.

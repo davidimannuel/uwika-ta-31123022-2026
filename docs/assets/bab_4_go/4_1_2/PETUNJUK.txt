@@ -1,0 +1,26 @@
+LAMPIRAN BAB IV SUBBAB 4.1.2 VERSI DIAGRAM
+
+Gambar 4.2 Kelengkapan Atribut Jalan pada Graf Penelitian
+Gunakan kelengkapan_atribut.png (resolusi tinggi) atau SVG untuk gambar tajam.
+Kode pembuat gambar: buat_diagram_kelengkapan.py.
+Data yang sama dengan analisa.ipynb Go bagian 5. Kelengkapan empat atribut,
+cell report.show_completeness(); CSV sumber_attribute_completeness.csv.
+Legenda bahasa Indonesia dan perbedaan terang gelap memperjelas cetak hitam putih.
+Angka di atas bagian berwarna menunjukkan persentase terisi.
+Seluruh persentase menggunakan 59.176 edge berarah; bukan ruas fisik unik.
+Gambar menggantikan tabel kelengkapan; jangan gunakan keduanya sekaligus.
+CSV kelengkapan_atribut.csv tetap disimpan sebagai sumber data/riwayat.
+Caption di bawah gambar, rata tengah. Sesuaikan nomor akhir.
+
+Tabel 4.2 Distribusi Nilai Akses pada Ruas Jalan
+Gunakan distribusi_akses.csv dan tabel dalam Word terbaru.
+Sumber analisa.ipynb Go bagian 6. Distribusi highway, surface, width, dan access,
+cell report.show_distributions(), tabel access.
+Tabel akses yang sebelumnya bernomor 4.3 kini 4.2 karena tabel kelengkapan
+diganti gambar. Sesuaikan nomor akhir dengan naskah utama.
+Caption tabel di atas, rata tengah.
+Tag akses pada ruas bukan jumlah akhir action legal atau bukti kondisi lapangan.
+
+Word aktif: docs/temp/bab_4_1_2_go_20261113/DRAF_BAB_IV_4_1_2_DIAGRAM.docx.
+Word dua tabel sebelumnya tetap disimpan sebagai riwayat, jangan salin bersamaan.
+Naskah utama tidak diubah. Tidak perlu rumus baru.

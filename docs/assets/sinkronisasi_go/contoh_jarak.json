@@ -1,0 +1,8 @@
+{
+  "profile": "b-horizon-100000-total-300000",
+  "seed": 1,
+  "step": 40,
+  "travel_distance_m": 2072.3392377881414,
+  "haversine_to_start_m": 1131.0808305676276,
+  "source": "evaluation-steps.csv"
+}

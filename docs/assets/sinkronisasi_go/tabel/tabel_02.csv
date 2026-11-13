@@ -1,0 +1,10 @@
+Parameter,Nilai
+Sumber dan format data,"OpenStreetMap melalui Overpass API, JSON"
+Waktu data pada snapshot,"5 November 2026, 10.59.34 UTC"
+Pusat area pengambilan,"-7,282187; 112,709282"
+Bounding box,3.025 m dari pusat ke setiap sisi
+Koordinat masukan start,"-7,281518; 112,710178"
+Node start,311432306
+Target dan toleransi,5.000 m; 20%
+Rentang loop valid,4.000–6.000 m
+Graf dan perhitungan jarak,Graf mentah dua arah dengan ruas paralel; Haversine

@@ -1,0 +1,47 @@
+LAMPIRAN RINGKASAN PERBANDINGAN HASIL EVALUASI
+
+Penempatan: subbab 4.3.4, setelah pembahasan evaluasi skenario C.
+Word sementara: docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/
+DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx
+Empat halaman: satu petunjuk dan tiga halaman isi. Salin mulai halaman kedua.
+Jangan mengganti atau mengulang pembahasan skenario A, B, dan C sebelumnya.
+
+TABEL
+tabel_ringkasan_evaluasi_a_c.csv: satu tabel dengan 12 baris data,
+empat konfigurasi pelatihan masing-masing diikuti skenario A, B, dan C.
+Caption sementara: Tabel 4.19 Ringkasan Perbandingan Hasil Evaluasi
+Skenario A B dan C. Nomor final mengikuti naskah pengguna.
+Kolom pengaturan epsilon dan episode digabung untuk tiga baris A–C di Word.
+Seluruh tabel muat pada halaman kedua. Font tabel 10 poin, isi 12 poin;
+A4, margin kiri/atas 4 cm dan kanan/bawah 3 cm, spasi 1,5.
+
+ARTI ANGKA
+Berhasil = jumlah loop / lima evaluasi akhir, diikuti persentase.
+Ketiga kolom metrik lainnya adalah rata-rata kelima hasil, termasuk gagal.
+Galat jarak dalam meter; skor ruas tidak bersatuan; pengulangan dalam persen
+berdasarkan frekuensi lintasan ruas fisik, bukan panjang jalan yang diulang.
+Skor ruas tidak menyatakan persentase kenyamanan atau bukti kelayakan lapangan.
+
+SUMBER
+data_ringkasan_12_konfigurasi.csv mempertahankan presisi angka ringkasan sumber.
+Angka diperiksa terhadap 60 evaluasi asli di proyek Go:
+/Users/david/development/go-running-route-q-learning/
+workdirs/training/output/training/<profile>/evaluation.csv dan metadata.json.
+Ringkasan dan salinan sumber permanen sebelumnya tersedia di:
+docs/assets/bab_4_go/4_3_evaluasi_a_c/.
+Tabel mencerminkan ringkasan hasil yang tersedia pada report.compare_profiles().
+
+buat_tabel.py dapat membentuk ulang CSV tabel tanpa pelatihan/evaluasi baru.
+Jalankan dengan Python: python buat_tabel.py
+Gunakan --output untuk menyimpan salinan pada lokasi lain.
+Tidak diperlukan pustaka tambahan untuk helper tersebut.
+
+BATAS PEMBAHASAN
+Setiap konfigurasi dilatih mandiri dari Q-table baru; total 300.000 episode
+bukan kelanjutan total 150.000. Evaluasi akhir epsilon 0.
+Tidak ada grafik garis perbandingan anggaran episode, gambar, atau rumus baru.
+Peta contoh berhasil/gagal ditempatkan pada pembahasan masing-masing skenario,
+bukan di ringkasan ini. Peta belum disisipkan ke draf yang disediakan.
+Tidak menyusun bab berikutnya, verifikasi, validasi, atau keputusan final katalog.
+Tidak mengubah naskah utama, kode/config/notebook maupun hasil Go; tidak training,
+evaluasi ulang, unduhan peta, instalasi, atau commit.

@@ -1,0 +1,4 @@
+Node tujuan,Ketentuan
+Selain titik awal dan belum dikunjungi,Dapat dipilih.
+Selain titik awal dan sudah dikunjungi,Jarak sebelum perpindahan minimal 2.500 m dan jumlah kunjungan sebelumnya kurang dari dua.
+Node awal,Total jarak setelah perpindahan harus berada pada 4.000–6.000 m.

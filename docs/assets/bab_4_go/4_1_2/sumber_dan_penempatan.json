@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-13",
+  "scope": "4.1.2 only",
+  "source_project": "/Users/david/development/go-running-route-q-learning",
+  "main_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "main_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_hashes": {
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/edges.csv": "969ba1360ae47e30173ffd5ea137b4ae64c0be712065dabfb64025e3dba3a9e1",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/attribute_completeness.csv": "1827e592b2c30fbf492b7f9c14d4707ced5a5079722d405e4e95abb45ee87807",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/attribute_distributions.csv": "457f79ce17120b8a925eed0ff72245ad8657609ea348c3f6a87589086138ca32",
+    "/Users/david/development/go-running-route-q-learning/analisa.ipynb": "2aef9aa197c6b0cf10b3eff057d28fca494df069e79204d79f42e3ce02cec1d3",
+    "/Users/david/development/go-running-route-q-learning/analysis/graph.py": "abc2790ae745703f9dd6f760f0601ca7e9323f123586beda22711052709f5e08"
+  },
+  "total_directed_edges": 59176,
+  "checks": [
+    "Completeness counts recomputed from edges.csv",
+    "Access categories recomputed from edges.csv",
+    "Source percentages checked against denominator",
+    "No connectivity conclusion drawn from edge count"
+  ],
+  "tables": [
+    {
+      "number": "4.2",
+      "title": "Distribusi Nilai Akses pada Ruas Jalan",
+      "file": "distribusi_akses.csv",
+      "notebook_section": "6. Distribusi highway, surface, width, dan access",
+      "call": "report.show_distributions()",
+      "select": "access"
+    }
+  ],
+  "notes": [
+    "Replaces completeness table, not an additional duplicate figure",
+    "Labels in Indonesian; source data unchanged",
+    "Percent labels show filled share; light gray remainder is not recorded",
+    "No connectivity conclusions from total edge count",
+    "Go notebook, code, config and research outputs unchanged",
+    "Previous two-table DOCX retained as history"
+  ],
+  "word_pages": 3,
+  "all_pages_visually_reviewed": true,
+  "docx_sha256": "9ccbb4375663c26506017ad6bbe2e81d5523c9ed3b37e5c9665b766c6bfef403",
+  "asset_hashes": {
+    "kelengkapan_atribut.csv": "02f28d19d6585fd9036dbb304c862a96996828608f9affaa39e0b074a5a77b3a",
+    "sumber_attribute_distributions.csv": "457f79ce17120b8a925eed0ff72245ad8657609ea348c3f6a87589086138ca32",
+    "sumber_attribute_completeness.csv": "1827e592b2c30fbf492b7f9c14d4707ced5a5079722d405e4e95abb45ee87807",
+    "revisi_diagram.json": "6a3ec2e3d793688c8202d15ded40702c6ecca3846b22e14bacabacaa782e3060",
+    "sumber_dan_penempatan_versi_dua_tabel.json": "ffd48deda10c11c6b3cc2cc7f7ac0be1f42ade24748ba3b5a68ec9a372b47113",
+    "kelengkapan_atribut.svg": "1fe3896f2f707e61941deabf84ceabcb1972ef7c37c1ed3b3c17e2ff1a2379f8",
+    "PETUNJUK.txt": "b56f91fbbe35e0b7d3af7977b504ba34f5a8f2fae8abb4e0615c95818f368997",
+    "kelengkapan_atribut.png": "08ee2ed103d45eaf083019e0304d2b4c3d2beb036cc5b6b92ade0e8ab132d6b7",
+    "distribusi_akses.csv": "4846bae0dc0860560a8a606b77db78307631734ed7725c21cd2e3fca68144b64",
+    "buat_diagram_kelengkapan.py": "8a99f110e039b27e97d257e3a93c0274249355868971ba30cd3907bf11251d20"
+  },
+  "supersedes": "sumber_dan_penempatan_versi_dua_tabel.json",
+  "active_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_1_2_go_20261113/DRAF_BAB_IV_4_1_2_DIAGRAM.docx",
+  "figure": {
+    "number": "4.2",
+    "title": "Kelengkapan Atribut Jalan pada Graf Penelitian",
+    "png": "kelengkapan_atribut.png",
+    "svg": "kelengkapan_atribut.svg",
+    "code": "buat_diagram_kelengkapan.py",
+    "data": "sumber_attribute_completeness.csv",
+    "notebook_section": "5. Kelengkapan empat atribut",
+    "call": "report.show_completeness()",
+    "status": "rendered_and_visually_reviewed"
+  }
+}

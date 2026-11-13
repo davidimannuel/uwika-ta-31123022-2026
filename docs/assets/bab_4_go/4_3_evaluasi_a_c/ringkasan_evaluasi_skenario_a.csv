@@ -1,0 +1,9 @@
+Penurunan Epsilon,Episode per Seed,Berhasil,Rata-rata Galat (m),Rata-rata Skor Ruas,Rata-rata Pengulangan (%)
+Dinamis,150.000,"0/5
+(0%)","1.017,00","0,8433","8,05"
+Dinamis,300.000,"0/5
+(0%)","919,16","0,5504","8,52"
+Durasi tetap 100.000 episode,150.000,"0/5
+(0%)","951,91","0,6641","5,41"
+Durasi tetap 100.000 episode,300.000,"1/5
+(20%)","1.034,83","0,5631","6,53"

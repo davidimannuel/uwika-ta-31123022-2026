@@ -1,0 +1,10 @@
+Komponen,Penggunaan
+Go,"Implementasi pengambilan data, graf, aturan perjalanan, reward, pelatihan, evaluasi, dan penyimpanan hasil."
+Python 3.13,Pengolahan dan analisis hasil eksperimen dari program Go.
+JupyterLab,Menjalankan notebook analisis data jalan dan hasil pelatihan.
+pandas,"Membaca, mengolah, dan merangkum tabel hasil."
+Matplotlib,Membuat grafik analisis data dan perkembangan pelatihan.
+Leaflet,Menampilkan jaringan jalan dan rute pada peta interaktif.
+Overpass API,Mengambil data jaringan jalan OpenStreetMap.
+uv,Mengelola lingkungan Python dan dependensi analisis.
+YAML,"Format penyimpanan pengaturan data, lingkungan perjalanan, reward, dan pelatihan."

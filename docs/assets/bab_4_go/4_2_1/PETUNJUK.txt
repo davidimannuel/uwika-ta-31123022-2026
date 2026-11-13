@@ -1,0 +1,91 @@
+LAMPIRAN BAB IV BAGIAN 4.2 DAN 4.2.1
+
+Word memuat pengantar4.2 dan4.2.1,12panel keberhasilan dan1tabel terminasi.
+Gambar4.4–4.15: panel kiri atas training.svg hasil report.show_profiles() pada
+training.ipynb, bagian4 Hasil per konfigurasi. Kurva, skala, titik, warna, grid
+dan label sumbu asli dipertahankan. Panel lain dan judul generik yang berulang
+tidak disertakan; identitas skenario/konfigurasi ada pada caption Word.
+Tidak membuat ulang kurva atau mengubah rolling50, sampel atau nilai hasil.
+PNG/SVG panel tersedia per profil. Lebar di Word14cm, huruf tick kira-kira8pt.
+Caption di bawah gambar, rata tengah. Nomor akhir mengikuti naskah utama.
+Pemetaan lengkap angka/berkas/profil/caption dan hash ada pada manifest JSON.
+
+Tabel4.3 merangkum tabel Termination Rate: Training yang sudah dihasilkan
+show_profiles(), dari termination_training.csv setiap profil. CSV asli disimpan
+di sumber_terminasi/. Angka mencakup SELURUH episode, lima seed, bukan10kakhir
+dan bukan persentase seed berhasil evaluasi greedy. Total750.000/1.500.000
+episode per profil sesuai150k/300k per seed. Kolom batas langkah tidak ditampilkan
+karena semuanya0; data asli tetap disimpan dan disebut pada teks.
+ringkasan_terminasi_training.csv menyimpan hitungan/persentase penuh.
+tabel_terminasi_siap_salin.csv menggunakan penulisan angka Indonesia.
+Caption tabel di atas, rata tengah. Selisih pembulatan kecil dapat terjadi.
+
+Gambar permanen ada di folder ini, tidak hanya di docs/temp.
+Word hanya memuat4.2pengantar dan4.2.1. Bagian lain dikerjakan setelah diskusi.
+Tidak ada tabel tail10k atau evaluasi greedy pada draf ini.
+Naskah utama hanya diedit pengguna. Hasil/kode Go tidak diubah.
+
+PEMETAAN GAMBAR
+
+Gambar 4.4 Perkembangan keberhasilan loop skenario A dengan epsilon dinamis, 150.000 episode
+PNG: a-dynamic-150000_keberhasilan.png
+SVG: a-dynamic-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/a-dynamic-150000/training.svg
+
+Gambar 4.5 Perkembangan keberhasilan loop skenario B dengan epsilon dinamis, 150.000 episode
+PNG: b-dynamic-150000_keberhasilan.png
+SVG: b-dynamic-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/b-dynamic-150000/training.svg
+
+Gambar 4.6 Perkembangan keberhasilan loop skenario C dengan epsilon dinamis, 150.000 episode
+PNG: c-dynamic-150000_keberhasilan.png
+SVG: c-dynamic-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/training.svg
+
+Gambar 4.7 Perkembangan keberhasilan loop skenario A dengan epsilon dinamis, 300.000 episode
+PNG: a-dynamic-300000_keberhasilan.png
+SVG: a-dynamic-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/a-dynamic-300000/training.svg
+
+Gambar 4.8 Perkembangan keberhasilan loop skenario B dengan epsilon dinamis, 300.000 episode
+PNG: b-dynamic-300000_keberhasilan.png
+SVG: b-dynamic-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/b-dynamic-300000/training.svg
+
+Gambar 4.9 Perkembangan keberhasilan loop skenario C dengan epsilon dinamis, 300.000 episode
+PNG: c-dynamic-300000_keberhasilan.png
+SVG: c-dynamic-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/training.svg
+
+Gambar 4.10 Perkembangan keberhasilan loop skenario A dengan horizon 100.000, total 150.000 episode
+PNG: a-horizon-100000-total-150000_keberhasilan.png
+SVG: a-horizon-100000-total-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/a-horizon-100000-total-150000/training.svg
+
+Gambar 4.11 Perkembangan keberhasilan loop skenario B dengan horizon 100.000, total 150.000 episode
+PNG: b-horizon-100000-total-150000_keberhasilan.png
+SVG: b-horizon-100000-total-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/b-horizon-100000-total-150000/training.svg
+
+Gambar 4.12 Perkembangan keberhasilan loop skenario C dengan horizon 100.000, total 150.000 episode
+PNG: c-horizon-100000-total-150000_keberhasilan.png
+SVG: c-horizon-100000-total-150000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/training.svg
+
+Gambar 4.13 Perkembangan keberhasilan loop skenario A dengan horizon 100.000, total 300.000 episode
+PNG: a-horizon-100000-total-300000_keberhasilan.png
+SVG: a-horizon-100000-total-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/a-horizon-100000-total-300000/training.svg
+
+Gambar 4.14 Perkembangan keberhasilan loop skenario B dengan horizon 100.000, total 300.000 episode
+PNG: b-horizon-100000-total-300000_keberhasilan.png
+SVG: b-horizon-100000-total-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/b-horizon-100000-total-300000/training.svg
+
+Gambar 4.15 Perkembangan keberhasilan loop skenario C dengan horizon 100.000, total 300.000 episode
+PNG: c-horizon-100000-total-300000_keberhasilan.png
+SVG: c-horizon-100000-total-300000_keberhasilan.svg
+Sumber: /Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/training.svg
+
+Kode ekstraksi vector: ekstrak_panel_keberhasilan.py. Tidak perlu dijalankan
+untuk menyalin gambar karena PNG/SVG panel sudah tersedia.

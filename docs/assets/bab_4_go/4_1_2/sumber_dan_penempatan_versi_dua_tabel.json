@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-13",
+  "scope": "4.1.2 only",
+  "source_project": "/Users/david/development/go-running-route-q-learning",
+  "main_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "main_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_hashes": {
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/edges.csv": "969ba1360ae47e30173ffd5ea137b4ae64c0be712065dabfb64025e3dba3a9e1",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/attribute_completeness.csv": "1827e592b2c30fbf492b7f9c14d4707ced5a5079722d405e4e95abb45ee87807",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/attribute_distributions.csv": "457f79ce17120b8a925eed0ff72245ad8657609ea348c3f6a87589086138ca32",
+    "/Users/david/development/go-running-route-q-learning/analisa.ipynb": "2aef9aa197c6b0cf10b3eff057d28fca494df069e79204d79f42e3ce02cec1d3",
+    "/Users/david/development/go-running-route-q-learning/analysis/graph.py": "abc2790ae745703f9dd6f760f0601ca7e9323f123586beda22711052709f5e08"
+  },
+  "total_directed_edges": 59176,
+  "checks": [
+    "Completeness counts recomputed from edges.csv",
+    "Access categories recomputed from edges.csv",
+    "Source percentages checked against denominator",
+    "No connectivity conclusion drawn from edge count"
+  ],
+  "tables": [
+    {
+      "number": "4.2",
+      "file": "kelengkapan_atribut.csv",
+      "notebook_section": "5. Kelengkapan empat atribut",
+      "call": "report.show_completeness()"
+    },
+    {
+      "number": "4.3",
+      "file": "distribusi_akses.csv",
+      "notebook_section": "6. Distribusi highway, surface, width, dan access",
+      "call": "report.show_distributions()",
+      "select": "access"
+    }
+  ],
+  "notes": [
+    "Raw way access, not final legal action count",
+    "No extra figure or equation",
+    "No old Bab IV read",
+    "No thesis/code/config/results edited; no training or downloads",
+    "4.1.3 and verification/validation deferred"
+  ],
+  "word_pages": 3,
+  "all_pages_visually_reviewed": true,
+  "docx_sha256": "784cefff63da7b3fa5d3dbdb9ee10c236ce0e65d6d5ff1bf117b3d826fe1a92b",
+  "asset_hashes": {
+    "kelengkapan_atribut.csv": "02f28d19d6585fd9036dbb304c862a96996828608f9affaa39e0b074a5a77b3a",
+    "sumber_attribute_distributions.csv": "457f79ce17120b8a925eed0ff72245ad8657609ea348c3f6a87589086138ca32",
+    "sumber_attribute_completeness.csv": "1827e592b2c30fbf492b7f9c14d4707ced5a5079722d405e4e95abb45ee87807",
+    "PETUNJUK.txt": "04bb9555566e7c111b7fe0c0942e30f6834de4ae175fdb25d5ef1355155fb060",
+    "distribusi_akses.csv": "4846bae0dc0860560a8a606b77db78307631734ed7725c21cd2e3fca68144b64"
+  }
+}

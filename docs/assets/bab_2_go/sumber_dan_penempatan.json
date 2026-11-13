@@ -1,0 +1,160 @@
+{
+  "date": "2026-11-11",
+  "source_docx": "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx",
+  "source_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "source_code_project": "/Users/david/development/go-running-route-q-learning",
+  "scope": "Bab II only; instructions and replacement prose, no edits to thesis",
+  "tables": 2,
+  "equations": 3,
+  "diagrams": 3,
+  "diagrams_rendered": false,
+  "sources": [
+    {
+      "reference": "Boeing, G. (2017). OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks. Computers, Environment and Urban Systems, 65, 126–139. https://doi.org/10.1016/j.compenvurbsys.2017.05.004",
+      "url": "https://arxiv.org/abs/1611.01890"
+    },
+    {
+      "reference": "Loepp, B., & Ziegler, J. (2018). Recommending running routes: Framework and demonstrator. In ComplexRec ’18: Proceedings of the 2nd Workshop on Recommendation in Complex Scenarios (pp. 26–29). https://interactivesystems.info/system/pdfs/858/original/ComplexRec-18-Final.pdf",
+      "url": "https://benedikt.loepp.eu/17/136/recommending-running-routes-framework-and-demonstrator.html"
+    },
+    {
+      "reference": "OpenStreetMap contributors. (n.d.). Copyright and license. Retrieved November 11, 2026, from https://www.openstreetmap.org/copyright",
+      "url": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-a). Key: access. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:access",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:access"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-b). Key: highway. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:highway"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-c). Key: surface. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:surface"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-d). Key: width. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:width",
+      "url": "https://wiki.openstreetmap.org/wiki/Key:width"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-e). Node. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Node",
+      "url": "https://wiki.openstreetmap.org/wiki/Node"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-f). Overpass API. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Overpass_API",
+      "url": "https://wiki.openstreetmap.org/wiki/Overpass_API"
+    },
+    {
+      "reference": "OpenStreetMap Wiki contributors. (n.d.-g). Way. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Way",
+      "url": "https://wiki.openstreetmap.org/wiki/Way"
+    },
+    {
+      "reference": "OSMnx Developers. (n.d.). User reference. OSMnx documentation. Retrieved November 11, 2026, from https://osmnx.readthedocs.io/en/stable/user-reference.html",
+      "url": "https://osmnx.readthedocs.io/en/stable/user-reference.html#osmnx.distance.great_circle"
+    },
+    {
+      "reference": "Sutton, R. S., & Barto, A. G. (2018). Reinforcement learning: An introduction (2nd ed.). The MIT Press.",
+      "url": "https://mitpress.mit.edu/9780262039246/reinforcement-learning/"
+    },
+    {
+      "reference": "Tegart, A. D., Schuurman, N., & Harden, S. R. (2025). Runnability: A scoping review. International Journal of Environmental Research and Public Health, 22(1), 71. https://doi.org/10.3390/ijerph22010071",
+      "url": "https://www.mdpi.com/1660-4601/22/1/71"
+    },
+    {
+      "reference": "Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. Machine Learning, 8, 279–292. https://doi.org/10.1007/BF00992698",
+      "url": "https://link.springer.com/article/10.1007/BF00992698"
+    },
+    {
+      "reference": "Zhang, X., Li, H., Peng, J., & Liu, W. (2015). A cooperative Q-learning path planning algorithm for origin-destination pairs in urban road networks. Mathematical Problems in Engineering, 2015, Article 146070. https://doi.org/10.1155/2015/146070",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1155/2015/146070"
+    }
+  ],
+  "citation_aliases": {
+    "n.d.-a": "Key: access",
+    "n.d.-b": "Key: highway",
+    "n.d.-c": "Key: surface",
+    "n.d.-d": "Key: width",
+    "n.d.-e": "Node",
+    "n.d.-f": "Overpass API",
+    "n.d.-g": "Way"
+  },
+  "figure_mapping": [
+    [
+      "siklus_rl.puml",
+      "2.1, setelah penjelasan siklus interaksi",
+      "Siklus interaksi agen dan lingkungan dalam Reinforcement Learning"
+    ],
+    [
+      "alur_q_learning.puml",
+      "2.2, setelah penjelasan rangkaian episode",
+      "Alur pelatihan Q-Learning"
+    ],
+    [
+      "graf_ruas_paralel.puml",
+      "2.4, setelah penjelasan node dan ruas paralel",
+      "Ilustrasi graf berarah dengan ruas paralel"
+    ],
+    [
+      "tag_osm.csv",
+      "Tabel pada 2.3",
+      "Tag OpenStreetMap dan Penggunaannya dalam Penelitian"
+    ],
+    [
+      "penelitian_terdahulu.csv",
+      "Tabel pada 2.5",
+      "Ringkasan Penelitian Terdahulu"
+    ],
+    [
+      "rumus_bab_2.tex",
+      "Persamaan pada 2.2 dan 2.4",
+      "Sumber rumus Q-Learning dan Haversine"
+    ]
+  ],
+  "notes": [
+    "All diagrams are conceptual, not training results.",
+    "No verification/validation chapter written.",
+    "No reward constants or training profiles added to theory."
+  ],
+  "word_pages": 14,
+  "docx_sha256": "67de3f4e1d1a74fdb04584d642b8faff6fcabe1f8dc4d1da32d9f14b1b054ec4",
+  "asset_hashes": {
+    "graf_ruas_paralel.svg": "6a8fd3b10a81349527f2713a395b417d553308b712eb05c16f730677419ad964",
+    "penelitian_terdahulu.csv": "f5e53bcfc4663a729d2da86f88a32de20360ec2aec8a1114252442bd03430c69",
+    "referensi_bab_2.txt": "2424bed86a7aaf153adc3287e64a0f965a47417a3afcab69a46df3e7a7974185",
+    "graf_ruas_paralel.png": "282da680a0efdd13f833c6ca9ada134d4c93b16c8af422eabac68009ac4ba1a5",
+    "rumus_bab_2.tex": "09cb9c8b2f7fd4878da459b0697e1867a9e4348e9822861cc8d70e4d772c9d5e",
+    "alur_q_learning.puml": "761dc6f00d7f1b7f2779522fac404f339c1d11d66ad1704abb9fb19b7c688c0c",
+    "graf_ruas_paralel.puml": "c641316cf69a1667f294fbc9fb1dafbd8bc0c8a7df5e90f1cf89aeb6004aa262",
+    "siklus_rl.svg": "c4848c54eb2cee2d04124ea89fdee1c82d88e19a3597c4974a9feeaeefc02e27",
+    "PETUNJUK.txt": "8558558bcc1ba6001262665b4e7b54914fb1ba7b45c242013376119689aa9e45",
+    "siklus_rl.puml": "41ec257d97c04aa7c659a88822933d68576638e7d033a8fb34132f9c0dbda74b",
+    "tag_osm.csv": "2d82a9b0a06690dccf61bd74e49204bcd5f509b535dc7d619e115867c91be0df",
+    "siklus_rl.png": "48f6d30b11b7dd134fa835f30be192dc881e8c29f8a30712c5362f5691aea99f"
+  },
+  "diagram_render_status": {
+    "siklus_rl.puml": {
+      "rendered": true,
+      "engine": "PlantUML via Kroki",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "visually_reviewed": true
+    },
+    "graf_ruas_paralel.puml": {
+      "rendered": true,
+      "engine": "PlantUML via Kroki",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "visually_reviewed": true,
+      "adapted_from": "docs/assets/multidigraph_representation.puml"
+    },
+    "alur_q_learning.puml": {
+      "rendered": false
+    }
+  },
+  "diagram_revision": "2026-11-11: RL cycle improved; graph restored to branching A–B–C/D–E layout preferred by user, adapted from existing multidigraph_representation.puml; reverse edges omitted in illustration; Word unchanged."
+}

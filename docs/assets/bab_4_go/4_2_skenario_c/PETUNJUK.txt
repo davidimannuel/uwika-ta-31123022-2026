@@ -1,0 +1,77 @@
+LAMPIRAN BAB IV SUBBAB HASIL PELATIHAN SKENARIO C
+
+Word hanya mencakup4.2.3 Hasil Pelatihan Skenario C. Salin judul dan isi setelah
+hasil skenario B, tanpa mengulang pengantar4.2. Ringkasan perbandingan belum ditulis.
+Pembahasan memakai rujukan umum; nomor caption dapat diubah oleh pengguna.
+
+SUMBER
+training.ipynb Go, bagian Hasil per konfigurasi, report.show_profiles().
+workdirs/training/output/analysis/training/<profil>/training.png dan diagnosis.png.
+Salinan PNG/SVG asli tersedia pada asli/<profil>/.
+
+GAMBAR CETAK DALAM WORD
+Seluruh panel tetap tergabung:6panel training dan5panel diagnosis.
+Versi *_cetak.svg/.png menyalin path kurva dan clipping SVG sumber. Tidak
+menghitung ulang, memilih ulang titik, mengubah jendela atau mengubah data kurva.
+Tata letak, font dan label disesuaikan untuk lebar14cm/fontminimal8pt.
+Episode dinyatakan dalam ribuan. Khusus sumbu jumlah state juga dalam RIBUAN,
+sehingga100 berarti100.000state; posisi tick dan koordinat kurva tetap.
+Skor kenyamanan/comfort pada sumber disebut skor karakter ruas dalam cetak.
+Jenis akhir episode memakai pola garis berbeda agar dapat dibaca hitam-putih.
+PNG300dpi dan SVG tersedia. Jangan memperkecil lebar gambar di bawah14cm.
+Caption sementara melanjutkan4.20–4.27 setelah draf B; sesuaikan dengan naskah.
+
+ANGKA PEMBAHASAN
+Keberhasilan SELURUH training C:dinamis150k0,04%;dinamis300k0,29%;
+tetap100k-total150k2,79%;tetap100k-total300k10,59%.
+Persentase berasal dari termination_training.csv, seluruh lima seed0–4.
+Dasar750.000 atau1.500.000observasi per profil. Semua step_limit0.
+Angka bukan proporsi seed berhasil greedy atau hanya10kepisode terakhir.
+Nilai ringkasan50k/50episode pada manifest hanya pemeriksaan internal sumber;
+tidak menjadi tabel/ukuran utama tambahan. Belum ada klaim optimalitas/stabilitas
+setiap seed atau validasi lapangan. Grafik overlap training tidak dimasukkan.
+
+Tidak ada tabel/rumus baru. Tidak training/download/perubahan kode Go.
+Verifikasi/validasi tetap terpisah. Naskah utama hanya diedit pengguna.
+
+PEMETAAN GAMBAR
+
+Gambar 4.20 Perkembangan pelatihan skenario C dengan epsilon dinamis, 150.000 episode
+PNG: c-dynamic-150000_training_cetak.png
+SVG: c-dynamic-150000_training_cetak.svg
+Asli: asli/c-dynamic-150000/training.png
+
+Gambar 4.21 Diagnosis pelatihan skenario C dengan epsilon dinamis, 150.000 episode
+PNG: c-dynamic-150000_diagnosis_cetak.png
+SVG: c-dynamic-150000_diagnosis_cetak.svg
+Asli: asli/c-dynamic-150000/diagnosis.png
+
+Gambar 4.22 Perkembangan pelatihan skenario C dengan epsilon dinamis, 300.000 episode
+PNG: c-dynamic-300000_training_cetak.png
+SVG: c-dynamic-300000_training_cetak.svg
+Asli: asli/c-dynamic-300000/training.png
+
+Gambar 4.23 Diagnosis pelatihan skenario C dengan epsilon dinamis, 300.000 episode
+PNG: c-dynamic-300000_diagnosis_cetak.png
+SVG: c-dynamic-300000_diagnosis_cetak.svg
+Asli: asli/c-dynamic-300000/diagnosis.png
+
+Gambar 4.24 Perkembangan pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+PNG: c-horizon-100000-total-150000_training_cetak.png
+SVG: c-horizon-100000-total-150000_training_cetak.svg
+Asli: asli/c-horizon-100000-total-150000/training.png
+
+Gambar 4.25 Diagnosis pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode
+PNG: c-horizon-100000-total-150000_diagnosis_cetak.png
+SVG: c-horizon-100000-total-150000_diagnosis_cetak.svg
+Asli: asli/c-horizon-100000-total-150000/diagnosis.png
+
+Gambar 4.26 Perkembangan pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+PNG: c-horizon-100000-total-300000_training_cetak.png
+SVG: c-horizon-100000-total-300000_training_cetak.svg
+Asli: asli/c-horizon-100000-total-300000/training.png
+
+Gambar 4.27 Diagnosis pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode
+PNG: c-horizon-100000-total-300000_diagnosis_cetak.png
+SVG: c-horizon-100000-total-300000_diagnosis_cetak.svg
+Asli: asli/c-horizon-100000-total-300000/diagnosis.png

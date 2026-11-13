@@ -1,0 +1,27 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 18
+skinparam ArrowColor #34495E
+skinparam activity {
+  BackgroundColor #E7F0F8
+  BorderColor #34495E
+  FontColor #172A3A
+  DiamondBackgroundColor #FFF3CD
+  DiamondBorderColor #8A7840
+}
+start
+:Tempatkan agen pada node awal;\njarak dan jumlah langkah nol;
+repeat
+  :Bentuk state dan\npilihan ruas yang diperbolehkan;
+  if (Ada pilihan ruas?) then (Ya)
+    :Pilih satu ruas dan pindahkan agen;\nperbarui jarak serta riwayat kunjungan;
+    :Hitung reward dan tentukan\napakah episode harus berakhir;
+  else (Tidak)
+    :Akhiri episode karena\ntidak tersedia tindakan;\nhitung penalti kondisi akhir;
+  endif
+repeat while (Episode masih berjalan?) is (Ya) not (Tidak)
+:Simpan hasil episode;
+stop
+@enduml

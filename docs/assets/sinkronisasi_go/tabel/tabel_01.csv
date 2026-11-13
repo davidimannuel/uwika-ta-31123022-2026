@@ -1,0 +1,6 @@
+Bagian,Yang dikerjakan
+Bab I,"Selaraskan batas jarak, sumber data, akses node, dan pembagian peran Go serta Python. Rumusan masalah dan tujuan tetap."
+Bab II,"Sesuaikan penjelasan pengambilan OSM, graf mentah, dan jarak Haversine. Pertahankan teori RL dan Q-Learning."
+Bab III,"Selaraskan data, skor, state, penyaringan action, reward, episode, epsilon, metrik, dan perangkat."
+Bab IV,Ganti angka dan grafik lama; kurangi pengulangan metode; sajikan hasil yang berasal dari satu kelompok eksperimen.
+Bab V,Ganti kesimpulan hasil Python dengan kesimpulan deskriptif dari eksperimen Go.

@@ -1,0 +1,4 @@
+Kondisi width,Wₑ
+"Satu nilai valid, lebar ≥ 3 meter","+1,00"
+"Satu nilai valid, 0 < lebar < 3 meter","−1,00"
+"Kosong, tidak valid, tidak positif, atau gabungan","−0,50"

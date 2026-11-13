@@ -1,0 +1,8 @@
+Komponen,Keterangan
+Sumber data,OpenStreetMap
+Cara pengambilan,Overpass API
+Format data,JSON
+Wilayah penelitian,"Daerah Dukuh Kupang, Surabaya, dan sekitarnya"
+Koordinat acuan penelitian,"Latitude −7,281518; longitude 112,710178"
+Parameter area pengunduhan,Bounding box dengan jarak sekitar 3.025 m dari pusat pengunduhan ke setiap sisi
+Penggunaan data,Salinan data peta yang sama pada seluruh perbandingan skenario

@@ -2,12 +2,50 @@
 
 Dokumen ini adalah daftar sumber yang telah digunakan atau direncanakan untuk digunakan dalam naskah TA. Setiap kali menambahkan sitasi baru ke BAB I--V, tambahkan pula entri sumbernya di sini agar daftar pustaka akhir dapat disinkronkan.
 
+## Pemakaian sumber pada Bab III — 12 November 2026
+
+Bab III memakai sumber teori dan definisi yang sudah ada pada Bab II: Watkins &
+Dayan1992, Sutton & Barto2018, OpenStreetMap contributors n.d., dan OSM Wiki
+n.d.-a/b/c/d/f. Alias a–g tetap global, jangan diurutkan ulang per bab. Entri yang
+sama ada di docs/assets/bab_3_go/referensi_bab_3.txt; jangan digandakan pada daftar
+pustaka. Parameter/bobot/reward dinyatakan keputusan desain penelitian, bukan
+angka yang diklaim berasal dari referensi tersebut atau hasil optimasi.
+
+Sumber implementasi dan konfigurasi dicatat pada manifest lampiran Bab III,
+termasuk hash source Go/metadata, bukan sebagai jurnal baru. Tidak menambah teori
+verifikasi/validasi atau menyatakan nilai konfigurasi paling optimal.
+
 ## Aturan pencatatan
 
 - Gunakan satu entri untuk satu sumber; jangan menduplikasi sumber yang sama.
 - Cantumkan sitasi dalam teks, format daftar pustaka, tautan sumber, dan bagian naskah yang menggunakan sumber tersebut.
 - Format mengikuti contoh APA pada panduan UWIKA. Untuk sumber berbahasa Inggris, sitasi naratif menggunakan kata `and`; kutipan pertama dari karya tiga sampai lima penulis menuliskan seluruh nama, sedangkan kutipan berikutnya memakai `et al.`.
 - Tanggal akses hanya dipakai pada sumber daring yang relevan, terutama halaman web atau laporan lembaga yang dapat diperbarui.
+
+## Acuan sitasi Bab II yang disepakati — 11 November 2026
+
+Word khusus Bab II berada di `docs/temp/revisi_bab_2_go_20261111/`.
+Daftar sumber/penempatan permanen berada di `docs/assets/bab_2_go/`.
+Bab II hanya membahas highway/surface/width/access sebagai tag penelitian;
+barrier tidak dibahas dan dikeluarkan dari daftar sumber web aktif. Karena itu,
+huruf sumber OpenStreetMap Wiki disusun ulang menjadi a–g pada entri aktif di
+bawah. Susunan ini menggantikan a–h pada panduan gabungan terdahulu; sesuaikan
+sitasi bab lain saat sumber yang sama dirujuk. Daftar pustaka lama di bagian
+riwayat bukan acuan penanda terbaru.
+
+Watkins–Dayan tetap sumber teori 2.2, dihapus hanya dari tabel penelitian
+terdahulu. Tabel pada subbab 2.5 memuat Zhang/Loepp–Ziegler/Tegart/Boeing. Boeing tetap
+referensi pemodelan; OSMnx Developers dipakai untuk Haversine, bukan klaim
+bahwa implementasi Go menggunakan OSMnx. Patterson tetap bahan Bab III,
+tidak ditambahkan ke Bab II. Penambahan sumber berikut tidak menyatakan
+penulisan verifikasi/validasi sudah dikerjakan.
+
+### Patterson, Neumann, White and White 2024
+
+- **Sitasi pertama:** `(Patterson, Neumann, White, and White, 2024)`; berikutnya `(Patterson et al., 2024)`.
+- **Pemakaian:** Bab III, rancangan perbandingan empiris, pencatatan kondisi eksperimen dan pengulangan beberapa seed; bukan dasar mengklaim lima seed menjamin stabilitas.
+- **Daftar pustaka:** Patterson, A., Neumann, S., White, M., & White, A. (2024). Empirical design in reinforcement learning. *Journal of Machine Learning Research, 25*(318), 1–63. https://www.jmlr.org/papers/v25/23-0183.html
+- **Sumber primer:** [JMLR](https://www.jmlr.org/papers/v25/23-0183.html).
 
 ## Referensi yang digunakan pada BAB I 1.1 Latar Belakang
 
@@ -62,35 +100,37 @@ Dokumen ini adalah daftar sumber yang telah digunakan atau direncanakan untuk di
 ### Boeing 2017
 
 - **Sitasi dalam teks:** `(Boeing, 2017)`
-- **Digunakan untuk:** penggunaan OSMnx dalam pengunduhan, pembentukan, proyeksi, dan analisis jaringan jalan OpenStreetMap.
+- **Digunakan untuk:** Bab II 2.4–2.5, referensi pemodelan jaringan jalan sebagai graf. Tidak menyatakan program Go memakai OSMnx, proyeksi, atau simplifikasi.
 - **Daftar pustaka:** Boeing, G. (2017). OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks. *Computers, Environment and Urban Systems, 65*, 126-139. https://doi.org/10.1016/j.compenvurbsys.2017.05.004
 - **Tautan:** [Halaman artikel](https://doi.org/10.1016/j.compenvurbsys.2017.05.004)
 
-### OSMnx Developers 2026
+### OSMnx Developers n.d.
 
-- **Sitasi dalam teks:** `(OSMnx Developers, 2026)`
-- **Digunakan untuk:** detail representasi `MultiDiGraph`, identitas *edge* `(u, v, key)`, atribut panjang *edge*, proyeksi graf, dan fungsi OSMnx yang digunakan dalam implementasi pada BAB II dan BAB III.
-- **Daftar pustaka:** OSMnx Developers. (2026). *OSMnx user reference*. Retrieved September 21, 2026, from https://osmnx.readthedocs.io/en/stable/user-reference.html
-- **Tautan:** [Dokumentasi resmi OSMnx](https://osmnx.readthedocs.io/en/stable/user-reference.html)
+- **Sitasi:** `(OSMnx Developers, n.d.)`.
+- **Pemakaian aktif:** Bab II, rujukan Haversine/great_circle atau perbandingan dengan representasi OSMnx; OSMnx tidak dipakai oleh core Go.
+- **Daftar pustaka:** OSMnx Developers. (n.d.). *User reference*. OSMnx documentation. Retrieved November 11, 2026, from https://osmnx.readthedocs.io/en/stable/user-reference.html
+- **Sumber primer:** [Dokumentasi OSMnx](https://osmnx.readthedocs.io/en/stable/user-reference.html).
 
-### OpenStreetMap Contributors 2026
+### OpenStreetMap contributors n.d.
 
-- **Sitasi dalam teks:** `(OpenStreetMap Contributors, 2026)`
-- **Digunakan untuk:** lisensi Open Database License dan kewajiban atribusi data OpenStreetMap.
-- **Daftar pustaka:** OpenStreetMap Contributors. (2026). *Copyright and licence*. Retrieved September 21, 2026, from https://www.openstreetmap.org/copyright
-- **Tautan:** [Copyright and licence OpenStreetMap](https://www.openstreetmap.org/copyright)
+- **Sitasi:** `(OpenStreetMap contributors, n.d.)`.
+- **Digunakan untuk:** Bab II 2.3, data OpenStreetMap, lisensi ODbL dan atribusi.
+- **Daftar pustaka:** OpenStreetMap contributors. (n.d.). *Copyright and license*. Retrieved November 11, 2026, from https://www.openstreetmap.org/copyright
+- **Sumber primer:** [OpenStreetMap](https://www.openstreetmap.org/copyright).
 
-### OpenStreetMap Wiki Contributors 2026
+### OpenStreetMap Wiki contributors n.d. — pasangan sitasi aktif Bab II
 
-- **Sitasi dalam teks:** `(OpenStreetMap Wiki contributors, 2026a)`, `(OpenStreetMap Wiki contributors, 2026b)`, dan `(OpenStreetMap Wiki contributors, 2026c)`.
-- **Digunakan untuk:** definisi dan penggunaan tag `highway`, `surface`, dan `width` pada data OpenStreetMap di BAB II.
-- **Daftar pustaka:**
-  - OpenStreetMap Wiki contributors. (2026a). *Key: highway*. OpenStreetMap Wiki. Retrieved September 21, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway
-  - OpenStreetMap Wiki contributors. (2026b). *Key: surface*. OpenStreetMap Wiki. Retrieved September 21, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
-  - OpenStreetMap Wiki contributors. (2026c). *Key: width*. OpenStreetMap Wiki. Retrieved September 21, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
-- **Tautan:** [highway](https://wiki.openstreetmap.org/wiki/Key:highway), [surface](https://wiki.openstreetmap.org/wiki/Key:surface), dan [width](https://wiki.openstreetmap.org/wiki/Key:width).
+- **n.d.-a:** OpenStreetMap Wiki contributors. (n.d.-a). *Key: access*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:access
+- **n.d.-b:** OpenStreetMap Wiki contributors. (n.d.-b). *Key: highway*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:highway
+- **n.d.-c:** OpenStreetMap Wiki contributors. (n.d.-c). *Key: surface*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:surface
+- **n.d.-d:** OpenStreetMap Wiki contributors. (n.d.-d). *Key: width*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Key:width
+- **n.d.-e:** OpenStreetMap Wiki contributors. (n.d.-e). *Node*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Node
+- **n.d.-f:** OpenStreetMap Wiki contributors. (n.d.-f). *Overpass API*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Overpass_API
+- **n.d.-g:** OpenStreetMap Wiki contributors. (n.d.-g). *Way*. OpenStreetMap Wiki. Retrieved November 11, 2026, from https://wiki.openstreetmap.org/wiki/Way
 
-## Daftar pustaka final untuk draf BAB I--V
+**Pemakaian:** Bab II 2.3–2.4 untuk definisi data/tag/node/way/Overpass; Bab III untuk penerapan yang nanti dibahas. Definisi atribut tidak membuktikan keamanan aktual dan tidak menetapkan angka reward. Gunakan pasangan sitasi/huruf yang sama pada naskah dan daftar pustaka.
+
+## Riwayat daftar pustaka draf BAB I–V — 26 September 2026
 
 Daftar berikut telah disinkronkan dengan draf BAB IV--V pada 26 September 2026 dan dirapikan ke gaya APA. Hanya sumber yang digunakan atau direncanakan untuk disitasi pada naskah revisi yang dicantumkan. Sumber daring tanpa tahun publikasi menggunakan `n.d.`; sitasi di BAB II yang sebelumnya memakai `2026a--c` perlu diseragamkan menjadi `n.d.-a--c` saat dokumen utama direvisi.
 

@@ -1,0 +1,9 @@
+Perangkat,Peran
+Go 1.27.2,"Implementasi utama graf, environment, Q-Learning, evaluasi, dan CLI."
+Overpass API dan JSON OSM,Pengambilan snapshot node/way dan atribut geospasial.
+Pustaka standar Go,"Struktur data, perhitungan numerik, RNG, CSV, JSON, HTTP, dan pelaksanaan pekerja."
+YAML,Penyimpanan parameter dan profil eksperimen.
+Python 3.13 dan JupyterLab,Lingkungan analisis hasil tersimpan.
+Pandas dan Matplotlib,Pengolahan tabel serta pembuatan grafik analisis.
+Leaflet dan HTML,"Visualisasi graf, rute, atribut, serta metrik pada peta interaktif."
+uv,Pengelolaan environment dan dependensi Python untuk analisis.

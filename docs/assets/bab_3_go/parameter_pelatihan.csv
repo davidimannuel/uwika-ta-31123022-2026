@@ -1,0 +1,7 @@
+Parameter,Nilai
+"Learning rate, α","0,15"
+"Discount factor, γ","0,95"
+Epsilon awal,"1,00"
+Epsilon minimum selama pelatihan,"0,05"
+Jumlah seed,5
+Nilai seed,"0, 1, 2, 3, dan 4"

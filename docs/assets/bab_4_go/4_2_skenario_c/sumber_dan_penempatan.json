@@ -1,0 +1,1176 @@
+{
+  "scope": "4.2.3 Hasil Pelatihan Skenario C only; no parent introduction or other scenarios",
+  "figures": [
+    {
+      "profile": "c-dynamic-150000",
+      "kind": "training",
+      "number": "4.20",
+      "svg": "c-dynamic-150000_training_cetak.svg",
+      "png": "c-dynamic-150000_training_cetak.png",
+      "original_png": "asli/c-dynamic-150000/training.png",
+      "caption": "Perkembangan pelatihan skenario C dengan epsilon dinamis, 150.000 episode"
+    },
+    {
+      "profile": "c-dynamic-150000",
+      "kind": "diagnosis",
+      "number": "4.21",
+      "svg": "c-dynamic-150000_diagnosis_cetak.svg",
+      "png": "c-dynamic-150000_diagnosis_cetak.png",
+      "original_png": "asli/c-dynamic-150000/diagnosis.png",
+      "caption": "Diagnosis pelatihan skenario C dengan epsilon dinamis, 150.000 episode"
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "kind": "training",
+      "number": "4.22",
+      "svg": "c-dynamic-300000_training_cetak.svg",
+      "png": "c-dynamic-300000_training_cetak.png",
+      "original_png": "asli/c-dynamic-300000/training.png",
+      "caption": "Perkembangan pelatihan skenario C dengan epsilon dinamis, 300.000 episode"
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "kind": "diagnosis",
+      "number": "4.23",
+      "svg": "c-dynamic-300000_diagnosis_cetak.svg",
+      "png": "c-dynamic-300000_diagnosis_cetak.png",
+      "original_png": "asli/c-dynamic-300000/diagnosis.png",
+      "caption": "Diagnosis pelatihan skenario C dengan epsilon dinamis, 300.000 episode"
+    },
+    {
+      "profile": "c-horizon-100000-total-150000",
+      "kind": "training",
+      "number": "4.24",
+      "svg": "c-horizon-100000-total-150000_training_cetak.svg",
+      "png": "c-horizon-100000-total-150000_training_cetak.png",
+      "original_png": "asli/c-horizon-100000-total-150000/training.png",
+      "caption": "Perkembangan pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode"
+    },
+    {
+      "profile": "c-horizon-100000-total-150000",
+      "kind": "diagnosis",
+      "number": "4.25",
+      "svg": "c-horizon-100000-total-150000_diagnosis_cetak.svg",
+      "png": "c-horizon-100000-total-150000_diagnosis_cetak.png",
+      "original_png": "asli/c-horizon-100000-total-150000/diagnosis.png",
+      "caption": "Diagnosis pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 150.000 episode"
+    },
+    {
+      "profile": "c-horizon-100000-total-300000",
+      "kind": "training",
+      "number": "4.26",
+      "svg": "c-horizon-100000-total-300000_training_cetak.svg",
+      "png": "c-horizon-100000-total-300000_training_cetak.png",
+      "original_png": "asli/c-horizon-100000-total-300000/training.png",
+      "caption": "Perkembangan pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode"
+    },
+    {
+      "profile": "c-horizon-100000-total-300000",
+      "kind": "diagnosis",
+      "number": "4.27",
+      "svg": "c-horizon-100000-total-300000_diagnosis_cetak.svg",
+      "png": "c-horizon-100000-total-300000_diagnosis_cetak.png",
+      "original_png": "asli/c-horizon-100000-total-300000/diagnosis.png",
+      "caption": "Diagnosis pelatihan skenario C dengan durasi penurunan epsilon tetap 100.000 episode, total 300.000 episode"
+    }
+  ],
+  "stats": [
+    {
+      "profile": "c-dynamic-150000",
+      "episodes_per_seed": 150000,
+      "total_observations": 750000,
+      "terminations": [
+        {
+          "termination_reason": "success",
+          "count": "294",
+          "termination_rate": "0.000392",
+          "termination_rate_percent": "0.0392"
+        },
+        {
+          "termination_reason": "over_distance",
+          "count": "18152",
+          "termination_rate": "0.024202666666666667",
+          "termination_rate_percent": "2.4202666666666666"
+        },
+        {
+          "termination_reason": "no_available_action",
+          "count": "731554",
+          "termination_rate": "0.9754053333333333",
+          "termination_rate_percent": "97.54053333333333"
+        },
+        {
+          "termination_reason": "step_limit",
+          "count": "0",
+          "termination_rate": "0.0",
+          "termination_rate_percent": "0.0"
+        }
+      ],
+      "blocks_50000_for_internal_fact_check_only": {
+        "0": {
+          "is_loop": 8e-06,
+          "total_reward": -265.5665545337663,
+          "distance_km": 0.6148697695087015,
+          "mean_comfort": 0.8367101227333134,
+          "q_state_count": 17421.04472000027,
+          "epsilon": 0.841668777791852,
+          "distance_to_start_at_end_m": 268.4790141681228,
+          "return_progress_ratio": 0.48989290037201466,
+          "closing_action_available": 1.2000000000000002e-05,
+          "mean_abs_td_error": 3.076944815803008
+        },
+        "1": {
+          "is_loop": 6.000000000000001e-05,
+          "total_reward": -247.660432136976,
+          "distance_km": 1.0468879726008107,
+          "mean_comfort": 0.7987752594526761,
+          "q_state_count": 45823.70597200004,
+          "epsilon": 0.5250000000000002,
+          "distance_to_start_at_end_m": 410.7466771542792,
+          "return_progress_ratio": 0.49171598700720603,
+          "closing_action_available": 0.00012000000000000006,
+          "mean_abs_td_error": 2.3306185822186123
+        },
+        "2": {
+          "is_loop": 0.001108000000000005,
+          "total_reward": -217.62626674447597,
+          "distance_km": 2.733325037471342,
+          "mean_comfort": 0.7671276705016887,
+          "q_state_count": 98747.04275600096,
+          "epsilon": 0.2083312222081483,
+          "distance_to_start_at_end_m": 745.4946098644757,
+          "return_progress_ratio": 0.4914189921380483,
+          "closing_action_available": 0.0015000000000000102,
+          "mean_abs_td_error": 2.039694038896184
+        }
+      },
+      "last_50_curve_values_for_internal_fact_check_only": {
+        "is_loop": 0.0,
+        "total_reward": -165.59126704195592,
+        "distance_km": 5.066142394986419,
+        "mean_comfort": 0.7683129124855589,
+        "q_state_count": 134607.048,
+        "epsilon": 0.05015516770111796,
+        "distance_to_start_at_end_m": 728.3141119933089,
+        "return_progress_ratio": 0.5617344167305452,
+        "closing_action_available": 0.008,
+        "mean_abs_td_error": 1.5343713787160105
+      },
+      "final_q_states_mean": 134623.6
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "episodes_per_seed": 300000,
+      "total_observations": 1500000,
+      "terminations": [
+        {
+          "termination_reason": "success",
+          "count": "4291",
+          "termination_rate": "0.0028606666666666667",
+          "termination_rate_percent": "0.2860666666666667"
+        },
+        {
+          "termination_reason": "over_distance",
+          "count": "39963",
+          "termination_rate": "0.026642",
+          "termination_rate_percent": "2.6642"
+        },
+        {
+          "termination_reason": "no_available_action",
+          "count": "1455746",
+          "termination_rate": "0.9704973333333333",
+          "termination_rate_percent": "97.04973333333334"
+        },
+        {
+          "termination_reason": "step_limit",
+          "count": "0",
+          "termination_rate": "0.0",
+          "termination_rate_percent": "0.0"
+        }
+      ],
+      "blocks_50000_for_internal_fact_check_only": {
+        "0": {
+          "is_loop": 4e-06,
+          "total_reward": -268.65426034487245,
+          "distance_km": 0.5552669799253259,
+          "mean_comfort": 0.8397154907623148,
+          "q_state_count": 15751.47203200009,
+          "epsilon": 0.9208346527821758,
+          "distance_to_start_at_end_m": 249.66885983952588,
+          "return_progress_ratio": 0.49335003145554984,
+          "closing_action_available": 4e-06,
+          "mean_abs_td_error": 2.8896688548186096
+        },
+        "1": {
+          "is_loop": 0.0,
+          "total_reward": -262.61863183155134,
+          "distance_km": 0.6754106266206887,
+          "mean_comfort": 0.8326604885157902,
+          "q_state_count": 32660.856867999653,
+          "epsilon": 0.7625007916693057,
+          "distance_to_start_at_end_m": 290.13471674335557,
+          "return_progress_ratio": 0.4954889970367065,
+          "closing_action_available": 1.2000000000000002e-05,
+          "mean_abs_td_error": 2.1448023529400357
+        },
+        "2": {
+          "is_loop": 2.8e-05,
+          "total_reward": -253.97449002622645,
+          "distance_km": 0.8779926830243688,
+          "mean_comfort": 0.8132561395557325,
+          "q_state_count": 51559.690919999826,
+          "epsilon": 0.6041669305564352,
+          "distance_to_start_at_end_m": 351.1754037816462,
+          "return_progress_ratio": 0.4932347344246705,
+          "closing_action_available": 5.6000000000000006e-05,
+          "mean_abs_td_error": 2.1145277596091017
+        },
+        "3": {
+          "is_loop": 9.200000000000003e-05,
+          "total_reward": -242.89233676782754,
+          "distance_km": 1.2201596064760551,
+          "mean_comfort": 0.7905882164574124,
+          "q_state_count": 75078.44317200074,
+          "epsilon": 0.44583306944356477,
+          "distance_to_start_at_end_m": 453.9185732880321,
+          "return_progress_ratio": 0.48219545085041854,
+          "closing_action_available": 0.0002319999999999998,
+          "mean_abs_td_error": 2.0703489639855053
+        },
+        "4": {
+          "is_loop": 0.00024399999999999978,
+          "total_reward": -231.26363837982225,
+          "distance_km": 1.9306484153894765,
+          "mean_comfort": 0.7809157865813752,
+          "q_state_count": 109465.24414400042,
+          "epsilon": 0.2874992083306944,
+          "distance_to_start_at_end_m": 643.5725758409443,
+          "return_progress_ratio": 0.47426176067526615,
+          "closing_action_available": 0.0004399999999999991,
+          "mean_abs_td_error": 1.994868745496292
+        },
+        "5": {
+          "is_loop": 0.016796000000000928,
+          "total_reward": -203.53594446302674,
+          "distance_km": 3.6928709241193025,
+          "mean_comfort": 0.7772912378534436,
+          "q_state_count": 161676.27467599872,
+          "epsilon": 0.129165347217824,
+          "distance_to_start_at_end_m": 828.2297835042212,
+          "return_progress_ratio": 0.4893024544681894,
+          "closing_action_available": 0.018064000000001173,
+          "mean_abs_td_error": 1.6806231015591007
+        }
+      },
+      "last_50_curve_values_for_internal_fact_check_only": {
+        "is_loop": 0.08800000000000001,
+        "total_reward": -142.98456155589082,
+        "distance_km": 5.154111817983764,
+        "mean_comfort": 0.79346747728655,
+        "q_state_count": 185185.012,
+        "epsilon": 0.050077583591945266,
+        "distance_to_start_at_end_m": 710.5711267789976,
+        "return_progress_ratio": 0.5474316006525752,
+        "closing_action_available": 0.08800000000000001,
+        "mean_abs_td_error": 1.216566429351358
+      },
+      "final_q_states_mean": 185193.8
+    },
+    {
+      "profile": "c-horizon-100000-total-150000",
+      "episodes_per_seed": 150000,
+      "total_observations": 750000,
+      "terminations": [
+        {
+          "termination_reason": "success",
+          "count": "20958",
+          "termination_rate": "0.027944",
+          "termination_rate_percent": "2.7944"
+        },
+        {
+          "termination_reason": "over_distance",
+          "count": "109595",
+          "termination_rate": "0.14612666666666665",
+          "termination_rate_percent": "14.612666666666666"
+        },
+        {
+          "termination_reason": "no_available_action",
+          "count": "619447",
+          "termination_rate": "0.8259293333333333",
+          "termination_rate_percent": "82.59293333333333"
+        },
+        {
+          "termination_reason": "step_limit",
+          "count": "0",
+          "termination_rate": "0.0",
+          "termination_rate_percent": "0.0"
+        }
+      ],
+      "blocks_50000_for_internal_fact_check_only": {
+        "0": {
+          "is_loop": 8e-06,
+          "total_reward": -261.6383879826125,
+          "distance_km": 0.6987784526678709,
+          "mean_comfort": 0.8296832244901023,
+          "q_state_count": 19873.36149199987,
+          "epsilon": 0.76250237502375,
+          "distance_to_start_at_end_m": 296.1357211909858,
+          "return_progress_ratio": 0.4943529271312393,
+          "closing_action_available": 2e-05,
+          "mean_abs_td_error": 3.1960331745871797
+        },
+        "1": {
+          "is_loop": 0.0014400000000000096,
+          "total_reward": -226.35853114840853,
+          "distance_km": 2.1795183156019515,
+          "mean_comfort": 0.7656123792874596,
+          "q_state_count": 71666.91877599987,
+          "epsilon": 0.2874976249762496,
+          "distance_to_start_at_end_m": 668.0230743496246,
+          "return_progress_ratio": 0.48635152338600196,
+          "closing_action_available": 0.0019160000000000158,
+          "mean_abs_td_error": 2.26596475847852
+        },
+        "2": {
+          "is_loop": 0.08238399999997988,
+          "total_reward": -150.70181208605888,
+          "distance_km": 5.014493713899785,
+          "mean_comfort": 0.7882835593938191,
+          "q_state_count": 140633.5696240028,
+          "epsilon": 0.05000000000000659,
+          "distance_to_start_at_end_m": 740.7858611761103,
+          "return_progress_ratio": 0.5572185817106446,
+          "closing_action_available": 0.08587999999997693,
+          "mean_abs_td_error": 1.3355537993770643
+        }
+      },
+      "last_50_curve_values_for_internal_fact_check_only": {
+        "is_loop": 0.18,
+        "total_reward": -115.10417830259492,
+        "distance_km": 5.129275162100538,
+        "mean_comfort": 0.8102564307897689,
+        "q_state_count": 155224.656,
+        "epsilon": 0.05,
+        "distance_to_start_at_end_m": 560.6993500912671,
+        "return_progress_ratio": 0.6058069529481389,
+        "closing_action_available": 0.18400000000000002,
+        "mean_abs_td_error": 1.1201063334540486
+      },
+      "final_q_states_mean": 155231.6
+    },
+    {
+      "profile": "c-horizon-100000-total-300000",
+      "episodes_per_seed": 300000,
+      "total_observations": 1500000,
+      "terminations": [
+        {
+          "termination_reason": "success",
+          "count": "158888",
+          "termination_rate": "0.10592533333333333",
+          "termination_rate_percent": "10.592533333333334"
+        },
+        {
+          "termination_reason": "over_distance",
+          "count": "462954",
+          "termination_rate": "0.308636",
+          "termination_rate_percent": "30.8636"
+        },
+        {
+          "termination_reason": "no_available_action",
+          "count": "878158",
+          "termination_rate": "0.5854386666666667",
+          "termination_rate_percent": "58.543866666666666"
+        },
+        {
+          "termination_reason": "step_limit",
+          "count": "0",
+          "termination_rate": "0.0",
+          "termination_rate_percent": "0.0"
+        }
+      ],
+      "blocks_50000_for_internal_fact_check_only": {
+        "0": {
+          "is_loop": 8e-06,
+          "total_reward": -261.6383879826125,
+          "distance_km": 0.6987784526678709,
+          "mean_comfort": 0.8296832244901023,
+          "q_state_count": 19873.36149199987,
+          "epsilon": 0.76250237502375,
+          "distance_to_start_at_end_m": 296.1357211909858,
+          "return_progress_ratio": 0.4943529271312393,
+          "closing_action_available": 2e-05,
+          "mean_abs_td_error": 3.1960331745871797
+        },
+        "1": {
+          "is_loop": 0.0014400000000000096,
+          "total_reward": -226.35853114840853,
+          "distance_km": 2.1795183156019515,
+          "mean_comfort": 0.7656123792874596,
+          "q_state_count": 71666.91877599987,
+          "epsilon": 0.2874976249762496,
+          "distance_to_start_at_end_m": 668.0230743496246,
+          "return_progress_ratio": 0.48635152338600196,
+          "closing_action_available": 0.0019160000000000158,
+          "mean_abs_td_error": 2.26596475847852
+        },
+        "2": {
+          "is_loop": 0.08238399999997988,
+          "total_reward": -150.70181208605888,
+          "distance_km": 5.014493713899785,
+          "mean_comfort": 0.7882835593938191,
+          "q_state_count": 140633.5696240028,
+          "epsilon": 0.05000000000000659,
+          "distance_to_start_at_end_m": 740.7858611761103,
+          "return_progress_ratio": 0.5572185817106446,
+          "closing_action_available": 0.08587999999997693,
+          "mean_abs_td_error": 1.3355537993770643
+        },
+        "3": {
+          "is_loop": 0.1721159999999328,
+          "total_reward": -117.7190242308676,
+          "distance_km": 5.061490445794871,
+          "mean_comfort": 0.7988610933542004,
+          "q_state_count": 164123.27201200373,
+          "epsilon": 0.05000000000000659,
+          "distance_to_start_at_end_m": 610.5549623060568,
+          "return_progress_ratio": 0.5956400920448741,
+          "closing_action_available": 0.17780799999994282,
+          "mean_abs_td_error": 1.0672143829119505
+        },
+        "4": {
+          "is_loop": 0.2167960000000022,
+          "total_reward": -101.7766074187216,
+          "distance_km": 5.071517521506938,
+          "mean_comfort": 0.8098247682730614,
+          "q_state_count": 178306.32807199948,
+          "epsilon": 0.05000000000000659,
+          "distance_to_start_at_end_m": 577.1578228110511,
+          "return_progress_ratio": 0.6112987303312275,
+          "closing_action_available": 0.22364400000000959,
+          "mean_abs_td_error": 1.0276116186372928
+        },
+        "5": {
+          "is_loop": 0.16280799999991072,
+          "total_reward": -111.76687920493319,
+          "distance_km": 5.11677676014767,
+          "mean_comfort": 0.8012821859307875,
+          "q_state_count": 189269.405923994,
+          "epsilon": 0.05000000000000659,
+          "distance_to_start_at_end_m": 614.8133620307947,
+          "return_progress_ratio": 0.605910845060844,
+          "closing_action_available": 0.16842799999991653,
+          "mean_abs_td_error": 0.9936238597838393
+        }
+      },
+      "last_50_curve_values_for_internal_fact_check_only": {
+        "is_loop": 0.2,
+        "total_reward": -103.55085326362536,
+        "distance_km": 5.2315522830671375,
+        "mean_comfort": 0.8072789214152981,
+        "q_state_count": 193948.328,
+        "epsilon": 0.05,
+        "distance_to_start_at_end_m": 593.1900187978503,
+        "return_progress_ratio": 0.6233705507912896,
+        "closing_action_available": 0.22,
+        "mean_abs_td_error": 0.9619904963713742
+      },
+      "final_q_states_mean": 193953.0
+    }
+  ],
+  "source_hashes": {
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/training.png": "2209d1be55c74eb96a99842ff7c6e38819039aec09417d42b280bc65181c8ba0",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/training.svg": "ecbb5790f215a23c4a261f7f212013bddd3906783e75f2c9cb717a57d9402810",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/diagnosis.png": "dc0905f9c4f718c41264f2b0bd3b9a2b72e33547a8e01dc90c2d2ffb8b1f136a",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/diagnosis.svg": "e4f1b043758a62b038f13ed60d1e2565f6bce2d81dd10a7309201ffcea4219dc",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-150000/metadata.json": "5f1345ca7694ac8a81afa2842d80c8c7dcd71cc55f8f67792f08a8132d14857e",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/termination_training.csv": "00832089f117f327111a3d002fd07ddfcbba61eb154861931e5261530957508c",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/episode_means.csv": "21b1abc4da7fe908781adf6dd344361bd3ffcaef433de094a92dc103daa884a8",
+    "/Users/david/development/go-running-route-q-learning/analysis/training.py": "5104fca7df622ad296a310edccc3cc16a8e6afe07b3f1537c1d212fff97da1b5",
+    "/Users/david/development/go-running-route-q-learning/internal/qlearning/metrics.go": "1058829cb774ccd8e56475101188061d19e3992a9232c5fcae0ee5b9cab28134",
+    "/Users/david/development/go-running-route-q-learning/internal/qlearning/environment.go": "8ddafddf2585aaeb103fc3f43fcf55f09dd57dd9eea45f9c2fb4247d488685be",
+    "/Users/david/development/go-running-route-q-learning/training.ipynb": "4a64cad16762af546217e9c0d17fa8833391bd422c645943e9fe6c4a05e158eb",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/training.png": "d5bf91aaf799078aa56283d5a3db03f7984528984ab321395d19793ab8d892b0",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/training.svg": "702d52f65b6e6dc4f53ce6b7c20c59881d64330443477f5b36178499c75f4893",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/diagnosis.png": "0aec78b1808b234caba33f7b45985091686a42fd5f21cf09ce5af3b2f69ad4eb",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/diagnosis.svg": "847eb7bf12d4713bb06d53e047d0f7d29e8825d56b2df16882f64a1fdbe8a635",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/metadata.json": "d346122745eeb4dfc206645e58f41ddaffc4d95efa89e0bd6d2116fb7a509073",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/termination_training.csv": "244550122746888667baa4ff8d027e0d475b7c9cf3fb99dfffbcdd67d19a1ad6",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/episode_means.csv": "06333c51ba1c98a6023544b26eb1e3a9b0257bc7f9c7bf9bedd1c6859f36bb14",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/training.png": "313e7b9e6e24df6a0097b23762a00f5f21321f90458e7405a13a28265e870b85",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/training.svg": "069da8213f80de26996f6670766e272208166da0921eeb9d003ff7226b3f16df",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/diagnosis.png": "a34b5d326fa23399a47745232d13849de1929b821cedea89bc9e3729eeb7ea00",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/diagnosis.svg": "cce717990dc037a9534ebe5861b1c9bb3d6270ae2796755b271edd599cbda842",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-150000/metadata.json": "9bb54052d9e2f7a9daa6e125694b34cc9d070107fe86e79917143ec3a3f29041",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/termination_training.csv": "e9d2bb997004b12b828c0b146422f5854b93d2f06000c1d71364a7c130721eae",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/episode_means.csv": "86f40c9ed2a81de5562503d493c7c8609ee121cf5033e8cac9c9ffe62b36a370",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/training.png": "b89869078a515f13cd069e60c731651b3e9c895b5cc55207b9095d2ba7bb6ca7",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/training.svg": "fe78ec2b0385455c8624f833bcbb3a9fc798b1133d4bc890c5d8e8ece8f3340f",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/diagnosis.png": "d46a27b612768e5f62f3b6e0f28f893ecec81c9ceaed54a11726f7d1522d43c2",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/diagnosis.svg": "dbae394a92a087df39a40bff82c2073ac29f218b570ac77ed9aea11a089e687c",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-300000/metadata.json": "9266386de06d1ce85843bbab43838c8bd94d762bdf644caa483bb3bc95695266",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/termination_training.csv": "a52ba85e2f449ccc093d58338a64b115abe94d333ccd21595ef32ff3e448cc87",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/episode_means.csv": "bf010e03ed893fa023d659da20c3be4698a84b6a3bca4d5e044578d71a99ad4b"
+  },
+  "main_docx_sha256": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+  "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+  "start_node": 311432306,
+  "figure_audit": [
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/training.svg",
+      "output": "c-dynamic-150000_training_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "b93c20878fdb02e28f80661d94182030d697ed8b3f13bfb0b401ca1f3eefb3d7",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            19.92571781976178,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "d4ffbea37c3d91040339a0c823b598fc78e0fcda6ab7429425f919cdfc41b749",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            53.90450696133905,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "2d79e46e83549ec4a4401dec42b1d95eec8ad5c90e619e896e4ecf7aa9ce81fd",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            19.92571781976178,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "fc06a2480baa06f0c3e74156af4f668be437d128cecc77e2d59a25235901f983",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            53.90450696133905,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "7946b9211ac3590998ba49a559cca60a419b595a87f6601158db4e2a7c91cec5",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345472340205,
+            19.92571781976178,
+            81.58590094116838
+          ]
+        },
+        {
+          "axis": 6,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "6093ec957a807b227076763e49d2124fd80cfc1f0526392a244f867f061701e6",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345472340205,
+            53.90450696133905,
+            81.58590094116838
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-150000/diagnosis.svg",
+      "output": "c-dynamic-150000_diagnosis_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "b75e9dc4a37103d771e19e9ed088ca91cc1fc6fd9ef139383809aa1215bd9441",
+          "matrix": [
+            0.3208286962446841,
+            0.24381409598292533,
+            26.8288130263295,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "b10d12659d3343d00d216416c52e67ac301b69da4f295eb5ef7d7043732889ad",
+          "matrix": [
+            0.320828696244684,
+            0.24381409598292533,
+            65.44111673197048,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "98506344aa9c1175014fd0e5ed5c619ff0fd96de33005850cdea9d06069262da",
+          "matrix": [
+            0.3208286962446841,
+            0.24381409598292533,
+            26.8288130263295,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "31fd42834bbc63c5d5d830ef3f7018abea35a00d87ab33600488de5db8c46966",
+          "matrix": [
+            0.320828696244684,
+            0.24381409598292533,
+            65.44111673197048,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "99ef8f3902f507c021fec035c42b5f3bc895b5e0dd5b665403a345192c7038c2",
+          "matrix": [
+            0.3616607247290076,
+            0.24381409689746866,
+            24.897968479377052,
+            85.66524228470729
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/training.svg",
+      "output": "c-dynamic-300000_training_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "260095474205ccd51d7a38c3276d656d8c33c954b80f5bbdc4ebd9c165e28f85",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345461295757,
+            19.756216964135323,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "35b1141d82469c1f3b8cc9d33f4dc75adc5a5b833460ce6d7ed9433ffc117754",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345461295757,
+            52.47554338097319,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "d8bd8581a423a1ce48baa22bdf29e24af748e21a775069972bdc3c0138b2e120",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345461295757,
+            19.756216964135323,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "5ef305e25c03a4a944a99f5741c66cac9480707e37ac4cdcf287d1bdf814f474",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345461295757,
+            52.47554338097319,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "0e99da6ce6006ad5d1e56c269c37ceb2b7e1ff31eb4bc8c5f89fcbf0a1483dd9",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345472340205,
+            19.756216964135323,
+            81.58590094116838
+          ]
+        },
+        {
+          "axis": 6,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "7b820068ab40b646b899f4cc5254cb1b06b182834e14227dca214fbc76e1c543",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345472340205,
+            52.47554338097319,
+            81.58590094116838
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-dynamic-300000/diagnosis.svg",
+      "output": "c-dynamic-300000_diagnosis_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "e008d50846d6c9a56665188d0e39907278267f64d6edbb7d9f71f421fea57fd5",
+          "matrix": [
+            0.3232046444363759,
+            0.24381409598292533,
+            26.716460376214876,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "8c0c2c3a4d7ba2d43887d00fe600d68bb8f8a6e6a49c8c1f394b0c8c9ddb1caf",
+          "matrix": [
+            0.3232046444363759,
+            0.24381409598292533,
+            64.14839302022332,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "48924e61a206a00c5d9770c8f67b042a96d54d4b5d1f0d95f2776304554278a4",
+          "matrix": [
+            0.3232046444363759,
+            0.24381409598292533,
+            26.716460376214876,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "da54e01f4057356c6b043beb01e0e5873fac8fc65f9b26bd80d917122a8323b6",
+          "matrix": [
+            0.3232046444363759,
+            0.24381409598292533,
+            64.14839302022332,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "0ab139f439b4d7e9d29b095ebde08a5dfae41ae6a441c629a1eda3f2c2196168",
+          "matrix": [
+            0.3629270440490454,
+            0.24381409689746866,
+            24.838087404530764,
+            85.66524228470729
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/training.svg",
+      "output": "c-horizon-100000-total-150000_training_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "2a10e8330fc7e71480cf82894eb6274ddd466d4b1c2223b61280eff2bb9d2a5b",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            19.92571781976178,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "cc8f09c8091a1e2ebd88eb606cee71cec258b6afadac5c3d515028a4388d6aae",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            53.90450696133905,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "e27de7320d0e6d90cfaa36536a912204016750b70d7808c0972fe7337558d28f",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            19.92571781976178,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "e35e87765ab43b53f81c951ee39cd1e21d08c7e789193047b585200234de2f11",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345461295757,
+            53.90450696133905,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "42975f4b54529f0573f09d4e1862f7bc3a3931a52f6fd649f7bc182eb6ac6671",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345472340205,
+            19.92571781976178,
+            81.58590094116838
+          ]
+        },
+        {
+          "axis": 6,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "374a2f10ad137ffc015feb5938c88b928f9b89d834024cf92d45eef4abd3fd4c",
+          "matrix": [
+            0.3325653099319196,
+            0.2679345472340205,
+            53.90450696133905,
+            81.58590094116838
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-150000/diagnosis.svg",
+      "output": "c-horizon-100000-total-150000_diagnosis_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "6921d697efc55a11548cd59f3c956184d69fd060ee7062ea674c62a2fe8304bd",
+          "matrix": [
+            0.32304463973509906,
+            0.24381409598292533,
+            24.668655078211938,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "08faf93cbfee0e965b4b511a577585b56ba5b94f2d7242b24f119861843f4223",
+          "matrix": [
+            0.3230446397350991,
+            0.24381409598292533,
+            63.17467693988104,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "450fb1dc4d98d5d0ee88e2934f7ff1e83378de2d48b524cde9f23d05000e3450",
+          "matrix": [
+            0.32304463973509906,
+            0.24381409598292533,
+            24.668655078211938,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "9604344098c12f27c1160dfbd50be58c1ef09e4d711ffcc80ee4225935d74e6c",
+          "matrix": [
+            0.3230446397350991,
+            0.24381409598292533,
+            63.17467693988104,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "74a0cd79e1d2fbfbbeee21af8f46c3666edad970a3e5a1ac118f540162d25aa3",
+          "matrix": [
+            0.36403116617703407,
+            0.24381409689746866,
+            22.469727934602123,
+            85.66524228470729
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/training.svg",
+      "output": "c-horizon-100000-total-300000_training_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "5a58648d93872b8469ab3ec116b1166d2abd33e92cb0c98e10ba82bd0dcdb7ea",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345461295757,
+            19.756216964135323,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "0a0dcb2cae5dfc5db44852072a402f717edf95f811cedab568fb2af1a0701dfd",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345461295757,
+            52.47554338097319,
+            11.388912880022952
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "16c64583183006aa57731983f83b494ee96d4d179924f3a482271f465ca482ab",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345461295757,
+            19.756216964135323,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "480f2ae99949ff234552fda5f5681dfb544a940581b25a6315fbe5428ac51bba",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345461295757,
+            52.47554338097319,
+            46.487407397853346
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "b18616a162e9455c5138a4b9cb8ef71350a58cea2383ab1a35195eb9e85aec3b",
+          "matrix": [
+            0.3351189650915697,
+            0.2679345472340205,
+            19.756216964135323,
+            81.58590094116838
+          ]
+        },
+        {
+          "axis": 6,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "5ae9264a6b5e6f663eb1bab3b620a1b26e00725a283d5a088cbd7d208408c66a",
+          "matrix": [
+            0.33511896509156963,
+            0.2679345472340205,
+            52.47554338097319,
+            81.58590094116838
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    },
+    {
+      "source": "/Users/david/development/go-running-route-q-learning/workdirs/training/output/analysis/training/c-horizon-100000-total-300000/diagnosis.svg",
+      "output": "c-horizon-100000-total-300000_diagnosis_cetak.svg",
+      "axes": [
+        {
+          "axis": 1,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "3dc737b5d952f893a7b09674b499a95819e3ea1a42534be48cb04141e6f3e618",
+          "matrix": [
+            0.3254536455423414,
+            0.24381409598292533,
+            24.539411916653386,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 2,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "69df71b856a4dca6035cd70ea6af7d63e22f55f7fe7f2b6fb2e808b4e2635eff",
+          "matrix": [
+            0.3254536455423414,
+            0.24381409598292533,
+            61.856056607816015,
+            12.69525414324265
+          ]
+        },
+        {
+          "axis": 3,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "d6949d47c3c0b328b352e8fcc44e0ba72eee0b8b9f94f4582fa9d46930158396",
+          "matrix": [
+            0.3254536455423414,
+            0.24381409598292533,
+            24.539411916653386,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 4,
+          "path_count": 1,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "3d3d1ae720f4cd27e95df86a5f9c59fa6ace23c5bc38a60bcfa7d3e6660beac2",
+          "matrix": [
+            0.3254536455423414,
+            0.24381409598292533,
+            61.856056607816015,
+            49.180248649717214
+          ]
+        },
+        {
+          "axis": 5,
+          "path_count": 4,
+          "original_path_d_unchanged": true,
+          "original_path_sha256": "040c580600c2f8d6a8c3178ba286fba0ab955a6091533a580289b759ff66085a",
+          "matrix": [
+            0.36531416907450714,
+            0.24381409689746866,
+            22.40089482915269,
+            85.66524228470729
+          ]
+        }
+      ],
+      "min_font_pt_at_14cm": 8.017179670722978,
+      "x_unit": "thousands of episodes; tick positions unchanged",
+      "q_state_y_unit": "thousands of states in training axis 5; tick positions and source limits unchanged",
+      "layout": "all original panels retained, printed typography and labels adapted, original curve paths and axis limits retained"
+    }
+  ],
+  "date": "2026-11-13",
+  "word_pages": 10,
+  "all_word_pages_visually_reviewed": true,
+  "all_eight_composite_figures_visually_reviewed": true,
+  "docx_sha256": "e8b79f534f88d32b142cfdc977be1c8f06179b65b69cd3d48213b0ada173566f",
+  "figure_width_cm": 14,
+  "whole_training_percentages_not_tail10k_or_greedy": true,
+  "no_fixed_figure_or_subsection_reference_in_body": true,
+  "q_state_axis_unit": "thousands of states; source vertices/limits unchanged",
+  "asset_hashes": {
+    "c-horizon-100000-total-300000_training_cetak.png": "92c7753fc07446f9baf62a726f0812365c2c0176b3b94f813469f8e71793a6d5",
+    "c-dynamic-150000_diagnosis_cetak.png": "5017cab0a2ff6d4a23a06436e9cd78c753ff561f61ed64fe4f53d0aac5103e4f",
+    "c-dynamic-150000_training_cetak.svg": "2c361ff340db8bc4e7d0bed2e6465c401f99ce2b560b108efbb5903ef086564c",
+    "c-dynamic-300000_diagnosis_cetak.svg": "a7df960ca3e8dca5b94e6e402bb7a3c1439c86cb9a689b17a69dadc302f77d53",
+    "c-dynamic-300000_diagnosis_cetak.png": "205f5187d6f1523f44b778eeffdc84fbe3aa43f1fe4f52b606ac9e1f297dd363",
+    "c-dynamic-150000_training_cetak.png": "d33e871aa2f348aa8596e2778436c0a963a9856f1dc69b7a4793f573bbc701cc",
+    "c-dynamic-150000_diagnosis_cetak.svg": "abcac88a476b9acda9b28b271b06089a05b2bce530042889fd8572f16972b49b",
+    "c-horizon-100000-total-300000_training_cetak.svg": "89d444e85269c6afd0237dca2e9635aeec9c80120e1bd4d281db5ff5911df092",
+    "c-horizon-100000-total-300000_diagnosis_cetak.png": "10f6bf02c1f8a0b769a99a33df7edac2bb4520fea8ec1ba041565c4f66cc2139",
+    "c-dynamic-300000_training_cetak.svg": "a726615096c9a3e490d88d9da44790e8975f98fda7f95140f32ed282b5b2d242",
+    "buat_versi_cetak.py": "ba12f16c3f808d39ab0e266d0788ab729cf190d25aab9d4f2c5b01d273eff296",
+    "c-horizon-100000-total-150000_training_cetak.png": "7849fc808edfcd6e6d9b2b36fa7dd2d599f3bead060b3ad144db9341407f533c",
+    "render_png.cjs": "65ac655699c6b374dec193c33d9cf8c03081ceb682e52f5339cb5bf2aef0905a",
+    "c-horizon-100000-total-150000_diagnosis_cetak.svg": "688f21d53270c46fbd378238e67061f4050d269f8d17e11b9a71591fdd56a97f",
+    "PETUNJUK.txt": "fe7dceed37a307efb440774a042d114af73349e0f5f4edb6fd1024cb1e8e290b",
+    "c-horizon-100000-total-150000_diagnosis_cetak.png": "34cd80c1a5e61a49066cfe41738a0025fdea423db3344ca8916f279ffddac295",
+    "c-horizon-100000-total-150000_training_cetak.svg": "7a9705cf64f5de9dddafe5c26564afeb0d63175c0afdb88000875480bedc1ae6",
+    "c-dynamic-300000_training_cetak.png": "8a2f653ed38397d98fd5fb32550534884b0d401be4acb97cfc101da70f60036a",
+    "c-horizon-100000-total-300000_diagnosis_cetak.svg": "9a609aed80f390c734779cf99abe0817be4bbbd00a5f67550fa6c7e33f7e0a08",
+    "sumber_terminasi/c-dynamic-300000.csv": "244550122746888667baa4ff8d027e0d475b7c9cf3fb99dfffbcdd67d19a1ad6",
+    "sumber_terminasi/c-dynamic-150000.csv": "00832089f117f327111a3d002fd07ddfcbba61eb154861931e5261530957508c",
+    "sumber_terminasi/c-horizon-100000-total-150000.csv": "e9d2bb997004b12b828c0b146422f5854b93d2f06000c1d71364a7c130721eae",
+    "sumber_terminasi/c-horizon-100000-total-300000.csv": "a52ba85e2f449ccc093d58338a64b115abe94d333ccd21595ef32ff3e448cc87",
+    "asli/c-dynamic-300000/diagnosis.png": "0aec78b1808b234caba33f7b45985091686a42fd5f21cf09ce5af3b2f69ad4eb",
+    "asli/c-dynamic-300000/diagnosis.svg": "847eb7bf12d4713bb06d53e047d0f7d29e8825d56b2df16882f64a1fdbe8a635",
+    "asli/c-dynamic-300000/training.svg": "702d52f65b6e6dc4f53ce6b7c20c59881d64330443477f5b36178499c75f4893",
+    "asli/c-dynamic-300000/training.png": "d5bf91aaf799078aa56283d5a3db03f7984528984ab321395d19793ab8d892b0",
+    "asli/c-horizon-100000-total-150000/diagnosis.png": "a34b5d326fa23399a47745232d13849de1929b821cedea89bc9e3729eeb7ea00",
+    "asli/c-horizon-100000-total-150000/diagnosis.svg": "cce717990dc037a9534ebe5861b1c9bb3d6270ae2796755b271edd599cbda842",
+    "asli/c-horizon-100000-total-150000/training.svg": "069da8213f80de26996f6670766e272208166da0921eeb9d003ff7226b3f16df",
+    "asli/c-horizon-100000-total-150000/training.png": "313e7b9e6e24df6a0097b23762a00f5f21321f90458e7405a13a28265e870b85",
+    "asli/c-horizon-100000-total-300000/diagnosis.png": "d46a27b612768e5f62f3b6e0f28f893ecec81c9ceaed54a11726f7d1522d43c2",
+    "asli/c-horizon-100000-total-300000/diagnosis.svg": "dbae394a92a087df39a40bff82c2073ac29f218b570ac77ed9aea11a089e687c",
+    "asli/c-horizon-100000-total-300000/training.svg": "fe78ec2b0385455c8624f833bcbb3a9fc798b1133d4bc890c5d8e8ece8f3340f",
+    "asli/c-horizon-100000-total-300000/training.png": "b89869078a515f13cd069e60c731651b3e9c895b5cc55207b9095d2ba7bb6ca7",
+    "asli/c-dynamic-150000/diagnosis.png": "dc0905f9c4f718c41264f2b0bd3b9a2b72e33547a8e01dc90c2d2ffb8b1f136a",
+    "asli/c-dynamic-150000/diagnosis.svg": "e4f1b043758a62b038f13ed60d1e2565f6bce2d81dd10a7309201ffcea4219dc",
+    "asli/c-dynamic-150000/training.svg": "ecbb5790f215a23c4a261f7f212013bddd3906783e75f2c9cb717a57d9402810",
+    "asli/c-dynamic-150000/training.png": "2209d1be55c74eb96a99842ff7c6e38819039aec09417d42b280bc65181c8ba0"
+  }
+}

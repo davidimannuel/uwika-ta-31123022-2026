@@ -1,0 +1,6 @@
+Pemeriksaan,Perlakuan
+Way dan kedua endpoint kosong/yes/permissive,Edge menjadi kandidat jika panjangnya valid dan positif.
+Salah satu access bernilai no/private/destination atau kategori lain,Edge tidak menjadi kandidat action.
+Access berupa gabungan nilai,Ditolak sebagai kategori yang tidak ada dalam daftar izin.
+"Barrier saja, access tetap diizinkan",Tidak otomatis menghapus edge.
+Way permissive,Tetap boleh dipilih; penalti akses mengikuti panjang ruas.

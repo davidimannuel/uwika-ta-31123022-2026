@@ -1,0 +1,5 @@
+Pengaturan,Total episode,Durasi penurunan,"Episode lanjutan pada 0,05"
+Dinamis,150.000,150.000,0
+Dinamis,300.000,300.000,0
+Horizon 100.000,150.000,100.000,50.000
+Horizon 100.000,300.000,100.000,200.000

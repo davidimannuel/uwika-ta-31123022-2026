@@ -1,0 +1,33 @@
+@startuml
+top to bottom direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 18
+skinparam ArrowColor #34495E
+skinparam ArrowThickness 1.5
+skinparam nodesep 55
+skinparam ranksep 65
+skinparam rectangle {
+  BorderColor #34495E
+  FontColor #172A3A
+}
+skinparam legend {
+  BackgroundColor white
+  BorderColor white
+  FontSize 16
+}
+rectangle "Node awal\nA" as A #FFF2CC
+rectangle "Node B" as B #D9EAF7
+rectangle "Node C" as C #D9EAF7
+rectangle "Posisi agen\nD" as D #E2F0D9
+A -right[#2E75B6]-> B : ruas 1
+B -down[#2E75B6]-> C : ruas 2
+C -left[#2E75B6]-> D : ruas 3
+A .down[#666666]. D : jarak langsung\nHaversine
+legend bottom
+Garis utuh: perjalanan A → B → C → D.
+Garis putus-putus: jarak langsung A–D, bukan ruas yang dapat dipilih.
+Ilustrasi konsep; posisi tidak menggambarkan koordinat sebenarnya.
+endlegend
+@enduml

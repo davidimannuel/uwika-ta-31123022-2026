@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 20
+skinparam roundcorner 18
+skinparam ArrowColor #34495E
+skinparam ArrowThickness 2
+skinparam nodesep 65
+skinparam ranksep 110
+skinparam padding 18
+skinparam rectangle {
+  BorderColor #34495E
+  BorderThickness 1.5
+  FontColor #172A3A
+}
+skinparam note {
+  BackgroundColor #FFF9DE
+  BorderColor #9D946B
+  FontColor #303030
+  FontSize 18
+}
+
+rectangle "<b>Agen</b>\nPengambil keputusan" as A #DFEBF7
+rectangle "<b>Lingkungan</b>\nTempat agen berinteraksi" as E #E4F0DF
+
+A -down-> E : <b>Tindakan</b>\nDipilih berdasarkan kebijakan
+E -up-> A : <b>Kondisi berikutnya dan reward</b>\nUmpan balik dari lingkungan
+
+note left of A
+  Agen mempelajari kebijakan
+  untuk memperoleh akumulasi
+  reward yang lebih besar.
+end note
+
+note right of E
+  Lingkungan berubah setelah
+  tindakan dilakukan dan
+  memberikan umpan balik.
+end note
+@enduml

@@ -1,0 +1,7 @@
+Karakteristik,Nilai
+Jumlah node,26.345
+Jumlah edge terarah,58.020
+Edge yang lolos penyaringan akses statis,56.816
+Panjang segmen rata-rata,"25,12 m"
+Komponen terhubung lemah pada seluruh graf,38
+Edge keluar start sebelum/sesudah filter statis,4/4

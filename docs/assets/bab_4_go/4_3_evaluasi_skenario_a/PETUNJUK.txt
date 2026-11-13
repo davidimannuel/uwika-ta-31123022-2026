@@ -1,0 +1,51 @@
+LAMPIRAN AKTIF EVALUASI SKENARIO A DENGAN TABEL
+
+WORD AKTIF
+DRAF_BAB_IV_4_3_DAN_4_3_1_EVALUASI_SKENARIO_A_TABEL_SAJA.docx
+pada docs/temp/bab_4_3_evaluasi_skenario_a_go_20261113/.
+Tujuh halaman termasuk satu halaman petunjuk. Salin mulai judul4.3.
+Draf sebelumnya dengan dua gambar tetap sebagai riwayat dan digantikan draf ini.
+
+PENYAJIAN
+Lima tabel: satu ringkasan empat konfigurasi dan empat tabel rincian setiap seed.
+Semua20evaluasi, termasuk gagal, tetap tampil. Semua nilai/header/CSV tabel sama
+persis dengan draf sebelumnya. Caption sementaraTabel4.4–4.8.
+Tidak ada gambar,caption gambar,atau pembahasan yang memerlukan grafik di isi.
+Gambar/helper lama dipertahankan sebagai arsip, tidak dipakai dalam Word aktif.
+Daftar historis terdapat pada PETUNJUK_DRAF_DENGAN_GAMBAR.txt.
+
+PENJELASAN PENTING
+Setiap konfigurasi dilatih terpisah dari awal menggunakan Q-table baru.
+Konfigurasi300.000episode bukan kelanjutan150.000episode. Yang dibandingkan
+adalah hasil evaluasi akhir masing-masing konfigurasi. Dalam setiap training
+fixed100k,epsilon turun selama100k lalu tetap0,05hingga budgetnya selesai.
+Evaluasi memakai epsilon0dan tidak memperbarui nilaiQ.
+Keberhasilan0/5=0%;1/5=20%,bukan persentase jutaan episode pelatihan.
+Rerata dari seluruh5seed termasuk gagal, sebelum pembulatan. Metrik tambahan
+returnprogress/closing tidak dibahas terpisah di versi ini, tetapi tetap pada
+CSV asli. Pelaporan berfokus pada keberhasilan,galat,skor dan pengulangan ruas.
+
+SUMBER
+training.ipynb Go bagian5/report.compare_profiles() untuk ringkasan.
+Bagian4/report.show_profiles(), tabel Metrik Evaluasi Greedy per Seed untuk
+rincian. CSV sumber pada sumber/<profil>/evaluation.csv;metadata menyertainya.
+Tidak ada training,evaluasi ulang,unduhan atau perubahan sumber/hasil Go.
+Naskah TA utama tidak diubah. Hanya4.3pengantar dan4.3.1A;B/C,peta,verifikasi,
+validasi belum dikerjakan. Grafik perkembangan training4.2tidak diubah.
+
+PEMETAAN TABEL
+
+Tabel 4.4 Ringkasan Hasil Evaluasi Skenario A
+CSV: ringkasan_evaluasi_skenario_a.csv
+
+Tabel 4.5 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 150.000 Episode
+CSV: a-dynamic-150000_setiap_seed.csv
+
+Tabel 4.6 Hasil Evaluasi Setiap Seed Skenario A dengan Epsilon Dinamis dan 300.000 Episode
+CSV: a-dynamic-300000_setiap_seed.csv
+
+Tabel 4.7 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 150.000 Episode
+CSV: a-horizon-100000-total-150000_setiap_seed.csv
+
+Tabel 4.8 Hasil Evaluasi Setiap Seed Skenario A dengan Durasi Penurunan Epsilon Tetap 100.000 Episode dan 300.000 Episode
+CSV: a-horizon-100000-total-300000_setiap_seed.csv

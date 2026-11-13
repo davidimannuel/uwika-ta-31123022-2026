@@ -1,0 +1,28 @@
+LAMPIRAN BAB IV SUBBAB 4.1.3
+
+Gambar 4.3 Distribusi Skor Karakter Ruas Jalan
+Gunakan gambar yang sudah disiapkan pengguna dari analisa.ipynb.
+Salinan PNG notebook: road_score_distribution.png, tersedia pada folder ini.
+Sumber: proyek Go, analisa.ipynb bagian 9, report.show_score_distribution().
+Ekspor melalui bagian 10, report.save(), ke workdirs/training/output/analysis/.
+Kode sumber gambar tetap pada analysis/graph.py proyek Go.
+
+Word memuat posisi sisip dan caption, tanpa menduplikasi gambar yang sudah
+disiapkan. Sisipkan gambar, hapus kalimat petunjuk sisip gambar, kemudian
+sesuaikan nomor gambar dan rujukan pada isi. Caption di bawah, rata tengah.
+Pertahankan batas sumbu, nilai, legenda dan rentang. Huruf gambar pada hasil
+cetak minimal 8 poin; bila terlalu kecil, perbesar tampilan huruf pada notebook
+sebelum mengambil screenshot/ekspor. Jangan mengubah data demi tampilan.
+
+road_score_groups.csv: jumlah/persentase positif, nol, negatif.
+road_score_statistics.csv: minimum dan maksimum.
+road_score_intervals.csv: interval, jumlah edge dan persentase.
+CSV disimpan sebagai sumber, tidak perlu ditampilkan lagi sebagai tabel di TA.
+Jumlah menggunakan seluruh 59.176 edge berarah, termasuk arah balik.
+Interval kiri termasuk, kanan tidak, kecuali interval terakhir keduanya termasuk.
+Lebar interval 0,25 hanya untuk penyajian, bukan parameter pembelajaran.
+Skor seluruh graf sebelum mask akses/perjalanan, bukan skor rute atau bukti aman.
+
+Tidak perlu rumus atau tabel tambahan. Sumber/hash ada pada manifest.
+Word: docs/temp/bab_4_1_3_go_20261113/DRAF_BAB_IV_4_1_3.docx.
+Hanya naskah subbab 4.1.3; pembahasan pelatihan dan validasi belum disusun.
