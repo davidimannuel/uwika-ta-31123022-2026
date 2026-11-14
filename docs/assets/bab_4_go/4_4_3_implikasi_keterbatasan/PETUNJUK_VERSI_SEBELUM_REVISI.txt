@@ -1,0 +1,39 @@
+SUMBER IMPLIKASI PRAKTIS DAN KETERBATASAN PENELITIAN
+
+Word sementara:
+docs/temp/bab_4_4_3_implikasi_go_20261114/
+DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN.docx
+Tiga halaman: halaman pertama petunjuk; salin mulai halaman kedua setelah4.4.2.
+Pengantar4.4 dan subbab sebelumnya tidak perlu disalin ulang.
+Keenam paragraf sesuai pembahasan chat yang disetujui.
+
+Tidak perlu tabel/gambar/persamaan baru untuk bagian ini. Screenshot dan rincian
+rute disiapkan saat membahas penerapan katalog, bukan di subbab ini.
+
+katalog_rute_tercatat.json:
+Salinan daftar tiga rute dari web-catalog/catalog.json proyek Go.
+ID: depan-gang-sebelah-toko9, depan-indomaret-dkb, depan-wk.
+Katalog publik https://davidimannuel.github.io/go-running-route-q-learning/
+telah dipublikasikan. Daftar publik catalog.json dibaca melalui HTTPGET200
+pada14November2026 dalam giliran diskusi sebelumnya dan cocok byte/hash lokal.
+Tidak menjalankan deployment baru atau mengubah katalog untuk dokumen ini.
+
+konfigurasi_tiga_rute.json:
+Ketiganya B, total300.000episode, penurunan epsilon100.000episode.
+Metadata mencatat tiga start_node berbeda. Ini penerapan terpisah dari
+eksperimen utama tiga state × empat konfigurasi × lima seed pada satu start.
+Metadata sumber dan hash terperinci tercatat dalam sumber_dan_penempatan.json.
+
+Batas klaim:
+Katalog sudah tersedia sebagai aplikasi publik, bukan sekadar rencana.
+Ketersediaan aplikasi bukan bukti kelayakan lapangan atau generalisasi hasil
+perbandingan state ke semua titik. Tidak menyimpulkan keamanan/kenyamanan dari
+skor jalan atau ketepatan panjang graf sebagai kebenaran GPS.
+Tidak menambahkan hasil cek lapangan yang belum diberikan pengguna dan tidak
+mengubah status field_validation yang tercatat pada katalog sumber.
+
+Format: A4, Times New Roman12, spasi1,5, justify, indentasi1cm,
+margin kiri/atas4cm dan kanan/bawah3cm, footer kampus/nomor halaman.
+Seluruh halaman dirender/diperiksa. Naskah utama dan sumber/kode/config/notebook/
+hasil/katalog Go tetap; tidak ada training, evaluasi ulang, unduhan, instalasi,
+commit, push atau publikasi. Verifikasi dan hasil validasi lapangan terpisah.

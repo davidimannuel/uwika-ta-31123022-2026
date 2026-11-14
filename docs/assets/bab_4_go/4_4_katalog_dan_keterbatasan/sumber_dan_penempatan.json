@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-14",
+  "scope": "4.4.3 Penerapan Katalog and 4.4.4 Keterbatasan; replaces former combined 4.4.3 and separate 4.5 plan",
+  "docx_name": "DRAF_BAB_IV_4_4_3_KATALOG_DAN_4_4_4_KETERBATASAN.docx",
+  "docx_sha256": "b4e581aaef18e23e37e917167a441b4e48d0fec238300b9a16aae26cf78c4971",
+  "source_hashes": {
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx": "fbbb7c39a9b62b04ebf7927f5179d8c3318aa660e558c08b12bb865ce5ce09bd",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_4_3_implikasi_go_20261114/DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN_REVISI.docx": "980d119d18858eca8e4354f5c0cdd1e2974959c4084a3c0a113812714bd849ea",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/catalog.json": "e9a0a32c5cd08f03e680ab5cbf8e0afe1a3a558d8c74c99b0ed7551af0515571",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-gang-sebelah-toko9/metadata.json": "7b29aa1a74cd80531cc7125ba992eca91d4e16c097b912ad9131ca9b0e838b76",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-indomaret-dkb/metadata.json": "b63ae335426f1b1a33713196677dd83d8a20f5a6cb6e269277766516003b21b7",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-wk/metadata.json": "d12f6ffe0a04be9128699329b6cfc3afe10943e4618709dc2fb1abf2b5062706",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/index.html": "37c97551e1338f85929f0040b7a80101468c5a13203b311e9547b0892855cf09",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/ringkasan_seluruh_konfigurasi.csv": "d8229f31477b7a955b3e5ff9defd7e8003f9345be8329d5d9e21bca0aef94642"
+  },
+  "catalog_prose": [
+    "Hasil pembentukan rute diterapkan dalam katalog berbasis web yang telah dipublikasikan. Katalog menyajikan pilihan rute dari beberapa titik awal beserta informasi panjang perjalanan dan lintasannya pada peta interaktif. Penyimpanan hasil pelatihan memungkinkan pengguna melihat rute yang telah disiapkan tanpa menjalankan proses pelatihan sendiri.",
+    "Katalog memuat tiga rute dengan titik awal di depan gang sebelah Toko 9, depan Indomaret Dukuh Kupang Barat, dan depan Universitas Wijaya Kusuma. Ketiganya menggunakan skenario B dengan total 300.000 episode dan durasi penurunan epsilon tetap 100.000 episode. Setiap rute dipilih dari hasil evaluasi yang memenuhi syarat loop pada graf, kemudian disimpan untuk ditampilkan kepada pengguna.",
+    "Halaman utama menampilkan daftar rute, deskripsi lokasi titik awal, panjang perjalanan, dan informasi hasil evaluasi. Pengguna dapat mencari serta memilih rute yang ingin dilihat. Setelah rute dipilih, pengguna dapat membuka peta interaktif dan memperbesar tampilannya untuk memeriksa lintasan. Katalog juga menyediakan informasi pengaturan yang tercatat pada hasil pelatihan untuk membantu menelusuri asal rute yang disajikan.",
+    "Salah satu contoh penerapan adalah rute dengan titik awal di depan gang sebelah Toko 9. Panjang perjalanan menurut hasil evaluasi graf adalah 5.151,87 meter. Rute ini dipilih sebagai contoh peta dalam laporan dan telah dicoba secara langsung di lapangan. Peta menampilkan rute rencana yang tersimpan dalam katalog; hasil pemeriksaan lapangannya dibahas berdasarkan bukti perjalanan yang diperoleh.",
+    "Contoh penerapan lainnya adalah rute dengan titik awal di depan Universitas Wijaya Kusuma. Panjang perjalanan menurut hasil evaluasi graf adalah 5.527,50 meter. Rute ini juga telah dicoba langsung dan digunakan sebagai contoh dari titik awal yang berbeda. Penyajian kedua peta menunjukkan pilihan lintasan yang tersedia pada katalog, tanpa menyatakan bahwa seluruh rute telah memenuhi kondisi penggunaan nyata.",
+    "Rute depan Indomaret Dukuh Kupang Barat tetap tersedia dalam katalog, tetapi belum diperiksa langsung di lapangan. Oleh karena itu, dua rute yang telah dicoba digunakan sebagai contoh peta detail dalam laporan. Informasi keberhasilan loop yang ditampilkan pada katalog merujuk pada evaluasi graf dan aturan penelitian, sedangkan kesesuaian kondisi lapangan dibahas secara terpisah pada bagian validasi."
+  ],
+  "limitations_prose": [
+    "Eksperimen perbandingan representasi state dilakukan pada satu graf dan titik awal yang sama, dengan tiga representasi state, empat kombinasi pengaturan pelatihan, dan lima seed untuk setiap konfigurasi. Hasil yang diperoleh terbatas pada kondisi tersebut. Penerapan katalog pada beberapa titik awal belum membuktikan bahwa hasil perbandingan A, B, dan C akan selalu berlaku pada lokasi lainnya.",
+    "Jumlah episode yang sama digunakan untuk membandingkan representasi state pada kondisi pelatihan yang sepadan. Penelitian ini belum menentukan kebutuhan jumlah episode terbaik untuk masing-masing representasi state atau menguji seluruh pilihan parameter pelatihan. Pengaruh setiap komponen reward juga belum dibandingkan secara terpisah. Dengan demikian, hasil penelitian belum menetapkan satu representasi, pengaturan pelatihan, atau susunan nilai reward sebagai pilihan terbaik untuk semua kondisi.",
+    "Pembentukan rute bergantung pada data OpenStreetMap. Kelengkapan atribut dan kesesuaiannya dengan kondisi nyata dapat berbeda antar ruas. Jalan yang terhubung pada graf belum tentu dapat dilewati pada waktu tertentu, misalnya karena pagar tertutup atau pembatasan akses. Skor karakter ruas merupakan penilaian berdasarkan atribut dan aturan penelitian, sehingga tidak dapat langsung diartikan sebagai ukuran keamanan atau kenyamanan yang dirasakan seluruh pelari.",
+    "Pemeriksaan lapangan baru dilakukan pada dua dari tiga rute katalog. Cakupan pemeriksaan tersebut terbatas pada lintasan, waktu, dan kondisi yang dijumpai selama percobaan. Temuan pada kedua rute tidak dapat mewakili seluruh rute atau seluruh kondisi penggunaan. Kesimpulan mengenai keterlintasan, kesesuaian lintasan, dan jarak perjalanan perlu mengikuti bukti yang diperoleh dari masing-masing percobaan."
+  ],
+  "figure_requirements": [
+    {
+      "id": "halaman_utama",
+      "filename": "halaman_utama_katalog.png",
+      "placement": "4.4.3, setelah uraian antarmuka dan pemilihan rute",
+      "caption": "Tampilan halaman utama katalog rute lari",
+      "url": "https://davidimannuel.github.io/go-running-route-q-learning/",
+      "contents": "Daftar tiga rute dan area peta setelah salah satu rute dipilih; panel tidak menutupi lintasan"
+    },
+    {
+      "id": "peta_toko9",
+      "filename": "peta_depan_gang_toko9.png",
+      "placement": "4.4.3, setelah paragraf contoh rute depan gang sebelah Toko 9",
+      "caption": "Peta rute dari titik awal depan gang sebelah Toko 9",
+      "url": "https://davidimannuel.github.io/go-running-route-q-learning/routes/depan-gang-sebelah-toko9/index.html",
+      "contents": "Seluruh lintasan rute, START/akhir, nama jalan dan atribusi peta"
+    },
+    {
+      "id": "peta_wk",
+      "filename": "peta_depan_wk.png",
+      "placement": "4.4.3, setelah paragraf contoh rute depan Universitas Wijaya Kusuma",
+      "caption": "Peta rute dari titik awal depan Universitas Wijaya Kusuma",
+      "url": "https://davidimannuel.github.io/go-running-route-q-learning/routes/depan-wk/index.html",
+      "contents": "Seluruh lintasan rute, START/akhir, nama jalan dan atribusi peta; tampilan konsisten dengan peta Toko 9"
+    }
+  ],
+  "placeholder_count": 3,
+  "actual_images": 0,
+  "tables": 0,
+  "equations": 0,
+  "catalog_route_count": 3,
+  "field_checked_route_count": 2,
+  "field_checked_ids": [
+    "depan-gang-sebelah-toko9",
+    "depan-wk"
+  ],
+  "not_yet_field_checked_ids": [
+    "depan-indomaret-dkb"
+  ],
+  "field_evidence_source": "Direct user statement; no results/GPS/photos supplied",
+  "field_outcomes_claimed": false,
+  "prior_public_catalog_check": "HTTP200 catalog.json matched local on14November in preceding discussion; no new deployment",
+  "main_docx_unchanged": true,
+  "go_unchanged": true,
+  "qa": {
+    "page_count": 4,
+    "all_pages_visually_reviewed": true,
+    "thesis_body_starts_on_page": 2,
+    "catalog_pages": [
+      2,
+      3
+    ],
+    "limitations_page": 4,
+    "placeholders_on_pages": [
+      2,
+      3,
+      3
+    ],
+    "all_sources_unchanged": true
+  },
+  "asset_hashes": {
+    "konfigurasi_tiga_rute.json": "979a42686085edae8beb6a542dcd36d58d69610fc2e5d472dbb1d5815d11d21d",
+    "katalog_rute_tercatat.json": "e9a0a32c5cd08f03e680ab5cbf8e0afe1a3a558d8c74c99b0ed7551af0515571",
+    "PETUNJUK.txt": "7b50a3e552c6b41a2a4aa32e040ae6b1900ffde06676cb02c659c7b0129c14ce",
+    "kebutuhan_gambar.csv": "4288d890f7049ca6cbebd47c617cbd3d5fbec68170f3cce7837a164c85d323e7",
+    "DAFTAR_LAMPIRAN.md": "664687db8339ad4da98a034f218258e19b85efedcd829d7222777a1d34f42c6f"
+  }
+}

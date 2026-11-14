@@ -1,0 +1,34 @@
+{
+  "distance_error_penalty_per_100m": -5,
+  "no_action_penalty": -50,
+  "outward_penalty_scale": 0,
+  "over_distance_penalty": -50,
+  "permissive_penalty_per_100m": -0.1,
+  "return_phase_ratio": 0.5,
+  "return_reward_scale": 1.2,
+  "revisit_penalty": -10,
+  "road": {
+    "highway": {
+      "missing": -2,
+      "other": -10,
+      "priority": 1,
+      "secondary_priority": 0.5,
+      "weight": 0.55
+    },
+    "surface": {
+      "missing": -0.5,
+      "other": -1,
+      "priority": 1,
+      "weight": 0.3
+    },
+    "width": {
+      "missing": -0.5,
+      "other": -1,
+      "priority": 1,
+      "weight": 0.15
+    },
+    "width_threshold_m": 3
+  },
+  "step_limit_penalty": -50,
+  "success_bonus": 100
+}

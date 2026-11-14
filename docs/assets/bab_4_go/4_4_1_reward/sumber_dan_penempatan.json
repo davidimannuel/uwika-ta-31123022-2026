@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-14",
+  "scope": "4.4 introduction and 4.4.1 only",
+  "docx_name": "DRAF_BAB_IV_4_4_DAN_4_4_1_REWARD.docx",
+  "docx_sha256": "ca82d8df7db501c6baec26c9d49c447953e203e8456493f115cbca7b69d13730",
+  "source_hashes": {
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx": "fbbb7c39a9b62b04ebf7927f5179d8c3318aa660e558c08b12bb865ce5ce09bd",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/ringkasan_seluruh_konfigurasi.csv": "d8229f31477b7a955b3e5ff9defd7e8003f9345be8329d5d9e21bca0aef94642",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/evaluasi_seluruh_seed.csv": "d30fcea8425cd557625fabf612325eadad4bce48d4962d6fdd30fda433aeb529",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-150000/evaluation.csv": "fd7ea577a154690fdfb2ccfc4a59ba7fa4f629ca7f42d8bb933a78bf4e9b34d3",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-150000/metadata.json": "3d2decb3e33bfa26656a4b64cbe6aa66cd70ee21a53629823a426c1f431b92ec",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-300000/evaluation.csv": "0f7a6662494c655bcd90d00e5b0db743958056acf108d12de169d357573ed992",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-300000/metadata.json": "7db3571d8bc5bec876be3844b78185ff642f15c723faa546068a6ba6c5e1626f",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/evaluation.csv": "6fdb0802b5e27503c0a77ae538148adc843a981b8b98d847cbb6db087c312030",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/metadata.json": "d346122745eeb4dfc206645e58f41ddaffc4d95efa89e0bd6d2116fb7a509073"
+  },
+  "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+  "start_node": 311432306,
+  "accepted_body_paragraphs": [
+    "Fungsi reward dirancang agar agen mempertimbangkan karakter ruas jalan sekaligus mencapai tujuan perjalanan. Penilaian karakter ruas memberikan pertimbangan terhadap jenis jalan, permukaan, dan lebar jalan. Komponen lainnya mempertimbangkan akses bersyarat, arah pergerakan menuju titik awal pada fase pulang, pengulangan kunjungan, serta hasil akhir perjalanan. Melalui gabungan tersebut, agen mempelajari pilihan perjalanan berdasarkan konsekuensi setiap tindakan terhadap keseluruhan rute.",
+    "Hasil evaluasi menunjukkan bahwa sistem dengan rancangan reward tersebut mampu menghasilkan rute yang kembali ke titik awal dalam rentang jarak penelitian. Pada skenario B dengan durasi penurunan epsilon tetap 100.000 episode, kedua konfigurasi jumlah episode menghasilkan lima keberhasilan dari lima evaluasi. Salah satu contohnya adalah seed 1 pada total 300.000 episode, yang menghasilkan rute sepanjang 4.985,52 meter, skor karakter ruas 0,9042, dan pengulangan ruas 0,71%. Contoh ini memperlihatkan bahwa pencapaian jarak mendekati target, pertimbangan karakter ruas, dan pengulangan yang rendah dapat tercapai dalam satu rute.",
+    "Meskipun demikian, skor karakter ruas yang tinggi belum menjamin keberhasilan pembentukan loop. Pada skenario C dengan epsilon dinamis dan total 300.000 episode, seed 1 memperoleh skor ruas 0,9498, tetapi perjalanan berakhir setelah menempuh 6.092,40 meter tanpa berhasil menutup loop. Hasil tersebut menunjukkan bahwa kesesuaian karakter ruas perlu dinilai bersama pencapaian jarak dan kemampuan kembali ke titik awal. Skor yang tinggi menunjukkan kesesuaian dengan aturan penilaian penelitian, sedangkan kondisi nyata ruas memerlukan pemeriksaan lapangan.",
+    "Pengulangan ruas juga perlu dibaca bersama keberhasilan perjalanan. Pengulangan yang rendah dapat ditemukan pada rute yang gagal, sehingga ukuran tersebut tidak dapat digunakan sendiri untuk menentukan keberhasilan. Dalam penelitian ini, pengulangan masih diperbolehkan sesuai aturan perjalanan. Penalti kunjungan ulang memberikan pertimbangan tambahan agar agen tidak menjadikan pengulangan sebagai pilihan utama, tanpa menetapkan bahwa seluruh rute harus bebas pengulangan.",
+    "Pembentukan rute turut dipengaruhi oleh aturan pemilihan ruas. Penyaringan akses menentukan ruas yang dapat dipilih, sedangkan perpindahan menuju titik awal hanya diperbolehkan apabila panjang perjalanan memenuhi rentang penelitian. Oleh karena itu, hasil yang diperoleh merupakan gabungan pengaruh fungsi reward, representasi state, pengaturan pelatihan, dan aturan perjalanan.",
+    "Berdasarkan hasil tersebut, rancangan yang digunakan telah memungkinkan sistem menghasilkan rute sesuai tujuan penelitian pada konfigurasi tertentu. Namun, penelitian ini belum membandingkan pengaruh setiap komponen reward secara terpisah. Kesimpulan mengenai reward dibatasi pada kemampuan rancangan secara keseluruhan dalam mendukung pembentukan rute, tanpa menyatakan bahwa nilai setiap komponennya merupakan pilihan terbaik."
+  ],
+  "scenario_b_summary_profiles": [
+    "b-horizon-100000-total-150000",
+    "b-horizon-100000-total-300000"
+  ],
+  "examples": [
+    {
+      "profile": "b-horizon-100000-total-300000",
+      "seed": "1",
+      "is_loop": "true",
+      "distance_m": 4985.515806431332,
+      "road_score": 0.904173983012359,
+      "overlap_ratio": 0.0070921985815602835
+    },
+    {
+      "profile": "c-dynamic-300000",
+      "seed": "1",
+      "is_loop": "false",
+      "distance_m": 6092.399319109874,
+      "road_score": 0.949751355853723,
+      "overlap_ratio": 0.03067484662576687
+    }
+  ],
+  "tables": 0,
+  "images": 0,
+  "new_equations": 0,
+  "component_ablation_performed": false,
+  "main_docx_unchanged": true,
+  "qa": {
+    "page_count": 3,
+    "all_pages_visually_reviewed": true,
+    "body_matches_accepted_chat": true,
+    "numeric_examples_match_saved_results": true,
+    "main_and_sources_unchanged": true,
+    "new_tables_figures_equations": false
+  },
+  "asset_hashes": {
+    "ringkasan_dua_konfigurasi_b.csv": "9b21518f84cc1fafde3554031af1bec1b4df238efb14814384263689f7a51cb6",
+    "contoh_evaluasi_reward.csv": "c3b526aa4ab140c127c766db45c38aadf9c326076f3d0a270cb5934f0e190d5f",
+    "parameter_reward.json": "5dc7599f0062938ebe92e8b9687a740b1c227ccc2491ad0a3cba5b1b0d503d12",
+    "PETUNJUK.txt": "2847aa69598dc0a35c7b714ade9d57e2661a953c6325b821b90056e04b5f140b"
+  }
+}

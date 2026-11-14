@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-14",
+  "scope": "4.4.3 only",
+  "docx_name": "DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN.docx",
+  "docx_sha256": "0dfea92e832e0a814ee32f35898c91f15a4626fa3d7488de68f8daffab7ebd0d",
+  "source_hashes": {
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx": "fbbb7c39a9b62b04ebf7927f5179d8c3318aa660e558c08b12bb865ce5ce09bd",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/catalog.json": "e9a0a32c5cd08f03e680ab5cbf8e0afe1a3a558d8c74c99b0ed7551af0515571",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-gang-sebelah-toko9/metadata.json": "7b29aa1a74cd80531cc7125ba992eca91d4e16c097b912ad9131ca9b0e838b76",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-indomaret-dkb/metadata.json": "b63ae335426f1b1a33713196677dd83d8a20f5a6cb6e269277766516003b21b7",
+    "/Users/david/development/go-running-route-q-learning/web-catalog/routes/depan-wk/metadata.json": "d12f6ffe0a04be9128699329b6cfc3afe10943e4618709dc2fb1abf2b5062706",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/ringkasan_seluruh_konfigurasi.csv": "d8229f31477b7a955b3e5ff9defd7e8003f9345be8329d5d9e21bca0aef94642"
+  },
+  "accepted_body_paragraphs": [
+    "Implikasi praktis penelitian ini adalah tersedianya kumpulan rute lari hasil pelatihan yang dapat diakses melalui katalog berbasis web. Pengguna dapat melihat pilihan rute, titik awal, panjang perjalanan, dan lintasannya pada peta interaktif. Penyimpanan hasil pelatihan memungkinkan pengguna melihat rute yang telah disiapkan tanpa menjalankan proses pelatihan sendiri.",
+    "Penerapan tersebut telah diwujudkan melalui tiga rute dari titik awal yang berbeda, yaitu depan gang sebelah Toko 9, depan Indomaret Dukuh Kupang Barat, dan depan Universitas Wijaya Kusuma. Ketiganya menggunakan skenario B dengan total 300.000 episode dan durasi penurunan epsilon tetap 100.000 episode. Rute yang dipilih disimpan dan dipublikasikan agar dapat digunakan sebagai bahan pertimbangan dalam memilih lintasan lari.",
+    "Pembuatan katalog merupakan penerapan hasil penelitian yang terpisah dari eksperimen perbandingan representasi state. Eksperimen utama menggunakan titik awal yang sama agar hasil A, B, dan C dapat dibandingkan dalam kondisi yang sepadan. Sementara itu, tiga titik awal pada katalog digunakan untuk menyediakan pilihan rute pada beberapa lokasi. Keberadaan rute pada lokasi tersebut belum membuktikan bahwa hasil perbandingan state akan selalu berlaku pada seluruh wilayah atau titik awal lainnya.",
+    "Penelitian ini juga memiliki keterbatasan dalam penggunaan data OpenStreetMap. Kelengkapan atribut dan kesesuaiannya dengan kondisi lapangan dapat berbeda antar ruas. Jalan yang terhubung pada graf belum tentu dapat dilewati pada waktu pemeriksaan, misalnya karena pagar tertutup atau pembatasan akses. Skor karakter ruas merupakan penilaian berdasarkan atribut dan aturan penelitian, sehingga tidak dapat langsung diartikan sebagai ukuran keamanan atau kenyamanan yang dirasakan seluruh pelari.",
+    "Selain itu, perbandingan dilakukan pada tiga representasi state, empat kombinasi pengaturan pelatihan, dan lima seed untuk setiap konfigurasi. Jumlah episode yang sama digunakan untuk membandingkan hasil pada kondisi pelatihan yang sepadan. Rancangan tersebut belum menentukan kebutuhan jumlah episode terbaik bagi setiap representasi state. Oleh karena itu, hasil yang diperoleh perlu dibatasi pada konfigurasi dan lingkungan yang diuji.",
+    "Katalog yang telah dipublikasikan menunjukkan bahwa hasil penelitian dapat disajikan dalam bentuk aplikasi yang dapat diakses pengguna. Kesesuaian rute dengan penggunaan nyata tetap memerlukan pemeriksaan lapangan, terutama terhadap keterlintasan jalan, kesesuaian lintasan, penutupan loop, dan jarak perjalanan. Hasil pemeriksaan tersebut perlu dibahas berdasarkan bukti yang diperoleh selama mencoba rute."
+  ],
+  "catalog_ids": [
+    "depan-gang-sebelah-toko9",
+    "depan-indomaret-dkb",
+    "depan-wk"
+  ],
+  "catalog_start_nodes": [
+    9645488767,
+    1720773161,
+    311431485
+  ],
+  "public_catalog_verification": {
+    "date": "2026-11-14",
+    "url": "https://davidimannuel.github.io/go-running-route-q-learning/catalog.json",
+    "http_status": 200,
+    "matches_local": true,
+    "evidence": "Read-only HTTP GET in the immediately preceding discussion turn; no deployment performed"
+  },
+  "main_experiment_scenarios": 3,
+  "profiles_per_scenario": 4,
+  "seeds_per_profile": 5,
+  "tables": 0,
+  "images": 0,
+  "new_equations": 0,
+  "field_results_supplied": false,
+  "main_docx_unchanged": true,
+  "go_sources_catalog_and_results_unchanged": true,
+  "qa": {
+    "page_count": 3,
+    "all_pages_visually_reviewed": true,
+    "body_matches_accepted_chat": true,
+    "catalog_config_and_distinct_starts_checked": true,
+    "main_and_sources_unchanged": true
+  },
+  "asset_hashes": {
+    "konfigurasi_tiga_rute.json": "979a42686085edae8beb6a542dcd36d58d69610fc2e5d472dbb1d5815d11d21d",
+    "katalog_rute_tercatat.json": "e9a0a32c5cd08f03e680ab5cbf8e0afe1a3a558d8c74c99b0ed7551af0515571",
+    "PETUNJUK.txt": "1a75b5fddd5a1ea2242dba29050f2fdbd183992889faf79891d5be5b51509714"
+  }
+}

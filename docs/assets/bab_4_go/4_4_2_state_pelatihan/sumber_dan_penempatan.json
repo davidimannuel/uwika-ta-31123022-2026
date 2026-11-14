@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-14",
+  "scope": "4.4.2 only",
+  "docx_name": "DRAF_BAB_IV_4_4_2_STATE_DAN_PELATIHAN.docx",
+  "docx_sha256": "c60481f151c52a67743c4e904d63cd77ed883d62435eddd9bf952a3387929e75",
+  "source_hashes": {
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/temp/bab_4_3_4_ringkasan_evaluasi_go_20261113/DRAF_BAB_IV_4_3_4_RINGKASAN_EVALUASI.docx": "fbbb7c39a9b62b04ebf7927f5179d8c3318aa660e558c08b12bb865ce5ce09bd",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/31123022_David_TA.docx": "8af21b7da9da49b0a4a1a03ec7c7ad13b7959f64c23269b27b1cab3d7df66082",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/ringkasan_seluruh_konfigurasi.csv": "d8229f31477b7a955b3e5ff9defd7e8003f9345be8329d5d9e21bca0aef94642",
+    "/Users/david/widya_kartika/uwika-ta-31123022-2026/docs/assets/bab_4_go/4_3_evaluasi_a_c/evaluasi_seluruh_seed.csv": "d30fcea8425cd557625fabf612325eadad4bce48d4962d6fdd30fda433aeb529",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-150000/evaluation.csv": "96d3af564180adfef95cbabd1c1e5f34d44e6319ccbf181651e5d76a57fafba3",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-150000/metadata.json": "62b6478d4ad15cd0c7d0f6cb146c7bd9d2fc3acf0b1aebf48e9500fbaab2de64",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-300000/evaluation.csv": "c7010936b73a6aa5529c404b04510674dc18b22304adbba2a0415dff2268d2a8",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-dynamic-300000/metadata.json": "b1e4249c52c9521b07deba59995197f6b4d8239e5daad84783a7dbc874cf927f",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-150000/evaluation.csv": "124381fd28d63f7007fea33a7df7352dde4a7b7644498948850a92277cd750ff",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-150000/metadata.json": "adee3268c801dfe8669c9829f43c65c9a7a530efe6df3e80326ce7524a8044c4",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-300000/evaluation.csv": "15de534b8b8ead34128f4401253611cde42e98c3afad363c5b606dca19b802b3",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/a-horizon-100000-total-300000/metadata.json": "746a1716c016df91978f71fcd767e11c6ff10b216d395056b859e51e71fd6251",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-150000/evaluation.csv": "3362ccd371f66aa8f40496481e21e2f96cce5af34d26304d05e4b0ed5d7a47e9",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-150000/metadata.json": "9edcea1904d74440de8077222dcde7d1a8bd8948bb8c00991ed3190d89188f1f",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-300000/evaluation.csv": "66165d537cb05bbc5fa4432df088e3b67de8edd84eaa12708fd189a157316e34",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-dynamic-300000/metadata.json": "b21be8e2e2a646510bc669a24201e2a207c8f84d12c0a4431d96ce3e4628d1a4",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-150000/evaluation.csv": "fd7ea577a154690fdfb2ccfc4a59ba7fa4f629ca7f42d8bb933a78bf4e9b34d3",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-150000/metadata.json": "3d2decb3e33bfa26656a4b64cbe6aa66cd70ee21a53629823a426c1f431b92ec",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-300000/evaluation.csv": "0f7a6662494c655bcd90d00e5b0db743958056acf108d12de169d357573ed992",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/b-horizon-100000-total-300000/metadata.json": "7db3571d8bc5bec876be3844b78185ff642f15c723faa546068a6ba6c5e1626f",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-150000/evaluation.csv": "f8979581fdcb7bdbc0539b866fd9790023c8a6801160acb853f21db1d798363b",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-150000/metadata.json": "5f1345ca7694ac8a81afa2842d80c8c7dcd71cc55f8f67792f08a8132d14857e",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/evaluation.csv": "6fdb0802b5e27503c0a77ae538148adc843a981b8b98d847cbb6db087c312030",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-dynamic-300000/metadata.json": "d346122745eeb4dfc206645e58f41ddaffc4d95efa89e0bd6d2116fb7a509073",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-150000/evaluation.csv": "b71e36c2ed70a8c07b41f7e01e60417ab26066277490cf83d8cc5c09a1ee8131",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-150000/metadata.json": "9bb54052d9e2f7a9daa6e125694b34cc9d070107fe86e79917143ec3a3f29041",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-300000/evaluation.csv": "21d018b9d154403e3a58eebce1f77fc7c75b25ac5f4a816cf44881586885ef88",
+    "/Users/david/development/go-running-route-q-learning/workdirs/training/output/training/c-horizon-100000-total-300000/metadata.json": "9266386de06d1ce85843bbab43838c8bd94d762bdf644caa483bb3bc95695266"
+  },
+  "snapshot_sha256": "d2402df59465909a6dbe85c7f860dbd6cd3789d375b09ce3642694e18453ff66",
+  "start_node": 311432306,
+  "accepted_body_paragraphs": [
+    "Representasi state menentukan informasi yang digunakan agen dalam mempelajari nilai suatu tindakan. Pada skenario A, state hanya memuat node saat ini. Akibatnya, informasi dalam state tidak membedakan kondisi ketika agen baru memulai perjalanan dan ketika agen telah mendekati target jarak pada node yang sama. Skenario B menambahkan kategori perkembangan jarak, sehingga agen dapat mempelajari pilihan tindakan berdasarkan posisi sekaligus perkembangan perjalanan. Skenario C menambahkan informasi node sebelumnya untuk membedakan arah kedatangan agen.",
+    "Hasil evaluasi menunjukkan bahwa skenario B menghasilkan lebih banyak loop daripada A dan C pada tiga dari empat konfigurasi yang dibandingkan. Pada durasi penurunan epsilon tetap 100.000 episode dengan total 300.000 episode, B menghasilkan lima keberhasilan dari lima evaluasi, sedangkan C menghasilkan dua dan A satu keberhasilan. Namun, pada pengaturan dinamis dengan total 150.000 episode, seluruh skenario belum berhasil. Hasil tersebut menunjukkan bahwa manfaat representasi state perlu dibaca bersama pengaturan pelatihannya.",
+    "Penambahan informasi node sebelumnya pada C belum menghasilkan keberhasilan yang lebih tinggi daripada B. Pada durasi penurunan tetap dengan total 300.000 episode, rata-rata jumlah state yang tercatat dalam Q-table C mencapai 193.953, sedangkan B sebanyak 135.876. Jumlah tersebut menunjukkan bahwa pengalaman perjalanan pada C tersimpan dalam lebih banyak kondisi yang berbeda. Hal ini dapat menjadi salah satu penjelasan mengapa tambahan informasi belum diikuti peningkatan keberhasilan pada jumlah episode yang sama. Namun, jumlah state tersebut belum membuktikan bahwa penyebaran pengalaman merupakan penyebab utama perbedaan hasil.",
+    "Pengaturan epsilon turut memengaruhi hasil perbandingan. Pada jumlah episode dan representasi state yang sama, durasi penurunan epsilon tetap menghasilkan jumlah keberhasilan yang sama atau lebih tinggi daripada pengaturan dinamis. Contohnya, pada B dengan total 150.000 episode, pengaturan dinamis belum menghasilkan loop, sedangkan durasi penurunan tetap menghasilkan lima keberhasilan. Pada pengaturan durasi tetap, epsilon mencapai 0,05 setelah 100.000 episode dan dipertahankan sampai pelatihan selesai. Dengan demikian, agen memiliki lebih banyak episode pelatihan pada tingkat eksplorasi rendah.",
+    "Penambahan episode juga belum menjamin peningkatan keberhasilan. Pada durasi penurunan tetap, B tetap menghasilkan lima keberhasilan dan C tetap menghasilkan dua keberhasilan ketika total episode bertambah dari 150.000 menjadi 300.000. Kedua jumlah episode merupakan pelatihan yang dimulai secara terpisah dari Q-table baru. Hasil tersebut menunjukkan bahwa penambahan jumlah episode perlu dinilai berdasarkan perubahan hasil yang diperoleh, bukan diasumsikan selalu memperbaiki kemampuan agen.",
+    "Dalam kondisi eksperimen ini, penambahan informasi perkembangan jarak pada B memberikan hasil yang lebih mendukung pembentukan loop daripada penggunaan node saat ini saja. Penambahan node sebelumnya pada C belum memberikan peningkatan dibandingkan B pada anggaran pelatihan yang sama. Kesimpulan tersebut terbatas pada graf, titik awal, lima seed, dan konfigurasi yang diuji. Penelitian ini belum menentukan kebutuhan jumlah episode terbaik untuk setiap representasi state, sehingga hasilnya tidak menunjukkan bahwa C selalu lebih buruk atau bahwa B selalu lebih baik pada kondisi lain."
+  ],
+  "evaluation_count": 60,
+  "seed_count_per_profile": 5,
+  "verified_success_counts": {
+    "a-dynamic-150000": 0,
+    "a-dynamic-300000": 0,
+    "a-horizon-100000-total-150000": 0,
+    "a-horizon-100000-total-300000": 1,
+    "b-dynamic-150000": 0,
+    "b-dynamic-300000": 4,
+    "b-horizon-100000-total-150000": 5,
+    "b-horizon-100000-total-300000": 5,
+    "c-dynamic-150000": 0,
+    "c-dynamic-300000": 1,
+    "c-horizon-100000-total-150000": 2,
+    "c-horizon-100000-total-300000": 2
+  },
+  "q_state_mean_fixed_100k_total_300k": {
+    "B": 135876,
+    "C": 193953
+  },
+  "tables": 0,
+  "images": 0,
+  "new_equations": 0,
+  "main_docx_unchanged": true,
+  "go_sources_and_results_unchanged": true,
+  "qa": {
+    "page_count": 3,
+    "all_pages_visually_reviewed": true,
+    "body_matches_accepted_chat": true,
+    "all_success_counts_and_mean_q_states_match_sources": true,
+    "main_and_sources_unchanged": true
+  },
+  "asset_hashes": {
+    "evaluasi_seluruh_seed.csv": "324e809434e82d9f386ddd932962458829c7e16ec4f001133679b56420eb1d76",
+    "PETUNJUK.txt": "5f668aba85267c6cf19697bbf247b905fd4a504b2f58cb6cec3aa36128f63c43",
+    "ringkasan_state_dan_pelatihan.csv": "f2fd015f353064da7bffff2bed92421cf7b2f1a8759cf3c1fba41e209de39dc6"
+  }
+}

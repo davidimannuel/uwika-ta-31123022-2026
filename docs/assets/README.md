@@ -4,6 +4,51 @@ Folder permanen bersama untuk kode diagram, gambar, dan sumber rumus.
 Word panduan revisi tetap di `docs/temp/`; PDF panduan kampus dan dokumen Word
 lainnya tetap di `docs/`. Folder ini menggantikan `docs/aset_naskah/`.
 
+## Penerapan Katalog dan Keterbatasan Aktif — 14 November 2026
+
+[Daftar gambar dan sumber](bab_4_go/4_4_katalog_dan_keterbatasan/DAFTAR_LAMPIRAN.md)
+untuk4.4.3 Penerapan Katalog dan4.4.4 Keterbatasan. Tidak memakai4.5 katalog.
+Word empat halaman di docs/temp/bab_4_4_katalog_keterbatasan_go_20261114/.
+Tiga placeholder langsung di isi: halaman utama dan dua peta Toko9/WK.
+Screenshot asli belum tersedia. Katalog tetap tiga rute, dua sudah dicoba;
+hasil lapangan belum disimpulkan. JSON/CSV/manifest untuk penelusuran tersedia.
+Panduan lama dialihkan ke versi ini dan arsip sebelumnya dipertahankan.
+
+## Dua Contoh Peta dan Revisi Status Lapangan — 14 November 2026
+
+[Panduan penempatan](bab_4_go/4_5_katalog/PENEMPATAN_GAMBAR.md) menjelaskan
+dua screenshot rencana rute Toko9 dan Universitas Wijaya Kusuma untuk4.5.
+Word4.4.3 aktif kini REVISI pada docs/temp/bab_4_4_3_implikasi_go_20261114/:
+halaman2–3isi,4–5placeholder dan caption. Katalog tetap tiga rute; pengguna
+sudah mencoba dua, Indomaret DKB belum. Hasil lapangan belum disimpulkan.
+Screenshot asli belum tersedia; petunjuk/manifest revisi4.4.3 sudah diselaraskan.
+
+## Implikasi Praktis dan Keterbatasan — 14 November 2026
+
+[Petunjuk](bab_4_go/4_4_3_implikasi_keterbatasan/PETUNJUK.txt) memetakan sumber
+subbab4.4.3. Word tiga halaman di docs/temp/bab_4_4_3_implikasi_go_20261114/.
+Snapshot daftar katalog dan konfigurasi tiga rute serta manifest tersedia.
+Tidak menambah tabel/gambar/rumus ke naskah. Katalog publik sudah tersedia;
+publikasi terpisah dari hasil validasi lapangan. Naskah utama dan Go tetap.
+
+## Pembahasan State dan Pelatihan — 14 November 2026
+
+[Petunjuk](bab_4_go/4_4_2_state_pelatihan/PETUNJUK.txt) menjelaskan sumber angka
+subbab4.4.2. Word tiga halaman di docs/temp/bab_4_4_2_state_pelatihan_go_20261114/.
+CSV12konfigurasi dan60seed serta manifest tersedia untuk penelusuran angka.
+Tidak menambah tabel/gambar/rumus ke naskah. Rerata jumlah state C193.953 dan
+B135.876 pada durasi tetap100k-total300k berasal dari hasil tercatat; bukan bukti
+penyebab kegagalan atau ukuran memori. Naskah utama dan Go tidak diubah.
+
+## Pembahasan Rancangan Reward — 14 November 2026
+
+[Petunjuk](bab_4_go/4_4_1_reward/PETUNJUK.txt) menjelaskan sumber angka untuk
+pengantar4.4 dan pembahasan4.4.1. Word khusus tiga halaman ada di
+docs/temp/bab_4_4_1_reward_go_20261114/.
+Dua CSV bukti angka, parameter reward dan manifest tersimpan permanen; tidak
+menambah tabel/gambar/persamaan ke naskah. Contoh adalah evaluasi eksperimen
+utama, terpisah dari tiga rute katalog. Tidak mengubah naskah utama atau Go.
+
 ## Ringkasan Evaluasi Lintas Skenario — 13 November 2026
 
 [Petunjuk](bab_4_go/4_3_ringkasan_evaluasi/PETUNJUK.txt) memetakan satu tabel

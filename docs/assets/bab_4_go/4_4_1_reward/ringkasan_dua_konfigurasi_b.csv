@@ -1,0 +1,3 @@
+﻿scenario,profile,episodes,decay_mode,decay_horizon,seed_count,loop_count,success_rate_greedy,mean_distance_error_m,mean_total_reward,mean_comfort,mean_overlap_ratio,mean_return_progress_ratio,closing_action_available_rate,mean_distance_to_start_at_end_m,mean_q_state_count
+B,b-horizon-100000-total-150000,150000,fixed,100000,5,5,1.0,145.71433015136955,141.73143233741138,0.914460393331057,0.00966794519226124,0.7974840307139192,1.0,0.0,112146.2
+B,b-horizon-100000-total-300000,300000,fixed,100000,5,5,1.0,168.81493548635498,144.69123757950356,0.9084897544347564,0.00697494168003916,0.8082938476595457,1.0,0.0,135876.0

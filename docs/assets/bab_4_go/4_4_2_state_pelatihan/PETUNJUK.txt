@@ -1,0 +1,45 @@
+SUMBER PEMBAHASAN STATE DAN PENGATURAN PELATIHAN
+
+Word sementara:
+docs/temp/bab_4_4_2_state_pelatihan_go_20261114/
+DRAF_BAB_IV_4_4_2_STATE_DAN_PELATIHAN.docx
+Tiga halaman: halaman pertama petunjuk, halaman kedua dan ketiga isi siap salin.
+Salin mulai judul 4.4.2 setelah pembahasan rancangan reward.
+Pengantar 4.4 sudah tersedia dalam draf sebelumnya; jangan disalin dua kali.
+Keenam paragraf sesuai pembahasan chat yang disetujui.
+
+Tidak diperlukan tabel, gambar, atau persamaan baru. CSV pada folder ini untuk
+penelusuran angka, bukan tabel tambahan yang wajib dipasang ke naskah.
+
+ringkasan_state_dan_pelatihan.csv:
+12 konfigurasi eksperimen utama A–C, presisi penuh sesuai sumber.
+mean_q_state_count adalah rata-rata lima q_state_count pada evaluasi akhir.
+Pada B durasi penurunan100k-total300k:135.876; C konfigurasi sama:193.953.
+Jumlah tersebut bukan ukuran RAM atau seluruh kemungkinan state, serta belum
+membuktikan mekanisme penyebab perbedaan keberhasilan.
+
+evaluasi_seluruh_seed.csv:
+60 hasil akhir untuk mencocokkan jumlah loop dan rerata state Q-table.
+Setiap konfigurasi memiliki seed0–4. Evaluasi menggunakan epsilon0.
+Berhasil = jumlah is_loop=true dibagi5, bukan proporsi seluruh episode training.
+
+Sumber utama:
+/Users/david/development/go-running-route-q-learning/
+workdirs/training/output/training/<profile>/evaluation.csv dan metadata.json.
+Salinan/asal ringkasan tetap tersedia pada docs/assets/bab_4_go/4_3_evaluasi_a_c/.
+Hash sumber, lingkup dan catatan QA ada di sumber_dan_penempatan.json.
+12 profil dan60 hasil dicocokkan baca-saja; tidak mereplay Q atau training.
+
+Cara membaca:
+Bandingkan A/B/C pada jumlah episode dan penurunan epsilon yang sama.
+Setiap konfigurasi memulai Q-table baru;300k bukan kelanjutan150k.
+Durasi tetap100k mempertahankan epsilon0,05 setelah penurunan selesai.
+Jumlah keberhasilan sama belum berarti rute atau metrik lainnya identik.
+Hasil belum menetapkan kebutuhan episode terbaik per state atau generalisasi
+ke wilayah berbeda. Jangan mencampur data ini dengan tiga rute katalog.
+
+Format mengikuti panduan TA: A4, Times New Roman12, spasi1,5, justify,
+indentasi1cm, margin kiri/atas4cm dan kanan/bawah3cm, footer kampus/nomor halaman.
+Seluruh halaman dirender dan diperiksa. Naskah utama serta kode/config/notebook/
+hasil Go tidak diubah. Tidak ada training, evaluasi ulang, unduhan, instalasi,
+commit atau push. Implikasi praktis dan hasil validasi lapangan belum disusun.

@@ -1,0 +1,47 @@
+SUMBER PEMBAHASAN RANCANGAN REWARD
+
+Word sementara:
+docs/temp/bab_4_4_1_reward_go_20261114/DRAF_BAB_IV_4_4_DAN_4_4_1_REWARD.docx
+Tiga halaman: halaman pertama petunjuk, halaman kedua dan ketiga isi siap salin.
+Salin mulai judul 4.4 setelah ringkasan perbandingan hasil evaluasi.
+Dokumen memuat pengantar 4.4 dan enam paragraf 4.4.1 yang dibahas di chat.
+Tidak menambahkan subjudul bernomor yang lebih kecil.
+
+Tidak diperlukan tabel, gambar, atau persamaan baru. CSV di folder ini adalah
+bukti sumber angka untuk penelusuran, bukan tabel tambahan yang harus dipasang.
+
+ringkasan_dua_konfigurasi_b.csv:
+Sumber dua konfigurasi B dengan durasi penurunan epsilon tetap 100.000 episode,
+total 150.000 dan 300.000 episode. Keduanya menghasilkan lima loop dari lima
+evaluasi akhir. Rata-rata pada sumber tetap mencakup seluruh lima hasil.
+
+contoh_evaluasi_reward.csv:
+- B durasi tetap total300k seed1: berhasil, 4.985,52m, skor0,9042,
+  pengulangan0,71% setelah pembulatan.
+- C dinamis300k seed1: gagal over_distance, 6.092,40m, skor0,9498.
+CSV mempertahankan angka presisi penuh. Pengulangan tersimpan sebagai rasio;
+kalikan100 untuk persen. Skor ruas tidak menyatakan persentase kenyamanan.
+
+parameter_reward.json:
+Parameter tercatat pada metadata sumber, sama pada tiga profil yang diperiksa.
+Bukan konfigurasi baru atau perubahan nilai reward.
+
+Sumber utama tersimpan di proyek Go:
+/Users/david/development/go-running-route-q-learning/
+workdirs/training/output/training/<profile>/evaluation.csv dan metadata.json.
+Ringkasan dan salinan sumber sebelumnya tetap tersedia pada:
+docs/assets/bab_4_go/4_3_evaluasi_a_c/.
+Identitas/hash sumber dicatat pada sumber_dan_penempatan.json.
+
+Batas pembahasan:
+Angka berasal dari eksperimen utama, bukan tiga rute pilihan dalam katalog.
+Tidak menyatakan bahwa tiap komponen reward terbukti optimal atau efeknya
+terisolasi. Hasil dipengaruhi reward, state, pelatihan, dan aturan perjalanan.
+Pengulangan tetap diperbolehkan sesuai aturan; tidak ada syarat bebas overlap.
+Bagian verifikasi dan hasil validasi lapangan belum disusun.
+
+Format: A4, Times New Roman12, spasi1,5; margin kiri/atas4cm dan kanan/bawah3cm;
+alinea1cm, rata kiri-kanan. Footer nomor halaman dan Universitas Widya Kartika.
+Seluruh halaman dirender dan diperiksa sebelum dokumen diserahkan.
+Naskah utama serta proyek/hasil Go tidak diubah; tidak training, evaluasi ulang,
+unduhan peta, instalasi, commit, atau push.

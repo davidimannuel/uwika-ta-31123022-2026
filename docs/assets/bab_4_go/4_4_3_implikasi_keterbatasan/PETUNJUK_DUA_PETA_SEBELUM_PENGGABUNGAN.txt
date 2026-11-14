@@ -1,0 +1,29 @@
+VERSI AKTIF REVISI DUA CONTOH PETA
+
+Gunakan:
+docs/temp/bab_4_4_3_implikasi_go_20261114/
+DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN_REVISI.docx
+
+Lima halaman, seluruhnya dirender dan diperiksa:
+- Halaman1: petunjuk penyalinan.
+- Halaman2–3: teks4.4.3 siap salin setelah4.4.2.
+- Halaman4: placeholder peta depan gang sebelah Toko9 untuk penerapan katalog.
+- Halaman5: placeholder peta depan Universitas Wijaya Kusuma untuk penerapan katalog.
+
+Katalog tetap tiga rute. Pengguna menyatakan pemeriksaan langsung telah dilakukan
+pada dua rute contoh. Depan Indomaret DKB belum diperiksa langsung.
+Tidak menyatakan kedua rute lolos/aman atau seluruh lintasan sesuai sebelum
+hasil dan bukti diberikan. Metadata field_validation proyek Go tidak diubah.
+Perubahan isi4.4.3 hanya paragraf terakhir; lima paragraf awal tetap.
+
+Petunjuk screenshot permanen dan saran nama berkas:
+docs/assets/bab_4_go/4_5_katalog/PENEMPATAN_GAMBAR.md
+Peta detail ditempatkan setelah pengantar masing-masing rute pada4.5, bukan
+di4.4.3. Sesuaikan nomor gambar dengan naskah. Ganti placeholder dengan screenshot
+asli, pertahankan caption di bawahnya. Belum ada screenshot asli yang disisipkan.
+Rekaman GPS/foto lapangan ditempatkan pada pembahasan validasi yang terpisah.
+
+Dokumen versi sebelumnya tetap sebagai riwayat. Bukti sumber katalog/config
+tetap pada JSON awal; sumber_dan_penempatan_revisi.json memetakan revisi ini.
+Naskah utama/kode/hasil/katalog Go tidak diubah. Tidak ada training, unduhan,
+evaluasi ulang, instalasi, commit, push atau deployment.

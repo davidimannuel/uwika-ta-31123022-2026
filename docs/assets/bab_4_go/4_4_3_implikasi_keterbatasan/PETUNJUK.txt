@@ -1,0 +1,12 @@
+VERSI INI TELAH DIGANTIKAN
+
+Gunakan Word aktif:
+docs/temp/bab_4_4_katalog_keterbatasan_go_20261114/
+DRAF_BAB_IV_4_4_3_KATALOG_DAN_4_4_4_KETERBATASAN.docx
+
+4.4.3 Penerapan Katalog Rute Lari dan4.4.4 Keterbatasan Penelitian.
+Tidak ada4.5 Penerapan Katalog tersendiri. Tiga placeholder sudah langsung
+di antara paragraf. Petunjuk lengkap:
+docs/assets/bab_4_go/4_4_katalog_dan_keterbatasan/DAFTAR_LAMPIRAN.md
+
+Dokumen/manifest/petunjuk lama dipertahankan sebagai riwayat.

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "depan-gang-sebelah-toko9",
+    "start_node": 9645488767,
+    "training": {
+      "alpha": 0.15,
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "epsilon_end": 0.05,
+      "epsilon_start": 1,
+      "gamma": 0.95,
+      "max_workers": 5,
+      "runs": 5,
+      "seeds": null
+    }
+  },
+  {
+    "id": "depan-indomaret-dkb",
+    "start_node": 1720773161,
+    "training": {
+      "alpha": 0.15,
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "epsilon_end": 0.05,
+      "epsilon_start": 1,
+      "gamma": 0.95,
+      "max_workers": 5,
+      "runs": 5,
+      "seeds": null
+    }
+  },
+  {
+    "id": "depan-wk",
+    "start_node": 311431485,
+    "training": {
+      "alpha": 0.15,
+      "episodes": 300000,
+      "epsilon_decay_episodes": 100000,
+      "epsilon_end": 0.05,
+      "epsilon_start": 1,
+      "gamma": 0.95,
+      "max_workers": 5,
+      "runs": 5,
+      "seeds": null
+    }
+  }
+]

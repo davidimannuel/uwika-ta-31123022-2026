@@ -4,6 +4,164 @@ Dokumen ini menyimpan konteks implementasi dan keputusan teknis penelitian. Acua
 
 Dokumen ini bukan BAB IV skripsi. Untuk naskah TA gunakan dokumen skripsi; wiki ini menyimpan rincian teknis yang terlalu panjang untuk naskah akademik.
 
+## Katalog digabung ke4.4.3 dan keterbatasan4.4.4 selesai — 14 November 2026
+
+Pengguna menyetujui penggabungan manfaat praktis dan penerapan katalog; tidak
+lagi memakai4.5 Penerapan Katalog tersendiri. Susunan4.4 kini:4.4.1 reward,
+4.4.2 state/pelatihan,4.4.3 Penerapan Katalog Rute Lari,4.4.4 Keterbatasan.
+Word aktif menggantikan draf4.4.3 sebelumnya:
+`docs/temp/bab_4_4_katalog_keterbatasan_go_20261114/DRAF_BAB_IV_4_4_3_KATALOG_DAN_4_4_4_KETERBATASAN.docx`.
+Empat halaman:1petunjuk,2–3penerapan,4keterbatasan. Semua dirender/diperiksa.
+Salin mulai halaman kedua setelah4.4.2. Tidak mengulang pengantar4.4.
+
+Tiga placeholder langsung di antara paragraf: halaman utama katalog, peta
+Toko9, peta Universitas Wijaya Kusuma. Caption di bawah, nomor menyesuaikan.
+Screenshot asli belum tersedia pada aset yang diperiksa; tidak mengarang gambar.
+Peta Toko9 bersumber jarak graf5.151,87m; WK5.527,50m. Metadata tiga katalog
+tetap B300k/penurunan100k, start berbeda. Manfaat pengguna, daftar/pemilihan/
+peta/pengaturan tercatat dijelaskan tanpa detail CLI atau training di browser.
+Katalog tetap tiga rute; pengguna sudah mencoba Toko9/WK, Indomaret belum.
+Tidak menyatakan hasil lapangan lolos/aman sebelum bukti diberikan dan tidak
+mengubah metadata field_validation Go. Eksperimen utama satu start terpisah.
+
+4.4.4 membahas batas graf/titik/seeds/konfigurasi, kebutuhan episode optimum
+per state yang belum ditentukan, komponen reward yang belum diuji terpisah,
+kelengkapan/kondisi OSM, skor bukan persepsi keamanan/kenyamanan, serta cakupan
+dua pemeriksaan lapangan. Tidak ada tabel/gambar/rumus tambahan pada4.4.4.
+
+Lampiran permanen `docs/assets/bab_4_go/4_4_katalog_dan_keterbatasan/` berisi
+DAFTAR_LAMPIRAN.md,kebutuhan_gambar.csv,snapshot katalog/config,PETUNJUK,
+manifest sumber/hash/QA. Tiga gambar dipasang di isi4.4.3, tidak wajib diulang
+pada Lampiran akhir. Bukti GPS/foto/catatan untuk pembahasan validasi terpisah.
+Panduan4.5 lama dan PETUNJUK4.4.3 dialihkan ke versi baru; riwayat diarsipkan.
+Naskah utama dan kode/config/notebook/hasil/katalog Go tetap; tanpa training,
+evaluasi ulang, unduhan, instalasi, commit, push atau deployment.
+
+## Revisi4.4.3 dua rute lapangan dan placeholder peta — 14 November 2026
+
+Pengguna menyatakan sudah mencoba depan gang sebelah Toko9 dan depan
+Universitas Wijaya Kusuma; depan Indomaret DKB belum diperiksa langsung.
+Katalog tetap tiga rute, validasi yang sudah dilaksanakan baru dua. Ini pernyataan
+pelaksanaan dari pengguna; hasil/GPS/foto belum diberikan. Jangan menyimpulkan
+keduanya lolos, aman atau tanpa penyimpangan. Metadata Go tidak diubah otomatis.
+
+Word aktif:
+`docs/temp/bab_4_4_3_implikasi_go_20261114/DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN_REVISI.docx`.
+Lima halaman:1petunjuk,2–3isi4.4.3,4–5panduan dua placeholder. Semua halaman
+dirender/diperiksa. Lima paragraf awal4.4.3 tetap; paragraf terakhir disesuaikan
+menjadi dua rute telah diperiksa dan satu belum. Versi sebelumnya dipertahankan
+karena terbuka di Word. Naskah utama tidak diubah.
+
+Placeholder Toko9 dan Universitas Wijaya Kusuma untuk4.5 Penerapan Katalog:
+letakkan setelah pengantar masing-masing rute, caption di bawah dan nomor
+disesuaikan. Disertai contoh kalimat, sumberID katalog, petunjuk screenshot.
+Halaman4–5 adalah panduan, bukan lanjutan isi4.4.3 atau penulisan penuh4.5.
+Peta rencana dari katalog terpisah dari rekaman GPS/foto validasi lapangan.
+Tidak ada screenshot asli yang dimasukkan, hanya dua placeholder teks.
+
+Petunjuk permanen `docs/assets/bab_4_go/4_5_katalog/PENEMPATAN_GAMBAR.md`;
+saran nama screenshot peta_depan_gang_toko9.png dan peta_depan_wk.png di folder
+tersebut. PETUNJUK4.4.3 diperbarui, petunjuk lama diarsipkan; manifest revisi
+terpisah sumber_dan_penempatan_revisi.json. Sumber/manifest asli tetap.
+Dokumentasi progres disinkronkan. Kode/hasil/config/notebook/katalog Go utuh;
+tanpa training, evaluasi ulang, unduhan, instalasi, commit, push atau deployment.
+Berikutnya diskusi/penulisan bagian penerapan katalog sesuai alur per subbab.
+
+## Implikasi praktis dan keterbatasan 4.4.3 selesai — 14 November 2026
+
+Word sementara khusus4.4.3:
+`docs/temp/bab_4_4_3_implikasi_go_20261114/DRAF_BAB_IV_4_4_3_IMPLIKASI_DAN_KETERBATASAN.docx`.
+Tiga halaman termasuk satu petunjuk; enam paragraf yang direview di chat tetap.
+Seluruh halaman dirender dan diperiksa. Tanpa tabel/gambar/persamaan baru.
+Salin mulai halaman kedua setelah4.4.2. Pengantar4.4 tidak diulang.
+
+Pembahasan menyatakan katalog sudah tersedia sebagai aplikasi publik, bukan
+sekadar rencana. Tiga rute: depan gang sebelah Toko9, depan Indomaret DKB,
+depan Universitas Wijaya Kusuma. Metadata ketiganya B300k/penurunan100k dan
+start_node berbeda. Katalog adalah penerapan pada beberapa titik, terpisah dari
+eksperimen utama A–C satu start. Tidak mengklaim optimalitas/generalisasi atau
+keamanan/kenyamanan berdasarkan skor. Keterbatasan OSM dan tiga state/empat
+konfigurasi/lima seed dijelaskan; kebutuhan episode optimum per state belum diuji.
+
+Daftar katalog publik catalog.json diakses HTTP200 pada14November2026 ketika
+diskusi4.4.3 dan cocok byte/hash lokal. Sumber lokal/config diperiksa kembali
+saat pembuatan Word, tanpa deployment atau mutasi Go. Status validasi sumber
+tidak diubah; hasil pemeriksaan lapangan belum diberikan pengguna.
+Lampiran permanen `docs/assets/bab_4_go/4_4_3_implikasi_keterbatasan/`:
+snapshot daftar katalog, konfigurasi tiga rute, PETUNJUK dan manifest sumber/QA.
+Tidak menambahkan hasil lapangan yang tidak tersedia.
+
+Pembahasan4.4 kini selesai disusun dalam tiga Word terpisah. Berikutnya diskusi
+struktur4.5 Penerapan Katalog Rute Lari, lalu per subbab. Screenshot katalog dan
+rincian tiga rute ditempatkan pada bagian penerapan itu; belum disiapkan.
+Verifikasi dan hasil validasi lapangan tetap bagian terpisah.
+Naskah utama dan kode/config/notebook/hasil/katalog Go tetap; tanpa training,
+evaluasi ulang, unduhan, instalasi, commit, push atau deployment. Tunggu review.
+
+## Pembahasan state dan pelatihan 4.4.2 selesai — 14 November 2026
+
+Word sementara khusus 4.4.2 Pengaruh Representasi State dan Pengaturan Pelatihan:
+`docs/temp/bab_4_4_2_state_pelatihan_go_20261114/DRAF_BAB_IV_4_4_2_STATE_DAN_PELATIHAN.docx`.
+Tiga halaman termasuk satu petunjuk; enam paragraf yang direview di chat tetap.
+Seluruh halaman dirender dan diperiksa; tidak ada tabel/gambar/persamaan baru.
+Salin mulai halaman kedua setelah 4.4.1; pengantar 4.4 tidak diulang.
+
+12 CSV evaluasi dan metadata Go dicocokkan dengan 60 hasil dalam aset naskah;
+graf/start/reward/environment/mask/akses/parameter bersama dan seed0–4 sama.
+Jumlah loop dan rata-rata q_state_count sesuai. B tetap100k-total300k memiliki
+135.876 state tercatat rata-rata, C193.953. Data ini bukan RAM atau ukuran seluruh
+kemungkinan state, serta bukan bukti penyebab kegagalan. Penjelasan penyebaran
+pengalaman pada C dipertahankan sebagai kemungkinan, bukan kesimpulan sebab.
+B tertinggi pada tiga konfigurasi; dinamis150k semua0/5. Durasi tetap memberi
+jumlah loop sama/lebih tinggi pada enam pasangan. B tetap150/300k sama5/5,
+C sama2/5. Semua pelatihan mandiri dari Q-table baru; kebutuhan episode optimum
+per state belum ditentukan. Tidak menggeneralisasi C buruk atau B selalu unggul.
+
+Lampiran permanen `docs/assets/bab_4_go/4_4_2_state_pelatihan/` berisi CSV12profil,
+CSV60seed presisi penuh, PETUNJUK dan manifest sumber/hash/QA. CSV untuk
+penelusuran, bukan tabel baru yang wajib ditambahkan ke naskah. Eksperimen utama
+tetap terpisah dari tiga kandidat katalog yang telah dipublikasikan.
+Berikutnya diskusi 4.4.3 Implikasi Praktis dan Keterbatasan Penelitian; belum
+menulisnya. Verifikasi dan hasil validasi lapangan tetap bagian terpisah.
+Naskah utama dan kode/config/notebook/hasil Go tetap; tanpa training, evaluasi
+ulang, unduhan, instalasi, commit atau push. Tunggu review berikutnya.
+
+## Pembahasan reward 4.4.1 selesai — 14 November 2026
+
+Pengguna menyetujui lanjut setelah review enam paragraf di chat. Word sementara:
+`docs/temp/bab_4_4_1_reward_go_20261114/DRAF_BAB_IV_4_4_DAN_4_4_1_REWARD.docx`.
+Tiga halaman termasuk satu petunjuk; memuat judul/pengantar 4.4 Pembahasan Hasil
+Penelitian serta 4.4.1 Pembentukan Rute Berdasarkan Rancangan Reward. Keenam
+paragraf yang direview dipertahankan. Semua halaman dirender dan diperiksa.
+Tidak ada tabel, gambar, persamaan atau subjudul bernomor lebih kecil yang baru.
+
+Contoh B durasi tetap100k-total300k seed1: loop, 4.985,52m, skor0,9042,
+pengulangan0,71%. C dinamis300k seed1: over_distance, 6.092,40m, skor0,9498.
+Dua profil B durasi tetap masing-masing 5/5. Tiga CSV evaluasi/metadata Go
+dicocokkan dengan salinan naskah; graf/start/reward/environment/access/mask sama.
+Angka berasal dari eksperimen utama, bukan kandidat katalog titik awal lain.
+Pembahasan menghubungkan pencapaian jarak, skor ruas dan pengulangan; skor tinggi
+belum menjamin loop. Pengulangan diperbolehkan. Hasil merupakan gabungan reward,
+state, konfigurasi pelatihan dan aturan perjalanan; tidak ada uji pengaruh setiap
+komponen reward secara terpisah atau klaim nilai komponennya sudah optimal.
+
+Lampiran permanen `docs/assets/bab_4_go/4_4_1_reward/`: dua CSV bukti angka,
+parameter reward tercatat, PETUNJUK dan manifest sumber/hash/QA. CSV untuk
+penelusuran angka, bukan tabel baru yang wajib dimasukkan ke naskah.
+Berikutnya diskusi 4.4.2 Pengaruh Representasi State dan Pengaturan Pelatihan,
+kemudian 4.4.3 Implikasi Praktis dan Keterbatasan. Belum menulis keduanya.
+
+Konteks katalog telah diperiksa baca-saja 13November: katalog publik dan tiga
+halaman rute HTTP200 serta hash cocok lokal, tombol GPX tersedia. Tiga kandidat
+depan-gang-sebelah-toko9/depan-indomaret-dkb/depan-wk memakai B tetap100k300k.
+Publikasi aplikasi sudah terlaksana; bukan rencana yang belum diimplementasikan.
+Pengguna merencanakan cek lapangan 14November; belum memberikan hasilnya.
+Jangan menganggap pemeriksaan selesai atau mengubah status field_validation.
+Verifikasi kode dan validasi lapangan tetap dibahas terpisah.
+
+Naskah utama dan sumber/kode/config/notebook/hasil Go tetap; tanpa pelatihan,
+evaluasi ulang, unduhan, instalasi, commit atau push. Tunggu review berikutnya.
+
 ## Ringkasan evaluasi lintas skenario 4.3.4 selesai — 13 November 2026
 
 Word baru khusus 4.3.4 Ringkasan Perbandingan Hasil Evaluasi:
